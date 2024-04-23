@@ -1,0 +1,76 @@
+---
+
+---
+
+<aside class="inspector-side">
+  <div class="inspector-sticky">
+    <div id="viewfinder" class="viewfinder">
+      <div class="viewfinder-ui">
+        <span class="status">PREVIEW_MODE</span>
+      </div>
+      <img id="inspector-img" src="" alt="" />
+    </div>
+  </div>
+</aside>
+
+<style lang="scss">
+  .inspector-side {
+    display: none;
+    @media (min-width: 1200px) {
+      display: block;
+      width: 420px;
+      flex-shrink: 0;
+      align-self: stretch;
+    }
+  }
+
+  .inspector-sticky {
+    position: fixed;
+    top: 50%;
+    margin-right: 10px;
+    transform: translateY(-50%);
+    height: auto;
+  }
+
+  .viewfinder {
+    max-height: 50vh;
+    width: 100%;
+    aspect-ratio: 1.4;
+    border: 1px solid #ff3e00;
+    position: relative;
+    overflow: hidden;
+    background: #000;
+    opacity: 0;
+    transform: scale(0.98);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+
+    &.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      &.active {
+        opacity: 1;
+      }
+    }
+
+    .viewfinder-ui {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 8px;
+      font-family: monospace;
+      color: #ff3e00;
+      z-index: 2;
+      letter-spacing: 0.05em;
+    }
+  }
+</style>

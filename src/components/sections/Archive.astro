@@ -1,0 +1,174 @@
+---
+import Wrapper from '../../layouts/Wrapper.astro';
+import WorkWrapper from '../wrappers/WorkWrapper.astro';
+import FilterNav from './FilterNav.astro';
+import WorkPreview from './Inspector.astro';
+import { getSortedWork } from '../../utils/workUtils.ts';
+
+const allWork = await getSortedWork((data) => data.ongoing !== undefined);
+const ongoingWork = allWork.filter((item) => item.ongoing === true);
+const finishedWork = allWork.filter((item) => item.ongoing === false);
+const resolvedWork = [...ongoingWork, ...finishedWork];
+
+const categories = [
+  ...new Set(
+    resolvedWork.flatMap((item) => {
+      if (Array.isArray(item.type)) {
+        return item.type.flatMap((t: string) =>
+          t.split(',').map((s: string) => s.trim().toLowerCase()),
+        );
+      }
+      return typeof item.type === 'string'
+        ? item.type.split(',').map((s: string) => s.trim().toLowerCase())
+        : [];
+    }),
+  ),
+].sort();
+
+const pluralMapping = {
+  all: 'all',
+  installation: 'installations',
+  moving: 'moving',
+  stills: 'stills',
+  system: 'systems',
+};
+---
+
+<section class={`work ${Astro.props.className || ''}`}>
+  <Wrapper>
+    <FilterNav categories={categories} pluralMapping={pluralMapping} />
+
+    <div class="archive-container">
+      <div class="list-side">
+        <div class="table-head" aria-hidden="true">
+          <div class="work-grid-header">
+            <span class="font-spacing-small">Project</span>
+            <span class="font-spacing-small">Context</span>
+            <span class="font-spacing-small">Location</span>
+            <span class="font-spacing-small">Type</span>
+            <span class="font-spacing-small">Year</span>
+          </div>
+        </div>
+
+        <div class="content work-list">
+          {
+            resolvedWork.map(
+              (item) =>
+                item.resolvedThumbnail && (
+                  <div
+                    class="item work-item"
+                    data-type={JSON.stringify(item.type)}
+                  >
+                    <WorkWrapper
+                      slug={item.slug}
+                      start={item.start}
+                      title={item.title}
+                      type={item.type}
+                      src={item.resolvedThumbnail}
+                      end={item.end}
+                      ongoing={item.ongoing}
+                      location={item.location}
+                      context={item.context}
+                    />
+                  </div>
+                ),
+            )
+          }
+        </div>
+      </div>
+
+      <WorkPreview />
+    </div>
+  </Wrapper>
+</section>
+
+<style lang="scss">
+  .archive-container {
+    display: flex;
+    gap: var(--space-xl);
+    align-items: flex-start;
+    position: relative;
+  }
+  .list-side {
+    flex: 1;
+  }
+  .table-head {
+    display: none;
+    @media (min-width: 1000px) {
+      display: block;
+    }
+  }
+  .work-grid-header {
+    display: grid;
+    padding: 0 var(--space-xs);
+    grid-template-columns: 2.5fr 1fr 1fr 0.8fr 0.7fr;
+    gap: var(--space-l);
+    padding-bottom: 12px;
+
+    span:nth-child(4),
+    span:nth-child(5) {
+      text-align: right;
+    }
+  }
+  .work-item {
+    transition: opacity 0.4s ease;
+    &.hidden {
+      display: none;
+    }
+  }
+</style>
+<script>
+  function initArchive() {
+    const filters = document.querySelectorAll('.filter-btn');
+    const items = document.querySelectorAll('.work-item') as NodeListOf<HTMLElement>;
+    const inspectorImg = document.getElementById('inspector-img') as HTMLImageElement;
+    const viewfinder = document.getElementById('viewfinder');
+    const rows = document.querySelectorAll('.work-item-row');
+
+    filters.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter');
+        
+        filters.forEach((f) => f.classList.remove('active'));
+        btn.classList.add('active');
+
+        items.forEach((item) => {
+          // 1. Get the raw data from the attribute
+          const rawType = item.getAttribute('data-type') || '[]';
+          const parsed = JSON.parse(rawType);
+
+          // 2. Normalize to an array and split any comma-separated strings
+          const typeArray = (Array.isArray(parsed) ? parsed : [parsed])
+            .flatMap(t => typeof t === 'string' ? t.split(',') : t)
+            .map(t => t.trim().toLowerCase());
+
+          // 3. Check if the active filter exists in our normalized array
+          if (filter === 'all' || typeArray.includes(filter?.toLowerCase())) {
+            item.classList.remove('hidden');
+          } else {
+            item.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // ... keeping your existing rows.forEach inspector logic below ...
+    rows.forEach((row) => {
+      row.addEventListener('mouseenter', () => {
+        const src = row.getAttribute('data-preview');
+        if (inspectorImg && src) {
+          inspectorImg.src = src;
+          inspectorImg.classList.add('active');
+          viewfinder?.classList.add('visible');
+        }
+      });
+      row.addEventListener('mouseleave', () => {
+        viewfinder?.classList.remove('visible');
+        inspectorImg.classList.remove('active');
+      });
+    });
+  }
+
+  initArchive();
+  document.addEventListener('astro:after-swap', initArchive);
+</script>

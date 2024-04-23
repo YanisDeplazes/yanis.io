@@ -1,0 +1,135 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  type: string | string[];
+  start: Date;
+  end?: Date;
+  ongoing?: boolean;
+  src: ImageMetadata;
+  location?: string | string[];
+  context?: string;
+}
+
+const { slug, title, type, start, end, ongoing, src, location, context } =
+  Astro.props;
+
+const displayLocation = Array.isArray(location)
+  ? location.join(' | ')
+  : location;
+const yearStart = start.getFullYear();
+const yearEnd = end?.getFullYear();
+
+const dateString = ongoing
+  ? `since ${yearStart}`
+  : yearEnd && yearEnd !== yearStart
+    ? `${yearStart} — ${yearEnd}`
+    : `${yearStart}`;
+
+const typeString = Array.isArray(type) ? type.join(', ') : type;
+---
+
+<div class="work-item-row" data-preview={src.src}>
+  <a href={`/work/${slug}`} class="work-link">
+    <div class="work-grid">
+      <div class="col title-col">
+        <h2 class="title title-font-bold font-size-6">{title}</h2>
+      </div>
+
+      <div class="col context-col">
+        <span class="mobile-label">Context</span>
+        <span class="meta-value font-spacing-small"
+          >{context || 'Independent'}</span
+        >
+      </div>
+
+      <div class="col location-col">
+        <span class="mobile-label">Location</span>
+        <span class="meta-value font-spacing-small"
+          >{displayLocation || 'Worldwide'}</span
+        >
+      </div>
+
+      <div class="col type-col">
+        <span class="mobile-label">Type</span>
+        <span class="meta-value font-spacing-small">{typeString}</span>
+      </div>
+
+      <div class="col date-col">
+        <span class="mobile-label">Year</span>
+        <span class="meta-value font-spacing-small">{dateString}</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<style lang="scss">
+  .work-item-row {
+    border-top: 1px solid rgba(255, 62, 0, 0.2);
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(255, 62, 0, 0.05);
+      .title,
+      .meta-value {
+        opacity: 1;
+      }
+    }
+  }
+
+  .work-link {
+    display: block;
+    padding-block: var(--space-s);
+    text-decoration: none;
+    color: #ff3e00; /* Primary brand color */
+  }
+
+  .work-grid {
+    display: grid;
+    padding: 0 var(--space-xs);
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xs) var(--space-m);
+    align-items: center;
+
+    @media (min-width: 1000px) {
+      grid-template-columns: 2.5fr 1fr 1fr 0.8fr 0.7fr;
+      gap: var(--space-l);
+    }
+  }
+
+  .col {
+    display: flex;
+    flex-direction: column;
+
+    &.title-col {
+      grid-column: 1 / -1;
+      @media (min-width: 1000px) {
+        grid-column: auto;
+      }
+    }
+  }
+
+  .mobile-label {
+    font-size: 8px;
+    text-transform: uppercase;
+    opacity: 0.4;
+    letter-spacing: 0.1em;
+    margin-bottom: 2px;
+    font-weight: bold;
+    @media (min-width: 1000px) {
+      display: none;
+    }
+  }
+
+  /* Right alignment for desktop ledger */
+  .date-col,
+  .type-col {
+    @media (min-width: 1000px) {
+      text-align: right;
+      .meta-value {
+        justify-content: flex-end;
+        display: flex;
+      }
+    }
+  }
+</style>

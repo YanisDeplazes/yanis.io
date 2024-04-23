@@ -1,0 +1,88 @@
+---
+// src/components/GalleryVideo.astro
+
+interface Props {
+  videoSrc: string;
+  posterSrc?: string;
+  alt?: string;
+  autoplay?: boolean;
+}
+const { videoSrc, posterSrc, alt, autoplay = false } = Astro.props;
+---
+
+<figure class:list={['video-container', { 'is-autoplay': autoplay }]}>
+  <video
+    preload={autoplay ? 'auto' : 'none'}
+    class="video-player"
+    poster={posterSrc}
+    disablepictureinpicture
+    autoplay={autoplay}
+    muted={autoplay}
+    loop={autoplay}
+    playsinline={autoplay}
+  >
+    <source src={videoSrc} type="video/mp4" />
+    {alt && <track kind="captions" label={`${alt}`} src="/empty.vtt" />}
+    Your browser does not support the video tag.
+  </video>
+
+  {/* Only show play button if NOT in autoplay mode */}
+  {!autoplay && <button class="play-button">▶</button>}
+</figure>
+
+<style lang="scss">
+  .video-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    object-fit: contain;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    margin: 0;
+    cursor: pointer;
+
+    &.is-autoplay {
+      cursor: zoom-in;
+    }
+
+    .video-player {
+      width: auto;
+      height: auto;
+      max-height: 70vh;
+      max-width: 100%;
+      transition: ease-in-out;
+      object-fit: cover;
+
+      &.playing {
+        max-height: 90vh;
+        width: auto;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    .play-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
+      color: var(--color-accent);
+      font-size: 40px;
+      padding: 15px 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+      opacity: 1;
+      border: 1px solid #d42d2da8;
+
+      &.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+  }
+</style>

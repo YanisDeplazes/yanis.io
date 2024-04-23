@@ -1,0 +1,19 @@
+---
+// src/pages/work/index.astro
+import Layout from '../../layouts/Layout.astro';
+import Image from '../../assets/images/default.png';
+import Work from '../../components/sections/Work.astro';
+
+const title = 'Work';
+const suffix = 'Yanis Deplazes';
+const description =
+  'Browse the full archive of work by Yanis Deplazes.';
+---
+
+<Layout
+  title={`${title} — ${suffix}`}
+  description={description}
+  imageSrc={Image.src}
+>
+  <Work />
+</Layout>

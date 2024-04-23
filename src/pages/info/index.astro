@@ -1,0 +1,113 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Image from '../../assets/images/default.png';
+import Description from '../../components/sections/Description.astro';
+
+const title = 'Info';
+const suffix = 'Yanis Deplazes';
+const description =
+  'Yanis Deplazes is a visual artist whose work spans various media and technologies, exploring the intersection of analog and digital.';
+---
+
+<Layout
+  title={`${title} — ${suffix}`}
+  description={description}
+  imageSrc={Image.src}
+>
+  <Description title="Info">
+    <p>
+      <b>Yanis Deplazes</b> is a visual artist whose work spans various media and
+      technologies, exploring the intersection of analog and digital. Currently,
+      they split their time between Switzerland and the Netherlands, working on projects
+      across Europe.
+    </p>
+    <p>
+      With a background in computer science that began in 2016, Yanis ventured
+      into photography in 2020. In 2023, they expanded their creative practice
+      to include analog mediums, blending both digital and analog techniques in
+      their work.
+    </p>
+    <p>
+      As a member of <a
+        href="https://www.instagram.com/stories/thick.collective/"
+        target="_blank">thick collective</a
+      >, Yanis collaborates with other creatives on a diverse range of projects,
+      while also working as a developer and designer at <a
+        href="http://binaryone.ch/"
+        target="_blank">BINARY one GmbH</a
+      >.
+    </p>
+    <p>
+      Their work focuses on exploring people, subcultures, and the powerful
+      stories that emerge from everyday moments through multimedia.
+    </p>
+    <p>
+      For inquiries or collaborations, Yanis can be reached via <a
+        href="mailto:yanisdeplazes@gmail.com"
+        target="_blank">email</a
+      > or <a href="https://www.instagram.com/yanisdeplazes/" target="_blank"
+        >Instagram</a
+      >.
+    </p>
+
+    <h2>Exhibitions</h2>
+    <ul class="no-list-style">
+      <li>
+        <strong>Nov 29, 2025</strong> - <em>FC Hyena</em>: Documentary Premiere, <i
+          >Amsterdam, Netherlands</i
+        >
+      </li>
+      <li>
+        <strong>Sep 26, 2025</strong> - <em>OT301</em>: ECHO Recordings and AOS, <i
+          >Amsterdam, Netherlands</i
+        >
+      </li>
+      <li>
+        <strong>May 16, 2025</strong> - <em>MA'DAM</em>: Disconnect, <i
+          >Amsterdam, Netherlands</i
+        >
+      </li>
+    </ul>
+      <h2>Publications</h2>
+    <ul class="no-list-style">
+      <li>
+        <strong>Zone Magazine</strong> - <a href="https://www.instagram.com/p/DIBbsrsom32/?next=%2Fdirect%2Ft%2F17844926996877027%2F&img_index=1" target="_blank">Open Call / ZONE 4</a>
+      </li>
+      <li>
+        <strong>SRF</strong> - <a href="https://www.srf.ch/news/schweiz/cybersecurity-statt-darknet-kraeftemessen-der-nachwuchshacker-in-morges" target="_blank">Kräftemessen der Nachwuchshacker in Morges</a>
+      </li>
+      <li>
+        <strong>Luzerner Zeitung</strong> - <a href="https://www.luzernerzeitung.ch/zentralschweiz/uri/altdorf-ein-tag-voller-kunst-musik-und-guter-vibes-msa-dayz-gehen-in-die-zweite-runde-ld.2655098" target="_blank">Ein Tag voller Kunst, Musik und guter «Vibes» – «MSA Dayz» gehen in die zweite Runde</a>
+      </li>
+      <li>
+        <strong>Urnerwochenblatt</strong> - <a href="https://www.urnerwochenblatt.ch/artikel/ein-urner-rappt-ueber-sein-bewegtes-leben" target="_blank">Ein Urner rappt über sein bewegtes Leben</a>
+      </li>
+    </ul>
+    <h2>Education</h2>
+    <ul>
+      <li>
+        <strong>2023 - present</strong> - <b
+          >Bachelor of Science in Computer Science, Digital Ideation</b
+        ><br />HSLU, LUCERNE UNIVERSITY OF APPLIED SCIENCES AND ARTS, <i
+          >Switzerland</i
+        >
+      </li>
+      <li>
+        <strong>Spring 2025</strong> - <b
+          >Internet of Things Program Abroad Semester</b
+        ><br />AMSTERDAM UNIVERSITY OF APPLIED SCIENCES, <i>Netherlands</i>
+      </li>
+      <li>
+        <strong>2018 - 2022</strong> - <b
+          >Mediamatics Technician EFZ with technical FVB</b
+        ><br />SBW NEUE MEDIEN, <i>Switzerland</i>
+      </li>
+    </ul>
+    
+  </Description>
+</Layout>
+<style lang="scss">
+  ul.no-list-style {
+    list-style: none !important;
+  }
+</style>

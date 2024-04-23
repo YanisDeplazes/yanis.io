@@ -1,0 +1,40 @@
+---
+const links = [
+  { name: 'Instagram', href: 'https://instagram.com/yanisdeplazes' },
+  { name: 'Vimeo', href: 'https://vimeo.com/yanisdeplazes' },
+  { name: 'GitHub', href: 'https://github.com/yanisdeplazes' },
+  { name: 'LinkedIn', href: 'https://www.linkedin.com/in/yanis-deplazes/' },
+];
+---
+
+<nav class="socials">
+  <ul class="list" id="desktopNav">
+    {
+      links.map(({ name, href }) => (
+        <li>
+          <a
+            href={href}
+            target="_blank"
+            class="link title-font font-size-6"
+          >
+            {name}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style lang="scss">
+  .socials {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--space-s);
+    }
+  }
+</style>

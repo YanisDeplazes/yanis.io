@@ -1,0 +1,87 @@
+---
+interface ProjectData {
+  title: string;
+  description: string;
+  start: Date;
+  end?: Date;
+  type: string[];
+  thumbnail: string;
+  selected: boolean;
+  ongoing: boolean;
+  gallery?: {
+    content?: { imageUrl?: string; alt?: string; videoUrl?: string }[];
+  };
+}
+
+interface Project {
+  id: string;
+  data: ProjectData;
+  body: string;
+  filePath: string;
+  digest: string;
+  rendered: {
+    html: string;
+    metadata: any;
+  };
+  collection: string;
+  slug: string;
+  render: () => Promise<any>;
+}
+
+import { getCollection, getEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Gallery from '../../components/sections/Gallery.astro';
+import Lightbox from '../../components/sections/Lightbox.astro';
+import Description from '../../components/sections/Description.astro';
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/**/*.{jpg,jpeg,png,webp}',
+);
+const resolveImage = async (url: string) => images[`/src/assets${url}`]?.();
+
+const { slug } = Astro.params;
+
+const loadProject = await getEntry('work', slug);
+
+if (!loadProject) {
+  throw new Error(`Project not found: ${slug}`);
+}
+
+const { title, description, thumbnail, end, type, ongoing, start, gallery } =
+  loadProject.data;
+
+const resolvedThumbnail: ImageMetadata | undefined = thumbnail
+  ? (await resolveImage(thumbnail))?.default
+  : undefined;
+
+const suffix = 'Yanis Deplazes';
+
+// Render project content
+const { Content } = await loadProject.render();
+
+// Generate static paths for all projects (slug-based)
+export async function getStaticPaths() {
+  const work = await getCollection('work');
+  return work.map((project) => ({
+    params: { slug: project.slug },
+  }));
+}
+---
+
+<Layout
+  title={`${title} — ${suffix}`}
+  description={description}
+  imageSrc={resolvedThumbnail?.src ?? '/assets/images/default.png'}>
+  <Description
+    title={title}
+    start={start}
+    end={end}
+    ongoing={ongoing}
+    type={type.join(', ')}
+  >
+    <Content />
+  </Description>
+
+  {gallery && <Gallery galleryData={gallery.content} />}
+  <Lightbox galleryData={gallery?.content} />
+</Layout>

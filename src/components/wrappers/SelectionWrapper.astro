@@ -1,0 +1,75 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  slug: string;
+  date: number;
+  title: string;
+  type: string;
+  src: ImageMetadata;
+  ongoing?: boolean;
+  caption?: string;
+}
+
+const { slug, date, title, type, src, ongoing = false } = Astro.props;
+---
+
+<div class="work">
+  <a href={`/work/${slug}`}>
+    <figure>
+      <Image src={src} alt={title} format="webp" loading="lazy" />
+      {title && <figcaption>{title}</figcaption>}
+    </figure>
+
+    <div class="overlay">
+      <div class="details">
+        <span>[{ongoing ? `${date} – Present` : date}]</span>
+        <span>[{type}]</span>
+      </div>
+      <h2
+        class="title title-font-bold font-size-4"
+      >
+        {title}
+      </h2>
+    </div>
+  </a>
+</div>
+
+<style lang="scss">
+  .work {
+    position: relative;
+    padding: var(--space-m) 0px;
+
+    figure {
+      margin: 0;
+
+      img {
+        aspect-ratio: 4 / 3;
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        transition: all 1.5s ease-in-out;
+      }
+
+      figcaption {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    }
+
+    .overlay {
+      opacity: 1;
+      transition: all 1.5s ease-in-out;
+      & .title {
+        margin: 0;
+      }
+    }
+  }
+</style>

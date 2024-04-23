@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Image from '../assets/images/default.png';
+import Selected from '../components/sections/Selected.astro';
+import Title from '../components/sections/Title.astro';
+import Video from '../assets/videos/hero.mp4';
+
+const title = 'Portfolio';
+const suffix = 'Yanis Deplazes';
+const description = 'Visual Artist from Switzerland - Exploring people through multimedia.';
+---
+
+<Layout
+  title={`${title} — ${suffix}`}
+  description={description}
+  imageSrc={Image.src}
+>
+  <Title video={Video} title={`${title}`} />
+  <Selected />
+</Layout>

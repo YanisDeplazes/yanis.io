@@ -1,0 +1,49 @@
+<div class="hamburger">
+  <span></span>
+  <span></span>
+</div>
+
+<style>
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 16px;
+    cursor: pointer;
+    z-index: 1;
+    position: relative;
+
+    @media (min-width: 1100px) {
+      display: none;
+    }
+
+    span {
+      display: block;
+      height: 2px;
+      background-color: var(--color-primary);
+      transition: all 0.3s ease;
+    }
+
+    &:hover span {
+      opacity: 0.7;
+    }
+    &.open {
+      span {
+        background-color: var(--color-project);
+
+        &:nth-child(1) {
+          transform: rotate(45deg);
+          position: relative;
+          top: 7px;
+        }
+
+        &:nth-child(2) {
+          transform: rotate(-45deg);
+          position: relative;
+          top: -7px;
+        }
+      }
+    }
+  }
+</style>

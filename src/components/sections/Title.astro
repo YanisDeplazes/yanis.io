@@ -1,0 +1,233 @@
+---
+import ImageWrapper from '../wrappers/ImageWrapper.astro';
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/**/*.{jpg,jpeg,png,webp}',
+);
+
+const resolveImage = async (url: string) => images[`/src/assets${url}`]?.();
+
+interface Props {
+  title: string;
+  thumbnail?: string;
+  video?: string;
+}
+
+const breakTitle = (
+  text: string,
+  maxLines = 3,
+  minNextWordLength = 5,
+): string => {
+  const words = text.split(' ');
+  if (words.length <= 1) return text;
+
+  const lines: string[] = [];
+  let currentLine = '';
+
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i];
+    const nextWord = words[i + 1];
+
+    currentLine += (currentLine ? ' ' : '') + word;
+
+    const isLast = i === words.length - 1;
+    const shouldBreak =
+      nextWord &&
+      nextWord.length >= minNextWordLength &&
+      lines.length < maxLines - 1;
+
+    if (shouldBreak || isLast) {
+      lines.push(currentLine);
+      currentLine = '';
+    }
+  }
+
+  if (currentLine && lines.length < maxLines) {
+    lines.push(currentLine);
+  }
+
+  return lines.join('<br>');
+};
+
+const { thumbnail, video, title } = Astro.props;
+
+let resolvedThumbnail;
+if (thumbnail) {
+  const resolved = await resolveImage(thumbnail);
+  resolvedThumbnail = resolved?.default; // Use the URL string directly
+}
+
+let resolvedVideo;
+if (video) {
+  resolvedVideo = video; // If video is passed as a string (URL), assign directly
+}
+---
+
+<section
+  class={`title ${resolvedThumbnail ? 'has-thumbnail' : ''} ${resolvedVideo ? 'has-video' : ''}`}
+  data-background="var(--color-dark)"
+>
+  {
+    resolvedThumbnail && (
+      <div class="thumbnail">
+        <ImageWrapper
+          src={resolvedThumbnail}
+          alt="Yanis Deplazes"
+          caption="Yanis"
+        />
+      </div>
+    )
+  }
+
+  {
+    resolvedVideo && (
+      <div class="video-container">
+        <video preload="none" class="video" autoplay muted loop playsinline>
+          <source src={resolvedVideo} type="video/mp4" />
+          <track
+            kind="captions"
+            srclang="en"
+            label="Yanis Deplazes - Video"
+            src="/empty.vtt"
+          />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    )
+  }
+
+  <div class="title-container">
+    <div class="scaling-box">
+      <h1 id="auto-heading">
+        <span
+          class="title-font-extra-bold"
+          set:html={breakTitle(title, 3, 5)}
+        />
+      </h1>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  .title {
+    height: 100vh;
+    padding-top: 0;
+    padding-bottom: 0;
+
+    .thumbnail {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .video-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .video {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+
+    .title-container {
+      position: absolute;
+      width: 100%;
+      height: auto;
+      overflow: hidden;
+      top: 92px;
+      left: 0;
+      transition:
+        transform 0.05s linear,
+        top 0.05s linear;
+
+      .scaling-box {
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .scaling-box h1 {
+        white-space: nowrap;
+        display: inline-block;
+        margin: 0;
+        transform-origin: left center;
+        line-height: 1;
+        text-align: center;
+      }
+    }
+
+    &.has-thumbnail {
+      height: 100vh;
+      padding-bottom: 50vh;
+
+      .title-container {
+        top: 100%;
+        transform: translateY(-100%);
+      }
+    }
+
+    &.has-video {
+      .title-container {
+        top: 100%;
+        transform: translateY(-100%);
+        h1 {
+          bottom: 3vw;
+          position: absolute;
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+  // ResizeObserver-based responsive heading scaler
+  function setupHeadingScaler() {
+    const heading = document.getElementById('auto-heading');
+    if (!heading) return;
+
+    const box = heading.parentElement;
+    if (!box) return;
+
+    const resize = () => {
+      // Reset scale to measure original width
+      heading.style.transform = 'scale(1)';
+      heading.style.display = 'inline-block';
+
+      const availableWidth = box.clientWidth;
+      const naturalWidth = heading.scrollWidth;
+
+      if (naturalWidth === 0) return;
+
+      const scale = availableWidth / naturalWidth;
+
+      heading.style.transform = `scale(${scale})`;
+
+      const naturalHeight = heading.getBoundingClientRect().height;
+      box.style.height = `${naturalHeight * scale}px`;
+    };
+
+    // Observe changes to the container width
+    const observer = new ResizeObserver(resize);
+    observer.observe(box);
+
+    // Also observe heading content changes (if dynamic)
+    observer.observe(heading);
+
+    // Run once on initial load
+    resize();
+  }
+
+  window.addEventListener('DOMContentLoaded', setupHeadingScaler);
+</script>

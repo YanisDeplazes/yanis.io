@@ -1,0 +1,104 @@
+---
+import Wrapper from '../../layouts/Wrapper.astro';
+import Info from './Info.astro';
+
+interface Props {
+  title: string;
+  start?: Date;
+  end?: Date;
+  ongoing?: boolean;
+  type?: string;
+}
+
+const { title, start, end, ongoing, type } = Astro.props;
+---
+
+<section class="project-title">
+  <Wrapper>
+    <div class="container">
+      <!-- Title -->
+      <div class="title-container">
+        <h1 class="title title-font-bold font-size-3" set:html={title} />
+      </div>
+
+      <!-- Content Section -->
+      <div class="content">
+        <Info start={start} end={end} ongoing={ongoing} type={type} />
+        <slot />
+      </div>
+    </div>
+  </Wrapper>
+</section>
+
+<style lang="scss" is:global>
+  .project-title {
+    padding-top: 0;
+    padding-bottom: 0;
+
+    .container {
+      position: relative;
+      padding-bottom: var(--space-s);
+      @media (min-width: 1000px) {
+        display: flex;
+        justify-items: center;
+        gap: var(--space-3xl);
+        row-gap: var(--space-s);
+      }
+
+      &::after {
+        content: '';
+        background-color: var(--color-primary);
+        height: 1px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        opacity: 0.5;
+      }
+      .title-container {
+        width: 100%;
+        .title {
+          margin-block-start: var(--space-3xs);
+        }
+        @media (min-width: 1000px) {
+          width: 50%;
+        }
+      }
+      .content {
+        width: 100%;
+
+        @media (min-width: 1000px) {
+          width: 50%;
+        }
+        .info {
+          margin-block-end: 10px;
+        }
+        a {
+          text-decoration: underline;
+          transition: all 0.2s ease-in-out;
+          &:hover {
+            opacity: 0.8;
+          }
+        }
+        ul {
+          margin: 1em 0;
+          padding-left: 0px;
+          list-style-position: inside;
+          list-style-position: initial !important;
+        }
+        li {
+          margin: 0.5em 0;
+        }
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+          font-family: 'Syne', sans-serif;
+          font-weight: 700;
+          font-style: normal;
+        }
+      }
+    }
+  }
+</style>

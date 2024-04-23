@@ -1,0 +1,132 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  imageSrc: any;
+  pageColor?: string;
+}
+
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+
+import '../styles/main.scss';
+
+const baseUrl = 'https://yanis.io';
+const currentPath = Astro.url.pathname;
+const url = `${baseUrl}${currentPath}`;
+const pageColor = Astro.props.pageColor || 'var(--color-section-1)';
+
+const {
+  title = 'Yanis Deplazes',
+  description = 'My Portfolio',
+  imageSrc = 'default.png',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Canonical Link -->
+    <link rel="canonical" href={url} />
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:url" content={url} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={`${imageSrc}`} />
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="twitter:domain" content="yanis.io" />
+    <meta property="twitter:url" content={url} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${imageSrc}`} />
+
+    <!-- Favicon -->
+
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="yanis.io" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta name="theme-color" content="#000000" />
+  </head>
+  <body style={`--color-project: ${pageColor}; opacity: 0`}>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <script type="module">
+      function revealOnScroll(options = {}) {
+        const {
+          selector = '.reveal-on-scroll',
+          threshold = 0.2,
+          rootMargin = '0px',
+          once = true,
+          revealedClass = 'revealed',
+        } = options;
+
+        const observer = new IntersectionObserver(
+          (entries, obs) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add(revealedClass);
+                if (once) obs.unobserve(entry.target);
+              }
+            });
+          },
+          {
+            threshold,
+            rootMargin,
+          },
+        );
+
+        document
+          .querySelectorAll(selector)
+          .forEach((el) => observer.observe(el));
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          revealOnScroll();
+        }, 1000);
+      });
+    </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const navigation = document.querySelector('header .list');
+        const hamburger = document.querySelector('header .hamburger');
+
+        if (!navigation || !hamburger) return;
+
+        hamburger.addEventListener('click', () => {
+          navigation.classList.toggle('open');
+          hamburger.classList.toggle('open');
+        });
+      });
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        window.onload = () => {
+          const bodyElement = document.querySelector('body') as HTMLElement;
+          if (bodyElement) {
+            bodyElement.style.opacity = '1';
+          }
+        };
+      });
+    </script>
+  </body>
+</html>

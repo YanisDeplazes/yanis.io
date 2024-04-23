@@ -1,0 +1,31 @@
+---
+import Wrapper from '../layouts/Wrapper.astro';
+import Socials from '../components/footer/Socials.astro';
+import Copyright from '../components/footer/Copyright.astro';
+---
+
+<footer>
+  <Wrapper>
+    <div class="container">
+      <Copyright />
+      <Socials />
+    </div>
+    <style lang="scss">
+      footer {
+        width: 100vw;
+        padding: 20px 0px;
+        border-top: 1px solid var(--color-primary);
+        .container {
+          display: flex;
+          flex-direction: column-reverse;
+          align-items: center;
+
+          @media (min-width: 755px) {
+            flex-direction: row;
+            justify-content: space-between;
+          }
+        }
+      }
+    </style>
+  </Wrapper>
+</footer>

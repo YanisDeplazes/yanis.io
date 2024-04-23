@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Sitemap: https://yanis.io/sitemap-0.xml
+Sitemap: https://yanis.io/media-sitemap.xml

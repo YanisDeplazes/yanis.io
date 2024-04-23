@@ -1,0 +1,27 @@
+.reveal-on-scroll {
+  opacity: 1; // keep the container stable and visible
+
+  figure {
+    opacity: 0;
+  }
+
+
+  &.revealed {
+    figure {
+      animation: imgScaleFadeIn 1s ease-in-out forwards;
+    }
+     
+  }
+}
+
+@keyframes imgScaleFadeIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

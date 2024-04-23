@@ -1,0 +1,122 @@
+---
+import { Image } from 'astro:assets';
+import Info from '../sections/Info.astro';
+
+interface Props {
+  slug: string;
+  start: Date;
+  title: string;
+  type: string;
+  end?: Date;
+  ongoing?: boolean;
+  caption?: string;
+  src: ImageMetadata;
+}
+
+const { slug, start, title, end, type, src, ongoing = false } = Astro.props;
+---
+
+<div class="work">
+  <a href={`/work/${slug}`}>
+    <figure>
+      <Image src={src} alt={title} format="webp" loading="lazy" />
+      {title && <figcaption>{title}</figcaption>}
+    </figure>
+    <div class="overlay">
+      <Info start={start} end={end} ongoing={ongoing} type={type} />
+      <h2 class="title title-font-bold font-size-4">
+        {title}
+      </h2>
+    </div>
+  </a>
+</div>
+
+<style lang="scss">
+  .work {
+    position: relative;
+    padding: 0px;
+    aspect-ratio: 1 / 1;
+    height: 100%;
+
+    figure {
+      margin: 0;
+      height: 100%;
+      position: relative;
+      background-color: var(--color-primary);
+      &::before {
+        transition: all 0.4s ease-in-out;
+        box-sizing: border-box;
+        content: ' ';
+        height: 100%;
+        left: 0;
+        margin: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1;
+        background-color: var(--color-dark);
+        opacity: 0.5;
+        @media (min-width: 755px) {
+          opacity: 0;
+        }
+      }
+      img {
+        width: auto;
+        object-fit: cover;
+        height: 100%;
+        transition: all 0.4s ease-in-out;
+        width: 100%;
+      }
+
+      figcaption {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    }
+
+    .overlay {
+      transition: all 0.4s ease-in-out;
+      position: absolute;
+      top: 0%;
+      left: 0%;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3xs);
+      filter: brightness(1.1);
+      @media (min-width: 755px) {
+        opacity: 0;
+      }
+
+      & .title {
+        margin: 0;
+        max-width: 90%;
+        word-break: normal;
+      }
+    }
+    &:hover {
+      figure::before {
+        opacity: 0.5;
+      }
+      .overlay {
+        opacity: 1;
+      }
+      img {
+        transform: scale(0.95);
+      }
+    }
+  }
+</style>

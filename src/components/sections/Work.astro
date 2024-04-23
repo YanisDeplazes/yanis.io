@@ -1,0 +1,53 @@
+---
+import Wrapper from '../../layouts/Wrapper.astro';
+import WorkWrapper from '../wrappers/WorkWrapper.astro';
+import { getSortedWork } from '../../utils/workUtils.ts';
+
+// Get all work (ongoing and finished)
+const allWork = await getSortedWork((data) => data.ongoing !== undefined); // Get all work (both ongoing and finished)
+
+// Separate ongoing and finished work
+const ongoingWork = allWork.filter((item) => item.ongoing === true);
+const finishedWork = allWork.filter((item) => item.ongoing === false);
+
+// Combine the lists, ongoing first
+const resolvedWork = [...ongoingWork, ...finishedWork];
+---
+
+<section class={`work ${Astro.props.className || ''}`}>
+  <Wrapper>
+    <div class={`content`}>
+      {
+        resolvedWork.map(
+          (item) =>
+            item.resolvedThumbnail && (
+              <div class="item">
+                <WorkWrapper
+                  slug={item.slug}
+                  start={item.start}
+                  title={item.title}
+                  type={item.type}
+                  src={item.resolvedThumbnail}
+                  end={item.end}
+                  ongoing={item.ongoing}
+                />
+              </div>
+            ),
+        )
+      }
+    </div>
+  </Wrapper>
+</section>
+
+<style lang="scss">
+  .work .content {
+    display: flex;
+    flex-direction: column;
+    .item {
+      border-top: 1px solid var(--color-primary);
+      &:nth-last-child(1) {
+        border-bottom: 1px solid var(--color-primary);
+      }
+    }
+  }
+</style>

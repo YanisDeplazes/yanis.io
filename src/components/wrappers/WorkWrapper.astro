@@ -1,0 +1,131 @@
+---
+import { Image } from 'astro:assets';
+import Info from '../sections/Info.astro';
+
+interface Props {
+  slug: string;
+  start: Date;
+  title: string;
+  type: string;
+  end?: Date;
+  ongoing?: boolean;
+  caption?: string;
+  src: ImageMetadata;
+}
+
+const { slug, start, end, title, type, src, ongoing = false } = Astro.props;
+---
+
+<div class="work">
+  <a href={`/work/${slug}`} class="work-link">
+    <div class="overlay">
+      <h2 class="title title-font-bold font-size-4">
+        {title}
+      </h2>
+      <Info start={start} end={end} ongoing={ongoing} type={type} />
+    </div>
+
+    <figure class="floating-image">
+      <Image src={src} alt={title} format="webp" loading="lazy" />
+    </figure>
+  </a>
+</div>
+<script>
+  const works = document.querySelectorAll<HTMLElement>('.work');
+
+  // Check if the device supports mouse input
+  const isMouseDevice = window.matchMedia('(pointer: fine)').matches;
+
+  works.forEach((work) => {
+    const img = work.querySelector<HTMLElement>('.floating-image');
+    const link = work.querySelector<HTMLElement>('.work-link');
+    if (!img || !link) return;
+
+    const rect = link.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    if (isMouseDevice) {
+      work.addEventListener('mousemove', (e: MouseEvent) => {
+        // Adjust for scroll offset
+        const offsetX = (e.clientX + window.scrollX - centerX) * 0.2;
+        const offsetY = (e.clientY + window.scrollY - centerY) * 0.2;
+        img.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(1.05)`;
+      });
+
+      work.addEventListener('mouseenter', () => {
+        img.style.opacity = '1';
+      });
+
+      work.addEventListener('mouseleave', () => {
+        img.style.opacity = '0';
+        img.style.transform = 'translate(-50%, -50%) scale(1)';
+      });
+    }
+  });
+</script>
+
+<style lang="scss">
+  .work {
+    position: relative;
+
+    &:hover {
+      .overlay .title,
+      .overlay .details {
+        opacity: 0.7;
+      }
+    }
+
+    .overlay {
+      opacity: 1;
+      transition: opacity 1.5s ease-in-out;
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-m);
+      row-gap: var(--space-3xs);
+      flex-direction: column-reverse;
+      margin-block-start: var(--space-xs);
+      margin-block-end: var(--space-2xs);
+
+      .title {
+        margin-block: 0;
+        @media (min-width: 1000px) {
+          margin-block: var(--space-2xs);
+        }
+      }
+      @media (min-width: 1000px) {
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .details {
+        transition: all 0.2s ease-in-out;
+        text-align: right;
+      }
+    }
+
+    .floating-image {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300px;
+      height: 200px;
+      pointer-events: none;
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0;
+      transition:
+        opacity 0.5s ease,
+        transform 0.2s ease;
+      z-index: 10;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        will-change: transform;
+      }
+    }
+  }
+</style>

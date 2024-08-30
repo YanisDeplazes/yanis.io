@@ -1,0 +1,33 @@
+---
+import Wrapper from '../layouts/Wrapper.astro';
+---
+
+<header>
+  <Wrapper>
+    <div class="container">
+      <h1>Yanis</h1>
+      <a href="">Menu</a>
+    </div>
+  </Wrapper>
+</header>
+
+<style lang="scss">
+  header {
+    width: 100vw;
+    color: white;
+    position: fixed;
+    z-index: 100;
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid white;
+    }
+
+    a {
+      color: white;
+      text-decoration: none;
+    }
+  }
+</style>

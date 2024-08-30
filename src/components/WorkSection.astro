@@ -1,0 +1,207 @@
+---
+import Wrapper from '../layouts/Wrapper.astro';
+import Background from '../components/Background.astro';
+
+const projects = [
+  {
+    title: 'Wetter AR Ertweiterung',
+    type: 'Three.js',
+    videoUrl: 'images/wolken.gif',
+    imageUrl: 'images/wolken.jpg',
+  },
+  {
+    title: 'Yanis Film Diary',
+    type: 'Web',
+    videoUrl: 'images/film.gif',
+    imageUrl: 'images/film.png',
+  },
+  {
+    title: 'AMENRA Diaken',
+    type: 'Generative Art',
+    videoUrl: 'images/amenra.gif',
+    imageUrl: 'images/amenra.jpg',
+  },
+  {
+    title: 'Tilted',
+    type: 'Game Development',
+    videoUrl: 'images/tilted.gif',
+    imageUrl: 'images/tilted.jpg',
+  },
+  {
+    title: 'HSCL Redesign',
+    type: 'UX / UI',
+    videoUrl: 'images/hscl.gif',
+    imageUrl: 'images/hscl.png',
+  },
+];
+---
+
+<section id="section_to-pin" class="work">
+  <div id="section_pin">
+    <Wrapper>
+      <div class="projects">
+        {
+          projects.map((project) => (
+            <div class="project" data-video-url={project.videoUrl}>
+              <div class="container">
+                <h3 class="title">{project.title}</h3>
+                <span class="type">{project.type}</span>
+              </div>
+              <div class="background">
+                <img src={project.imageUrl} alt="" />
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </Wrapper>
+  </div>
+  <Background />
+</section>
+
+<style lang="scss">
+  .work {
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    #section_pin {
+      position: relative;
+      z-index: 1;
+    }
+
+    .title {
+      position: relative;
+      height: 60px;
+      h2 {
+        position: fixed;
+      }
+    }
+
+    .projects {
+      display: flex;
+      width: max-content;
+      gap: 15px;
+      flex-wrap: nowrap;
+      padding-right: var(--padding-side);
+
+      .project {
+        border: 1px solid white;
+        height: 300px;
+        padding: 15px;
+        color: white;
+        width: 600px;
+        position: relative;
+        overflow: hidden;
+
+        .background {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          transform: scale(1.2);
+          z-index: 0;
+          opacity: 0;
+          transition: all 0.4s ease;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        &:hover {
+          .background {
+            transform: scale(1);
+            filter: brightness(0.6);
+            opacity: 1;
+          }
+
+          .type {
+            font-size: 1em;
+            flex: 1;
+          }
+        }
+
+        .container {
+          display: flex;
+          flex-direction: column-reverse;
+          position: relative;
+          z-index: 1;
+          height: 100%;
+        }
+
+        .title {
+          font-size: 4em;
+          font-weight: bold;
+          text-transform: uppercase;
+          margin: 0;
+        }
+
+        .type {
+          font-size: 1em;
+          flex: 0;
+          transition: all 0.2s ease;
+        }
+      }
+    }
+    .transition {
+      width: 100vw;
+      height: 100vh;
+      background: green;
+    }
+  }
+</style>
+
+<style lang="scss" is:global>
+  section.work {
+    .background {
+      .video {
+        width: 100%;
+        height: 100%;
+        background-repeat: no-repeat;
+        position: absolute;
+        background-size: cover;
+        z-index: 0;
+        opacity: 0;
+        scale: 1;
+        transition: all 0.4s ease;
+        &.visible {
+          opacity: 1;
+          scale: 1.3;
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+  // Background hover effects
+  const projects = document.querySelectorAll(
+    '.project',
+  ) as NodeListOf<HTMLElement>;
+
+  let background = document.querySelector(
+    'section.work .background-container',
+  ) as HTMLElement;
+
+  let gif = document.createElement('div');
+  gif.className = 'video';
+  background.appendChild(gif);
+
+  projects.forEach((project) => {
+    project.addEventListener('mouseover', () => {
+      const videoUrl = (project as HTMLElement).dataset.videoUrl;
+      if (videoUrl) {
+        gif.style.backgroundImage = `url(${videoUrl})`;
+        gif.classList.add('visible');
+      }
+    });
+    project.addEventListener('mouseout', () => {
+      gif.classList.remove('visible');
+    });
+  });
+</script>

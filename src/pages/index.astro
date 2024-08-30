@@ -1,0 +1,121 @@
+---
+import Layout from '../layouts/Layout.astro';
+import WelcomeSection from '../components/WelcomeSection.astro';
+import AboutSection from '../components/AboutSection.astro';
+import WorkSection from '../components/WorkSection.astro';
+import GallerySection from '../components/GallerySection.astro';
+import ContactSection from '../components/ContactSection.astro';
+---
+
+<Layout title="Welcome to Astro.">
+  <WelcomeSection />
+  <AboutSection />
+  <WorkSection />
+  <GallerySection />
+  <ContactSection />
+</Layout>
+
+<style lang="scss">
+  html {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none;
+    --padding-side: 40px;
+  }
+
+  html body::-webkit-scrollbar {
+    display: none;
+  }
+
+  // browser
+  html {
+    // firefox
+    scrollbar-width: none !important;
+
+    // IE, Edge
+    -ms-overflow-style: none;
+  }
+
+  html body::-webkit-scrollbar {
+    display: none;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import Lenis from '@studio-freight/lenis';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initialiseApp();
+
+    function initialiseApp() {
+      initialiseGSAPScrollTriggerPinningHorizontal();
+      initialiseLenisScroll();
+    }
+
+    function initialiseGSAPScrollTriggerPinningHorizontal() {
+      const sectionPin = document.querySelector('#section_pin') as HTMLElement;
+      const sectionToPin = document.querySelector(
+        '#section_to-pin',
+      ) as HTMLElement;
+
+      if (!sectionPin || !sectionToPin) return;
+
+      // Horizontal scroll animation
+      const containerAnimation = gsap.to(sectionPin, {
+        scrollTrigger: {
+          trigger: sectionToPin,
+          start: 'top top',
+          end: () => '+=' + sectionPin.offsetWidth, // End after scrolling full width
+          pin: true,
+          scrub: true,
+          anticipatePin: 1,
+        },
+        x: () =>
+          -(sectionPin.scrollWidth - document.documentElement.clientWidth) +
+          'px',
+        ease: 'none',
+      });
+    }
+
+    function initialiseLenisScroll() {
+      const lenis = new Lenis({
+        smoothWheel: true,
+        duration: 1.2,
+      });
+
+      lenis.on('scroll', ScrollTrigger.update);
+
+      gsap.ticker.add((time: number) => {
+        lenis.raf(time * 1000);
+      });
+
+      gsap.ticker.lagSmoothing(0);
+    }
+  });
+</script>
+
+<style lang="scss" is:global>
+  section {
+    min-height: 100vh;
+    width: 100vw;
+    position: relative;
+    overflow: hidden;
+    color: white;
+
+    .wrapper {
+      padding-top: 200px;
+      padding-bottom: 75px;
+      position: relative;
+      z-index: 1;
+    }
+  }
+</style>

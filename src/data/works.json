@@ -1,0 +1,89 @@
+{
+  "selected": [
+    {
+      "title": "Real Time 3D Cloud Coverage Visualizer",
+      "type": "Three.js",
+      "videoUrl": "images/projects/wolken.gif",
+      "imageUrl": "images/projects/wolken.jpg",
+      "link": "https://github.com/YanisDeplazes/Real-Time-3D-Cloud-Coverage-Visualizer"
+    },
+    {
+      "title": "Yanis Film Diary",
+      "type": "Web",
+      "videoUrl": "images/projects/film.gif",
+      "imageUrl": "images/projects/film.png",
+      "link": "https://github.com/YanisDeplazes/Yanis-Film-Diary"
+    },
+    {
+      "title": "AMENRA - Diaken",
+      "type": "Generative Art",
+      "videoUrl": "images/projects/amenra.gif",
+      "imageUrl": "images/projects/amenra.jpg",
+      "link": "https://www.behance.net/gallery/198633655/AMENRA-Diaken-(RUNWAY)"
+    },
+    {
+      "title": "Tilted",
+      "type": "Game Development",
+      "videoUrl": "images/projects/tilted.gif",
+      "imageUrl": "images/projects/tilted.jpg",
+      "link": "https://www.behance.net/gallery/194269613/tilted-(Unity-Game)"
+    },
+    {
+      "title": "HSCL Redesign",
+      "type": "UX / UI",
+      "videoUrl": "images/projects/hscl.gif",
+      "imageUrl": "images/projects/hscl.png",
+      "link": "https://www.behance.net/gallery/194721225/HSCL-UX"
+    }
+  ],
+  "works": [
+    {
+      "title": "Analyrics",
+      "year": 2024,
+      "types": ["Web"],
+      "link": "https://github.com/YanisDeplazes/Analyrics"
+    },
+    {
+      "title": "Yanis Film Diary",
+      "year": 2024,
+      "types": ["Web"],
+      "link": "https://github.com/YanisDeplazes/Yanis-Film-Diary"
+    },
+    {
+      "title": "Real Time 3D Cloud Coverage Visualizer",
+      "year": 2024,
+      "types": ["Web"],
+      "link": "https://github.com/YanisDeplazes/Real-Time-3D-Cloud-Coverage-Visualizer"
+    },
+    {
+      "title": "AMENRA - Diaken",
+      "year": 2024,
+      "types": ["Generative Art"],
+      "link": "https://www.behance.net/gallery/198633655/AMENRA-Diaken-(RUNWAY)"
+    },
+    {
+      "title": "HSCL Redesign",
+      "year": 2023,
+      "types": ["UX / UI"],
+      "link": "https://www.behance.net/gallery/194721225/HSCL-UX"
+    },
+    {
+      "title": "tilted",
+      "year": 2023,
+      "types": ["Game Development"],
+      "link": "https://www.behance.net/gallery/194269613/tilted-(Unity-Game)"
+    },
+    {
+      "title": "Nuka-Cola - Fallout 3D Concept",
+      "year": 2023,
+      "types": ["3D Design"],
+      "link": "https://www.behance.net/gallery/194733063/Nuka-Cola-Fallout-3D-Concept"
+    },
+    {
+      "title": "Print & Web Portfolio",
+      "year": 2020,
+      "types": ["Design", "Web"],
+      "link": "https://www.behance.net/gallery/103129101/Print-Web-Portfolio-Yanis-Deplazes-2020"
+    }
+  ]
+}

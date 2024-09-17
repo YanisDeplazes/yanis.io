@@ -1,0 +1,50 @@
+---
+import Wrapper from '../layouts/Wrapper.astro';
+---
+
+<footer>
+  <Wrapper>
+    <div class="container">
+      <div class="copyright font-size-small color-light">©2024 Yanis</div>
+      <div class="links font-size-small color-white">
+        <!-- <a href="/privacy" class="link color-white">Privacy Policy</a>
+        <a href="/cookie-preferences" class="link color-white"
+          >Cookie preferences</a
+        >
+        <a href="/credits" class="link color-white">Credits</a> -->
+      </div>
+    </div>
+  </Wrapper>
+  <!-- Example: https://b2r.ca/ -->
+</footer>
+<style lang="scss">
+  footer {
+    width: 100vw;
+    color: #828282 !important;
+    border-top: 1px solid #8e8e8e;
+    padding: 20px 0px;
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      max-width: 1500px;
+      margin: auto;
+
+      .copyright {
+        text-align: center;
+      }
+
+      .links {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        a {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+</style>

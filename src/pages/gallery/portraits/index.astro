@@ -1,0 +1,15 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Gallery from '../../../components/sections/Gallery.astro';
+import ContactSection from '../../../components/sections/Contact.astro';
+import { portraits } from '../../../data/gallery.json'; // Import the data
+---
+
+<Layout
+  title="yanis.io - Gallery - Portraits"
+  description="Artistic and intimate portraits that tell a story."
+  image="/seo/portraits.jpg"
+>
+  <Gallery galleryData={portraits.content} title="Gallery - Portraits" />
+  <ContactSection />
+</Layout>

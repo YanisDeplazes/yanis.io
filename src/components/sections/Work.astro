@@ -1,0 +1,73 @@
+---
+import Wrapper from '../../layouts/Wrapper.astro';
+import WorkComponent from '../Work.astro';
+import GalleryNavigation from '../GalleryNavigation.astro';
+
+type WorkItem = {
+  title: string;
+  types: string;
+  year: number;
+};
+
+const { title, description, data } = Astro.props;
+const isGalleryPage = Astro.url.pathname.includes('gallery');
+const isEventPage = Astro.url.pathname.includes('/gallery/event');
+
+// Function to generate the event link dynamically
+const generateLink = (work: WorkItem & { link?: string }) =>
+  work.link
+    ? work.link
+    : isEventPage
+      ? `/gallery/event/${work.title.toLowerCase().replace(/\s+/g, '-')}`
+      : null;
+---
+
+<section class="work">
+  <Wrapper>
+    <div class="title">
+      <h1 class="fahkwang-bold font-size-1 color-white text-center">
+        {title}
+      </h1>
+      {
+        isGalleryPage ? (
+          <GalleryNavigation />
+        ) : (
+          <p class="font-size-p">{description}</p>
+        )
+      }
+    </div>
+    <div class="works">
+      {
+        data?.map((work: WorkItem) => (
+          <WorkComponent
+            title={work.title}
+            types={work.types}
+            link={generateLink(work)}
+            year={work.year}
+          />
+        ))
+      }
+    </div>
+  </Wrapper>
+</section>
+
+<style lang="scss">
+  .work {
+    .title {
+      h1 {
+        margin-block-start: 0;
+        margin-block-end: 0;
+      }
+      p {
+        margin-block-end: 150px;
+        text-align: center;
+      }
+    }
+    .works {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2xs);
+      width: 100%;
+    }
+  }
+</style>

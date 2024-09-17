@@ -1,0 +1,515 @@
+---
+import Wrapper from '../../layouts/Wrapper.astro';
+import GalleryNavigation from '../GalleryNavigation.astro';
+
+// Get the passed gallery data
+const { galleryData, title, year } = Astro.props;
+---
+
+<section class="gallery">
+  <Wrapper>
+    <div class="title">
+      {
+        year && (
+          <p class="text-center">
+            <span class="button font-size-small">{year}</span>
+          </p>
+        )
+      }
+      <h1 class="fahkwang-bold font-size-1 color-white text-center">{title}</h1>
+
+      <GalleryNavigation />
+    </div>
+
+    <div class="content masonry">
+      {
+        galleryData.map((item: any) => (
+          <div class="item">
+            {item.videoUrl ? (
+              <div class="video-container">
+                <video class="video-player" poster={item.thumbnail}>
+                  <source src={item.videoUrl} type="video/mp4" />
+                  {item.videoAlt && (
+                    <track
+                      kind="captions"
+                      label={item.videoAlt + ' - Yanis Deplazes'}
+                    />
+                  )}
+                  Your browser does not support the video tag.
+                </video>
+                <button class="play-button">▶</button>
+              </div>
+            ) : (
+              <img
+                src={item.imageUrl}
+                alt={item.imageAlt + ' - Yanis Deplazes'}
+              />
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </Wrapper>
+</section>
+<div id="lightbox" class="lightbox">
+  <span class="close">&times;</span>
+  <button id="prev-button" class="nav-button left">&larr;</button>
+  <img class="lightbox-content" id="lightbox-img" />
+  <video class="lightbox-video" id="lightbox-video" controls></video>
+  <button id="next-button" class="nav-button right">&rarr;</button>
+</div>
+
+<style lang="scss">
+  .gallery {
+    .title {
+      h1 {
+        margin-block-start: 0;
+        margin-block-end: 0;
+      }
+    }
+
+    .masonry {
+      opacity: 0;
+      position: relative;
+      visibility: hidden;
+
+      @media screen and (max-width: 754px) {
+        height: unset !important;
+        display: flex;
+        flex-direction: column;
+        gap: 5vw;
+      }
+
+      .item {
+        position: relative;
+        height: auto;
+        width: 100%;
+        @media screen and (max-width: 754px) {
+          transform: translateY(0) !important;
+        }
+        @media screen and (min-width: 754px) {
+          position: absolute;
+          max-width: calc(50% - var(--space-m));
+        }
+
+        img,
+        video {
+          width: 100%; /* Ensure items take up the full column width */
+          height: 100%;
+          opacity: 1;
+          transform: scale(0.8);
+          transition: all 1.5s ease-in-out;
+        }
+
+        .video-container {
+          position: relative;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .video-player {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+            transition: ease-in-out;
+            &.playing {
+              max-height: 90vh;
+              width: auto;
+              margin-left: auto;
+              margin-right: auto;
+            }
+          }
+
+          .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            color: white;
+            font-size: 40px;
+            padding: 15px 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            opacity: 1;
+          }
+
+          .play-button.hidden {
+            opacity: 0;
+            pointer-events: none;
+          }
+        }
+
+        &:nth-child(odd) {
+          left: 0; /* Align the odd items to the left */
+        }
+
+        &:nth-child(even) {
+          right: 0; /* Align the even items to the right */
+        }
+        &.reveal {
+          animation: reveal 1.5s ease-in-out forwards;
+
+          img,
+          video {
+            transform: scale(1);
+          }
+          img {
+            cursor: zoom-in;
+          }
+        }
+      }
+    }
+  }
+
+  @keyframes reveal {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .lightbox {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+    video {
+      max-height: 90vh;
+      max-width: 90vw;
+    }
+  }
+
+  .lightbox-content {
+    max-width: 90%;
+    max-height: 90%;
+    display: block;
+    margin: auto;
+  }
+
+  .close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: white;
+    font-size: 30px;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+  }
+
+  .left {
+    left: 20px;
+  }
+
+  .right {
+    right: 20px;
+  }
+
+  .nav-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .nav-button:disabled {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  function initMasonryGrid(
+    containerSelector: string,
+    itemSelector: string,
+    gap: number,
+  ): void {
+    const container = document.querySelector(
+      containerSelector,
+    ) as HTMLElement | null;
+    if (!container) return;
+
+    const items = Array.from(
+      container.querySelectorAll(itemSelector),
+    ) as HTMLElement[];
+    if (items.length === 0) return;
+
+    const createMasonryLayout = (): void => {
+      const columnHeights: number[] = [0, 0]; // To track heights for two columns
+      const totalMedia = items.length; // Total number of items
+
+      // Handle the case where there's only one item
+      if (items.length === 1) {
+        items[0].style.position = 'relative';
+        items[0].style.maxHeight = '90vh';
+        items[0].style.height = '100%';
+        items[0].style.width = 'auto';
+        items[0].style.margin = 'auto';
+        container.style.height = `${items[0].offsetHeight}px`;
+        container.style.opacity = '1';
+        container.style.visibility = 'visible';
+
+        const media = items[0].querySelector('img, video') as
+          | HTMLImageElement
+          | HTMLVideoElement
+          | null;
+
+        if (media) {
+          media.style.maxHeight = '90vh';
+          media.style.width = '100%';
+          media.style.height = '100%';
+          media.style.objectFit = 'contain'; // Ensures proper fitting within bounds
+        }
+
+        return;
+      }
+
+      let loadedMedia = 0; // Counter for loaded images
+
+      const checkAllMediaLoaded = () => {
+        if (loadedMedia === totalMedia) {
+          container.style.visibility = 'visible';
+          console.log('All images loaded');
+        }
+      };
+
+      items.forEach((item, index) => {
+        // Alternate between two columns
+        const columnIndex = index % 2;
+
+        // Set the top position based on the column height
+        const top = columnHeights[columnIndex];
+        item.style.transform = `translateY(${top}px)`;
+
+        // Update the column height
+        columnHeights[columnIndex] += item.offsetHeight + gap;
+
+        // Get the media element inside the item
+        const media = item.querySelector('img, video') as HTMLImageElement;
+
+        // Define the event handler for media load
+        const handleMediaLoad = () => {
+          loadedMedia += 1; // Increment the counter when the image loads
+          media.removeEventListener('load', handleMediaLoad); // Remove listener once loaded
+
+          // Check if all images have loaded
+          checkAllMediaLoaded();
+        };
+
+        container.style.height = `${columnHeights}px`;
+        // Attach correct event listeners for images & videos
+        if (media.tagName.toLowerCase() === 'img') {
+          media.addEventListener('load', handleMediaLoad);
+          if (media.complete) handleMediaLoad();
+        } else if (media.tagName.toLowerCase() === 'video') {
+          media.addEventListener('loadeddata', handleMediaLoad); // Fires when enough data is loaded to start playing
+          media.addEventListener('canplaythrough', handleMediaLoad); // Fires when the video can be played fully
+        }
+
+        // If the image is already loaded from cache, manually call the handler
+        if (media.complete) {
+          handleMediaLoad();
+        }
+      });
+
+      // Set the height of the container based on the tallest column
+      const containerHeight = Math.max(...columnHeights);
+      container.style.height = `${containerHeight}px`;
+      container.style.opacity = '1';
+    };
+
+    // Initialize the layout
+    createMasonryLayout();
+
+    // Recalculate on window resize
+    window.addEventListener('resize', createMasonryLayout);
+  }
+
+  // Function to add the 'reveal' class when the image is 20vh in the viewport
+  function revealOnScroll(itemSelector: string): void {
+    const items = document.querySelectorAll(itemSelector);
+
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && entry.intersectionRatio > 0) {
+          const item = entry.target as HTMLElement;
+          const viewportHeight = window.innerHeight;
+          const imageTop = item.getBoundingClientRect().top;
+
+          // Check if the image is 20vh within the view
+          if (imageTop < viewportHeight) {
+            item.classList.add('reveal');
+            observer.unobserve(item); // Stop observing once it has been revealed
+          }
+        }
+      });
+    });
+
+    items.forEach((item) => {
+      observer.observe(item);
+    });
+  }
+
+  // Call the function on window load
+  window.onload = () => {
+    initMasonryGrid('.masonry', '.item', 100); // Set gap to 100px
+    revealOnScroll('.item'); // Call the reveal function
+  };
+
+  function openLightbox(imageUrl: string): void {
+    const lightbox = document.getElementById('lightbox') as HTMLElement;
+    const lightboxImg = document.getElementById(
+      'lightbox-img',
+    ) as HTMLImageElement;
+
+    if (lightbox && lightboxImg) {
+      lightbox.style.display = 'flex'; // Show the lightbox
+      lightboxImg.src = imageUrl; // Set the clicked image
+
+      // Close when clicking outside the image
+      lightbox.addEventListener('click', (event: MouseEvent) => {
+        if (event.target === lightbox) {
+          closeLightbox();
+        }
+      });
+    }
+  }
+
+  function closeLightbox(): void {
+    const lightbox = document.getElementById('lightbox') as HTMLElement;
+    if (lightbox) {
+      lightbox.style.display = 'none';
+    }
+  }
+
+  // Attach event listeners after DOM is loaded
+  window.addEventListener('DOMContentLoaded', () => {
+    const items = document.querySelectorAll('.item');
+    const close = document.querySelector('.close');
+
+    items.forEach((item) => {
+      item.addEventListener('click', () => {
+        const img = item.querySelector('img') as HTMLImageElement;
+        if (img) {
+          openLightbox(img.src);
+        }
+      });
+    });
+    if (close) {
+      close?.addEventListener('click', () => {
+        closeLightbox();
+      });
+    }
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+    const lightbox = document.getElementById('lightbox') as HTMLElement;
+    const lightboxImg = document.getElementById(
+      'lightbox-img',
+    ) as HTMLImageElement;
+    const lightboxVideo = document.getElementById(
+      'lightbox-video',
+    ) as HTMLVideoElement;
+    const closeBtn = document.querySelector('.close') as HTMLElement;
+    const prevButton = document.getElementById(
+      'prev-button',
+    ) as HTMLButtonElement;
+    const nextButton = document.getElementById(
+      'next-button',
+    ) as HTMLButtonElement;
+
+    let currentIndex = 0;
+    let mediaItems: { type: 'image' | 'video'; src: string }[] = [];
+
+    function openLightbox(index: number) {
+      if (index < 0 || index >= mediaItems.length) return; // Prevent invalid index
+
+      currentIndex = index;
+      const { src, type } = mediaItems[index];
+
+      lightbox.style.display = 'flex'; // Show the lightbox
+
+      if (type === 'image') {
+        lightboxImg.src = src;
+        lightboxImg.style.display = 'block';
+        lightboxVideo.style.display = 'none';
+        lightboxVideo.pause(); // Stop video if switching to image
+      } else {
+        lightboxVideo.src = src;
+        lightboxVideo.style.display = 'block';
+        lightboxImg.style.display = 'none';
+        lightboxVideo.play(); // Auto-play video
+      }
+
+      // Enable/disable navigation buttons
+      prevButton.style.display = currentIndex > 0 ? 'block' : 'none';
+      nextButton.style.display =
+        currentIndex < mediaItems.length - 1 ? 'block' : 'none';
+    }
+
+    function closeLightbox() {
+      lightbox.style.display = 'none';
+      lightboxVideo.pause(); // Stop video when closing
+      lightboxVideo.src = ''; // Reset video source
+    }
+
+    function nextMedia() {
+      if (currentIndex < mediaItems.length - 1) {
+        openLightbox(currentIndex + 1);
+      }
+    }
+
+    function prevMedia() {
+      if (currentIndex > 0) {
+        openLightbox(currentIndex - 1);
+      }
+    }
+
+    // Attach event listeners for gallery items
+    document.querySelectorAll('.item').forEach((item, index) => {
+      const img = item.querySelector('img') as HTMLImageElement | null;
+      const video = item.querySelector(
+        'video source',
+      ) as HTMLSourceElement | null;
+
+      if (img) {
+        mediaItems.push({ type: 'image', src: img.src });
+      } else if (video) {
+        mediaItems.push({ type: 'video', src: video.src });
+      }
+
+      item.addEventListener('click', () => {
+        openLightbox(index);
+      });
+    });
+
+    // Close lightbox event
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeLightbox);
+    }
+
+    // Navigation event listeners
+    prevButton.addEventListener('click', prevMedia);
+    nextButton.addEventListener('click', nextMedia);
+  });
+</script>

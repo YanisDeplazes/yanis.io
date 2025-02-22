@@ -1,0 +1,45 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Gallery from '../../../components/sections/Gallery.astro';
+import ContactSection from '../../../components/sections/Contact.astro';
+import { events } from '../../../data/events.json';
+
+// Generate static paths for all events
+export async function getStaticPaths() {
+  return events.map((event) => ({
+    params: { slug: event.title.toLowerCase().replace(/\s+/g, '-') },
+    props: { event },
+  }));
+}
+
+// Get event data from props
+const { event } = Astro.props;
+---
+
+<Layout
+  title={'yanis.io - ' + event.title + ' - ' + event.year}
+  description={`Explore ${event.title} from ${event.year}`}
+  image="/seo/portraits.jpg"
+>
+  {
+    event.content ? (
+      <Gallery
+        galleryData={event.content}
+        title={`${event.title}`}
+        year={event.year}
+      />
+    ) : (
+      <p class="no-images">No images available for this event.</p>
+    )
+  }
+  <ContactSection />
+</Layout>
+
+<style lang="scss">
+  .no-images {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #ccc;
+    margin-top: 20px;
+  }
+</style>

@@ -1,0 +1,57 @@
+.letter-spacing {
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.border {
+  border: 1px solid #fff3;
+  &.radius {
+    border-radius: 40px;
+  }
+}
+
+.display-none {
+  display: none;
+}
+
+.color-white {
+  color: white;
+}
+
+.color-light {
+  color: #dfded9;
+}
+
+.color-dark {
+  color: #101010;
+}
+
+.link {
+  transition: all 0.2s ease-out;
+  &:hover {
+    color: #dfded9;
+  }
+}
+
+.button {
+  background-color: white;
+  color: #101010;
+  padding: 1em 2em;
+  border-radius: 2em;
+  transition: all 0.2s ease-out;
+
+  &:hover {
+    background-color: #101010;
+    color: white;
+  }
+}
+
+// Hide scrollbar
+html {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none;
+}
+
+html body::-webkit-scrollbar {
+  display: none;
+}

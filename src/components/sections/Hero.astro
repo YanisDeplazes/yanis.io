@@ -1,0 +1,49 @@
+---
+import Wrapper from '../../layouts/Wrapper.astro';
+import Background from '../../components/Background.astro';
+import YanisDeplazes from '../svgs/YanisDeplazes.astro';
+
+const title = {
+  subtitle: 'Creative Coder',
+  name: 'Yanis Deplazes',
+};
+---
+
+<section class="welcome">
+  <Wrapper>
+    <div class="title">
+      <span class="letter-spacing font-size-6 color-white"
+        >{title.subtitle}</span
+      >
+      <h1 class="fahkwang-bold display-none">{title.name}</h1>
+      <YanisDeplazes />
+    </div>
+    <video width="1000" height="1500" playsinline autoplay muted loop>
+      <source src="./videos/hero.mp4" type="video/mp4" />
+    </video>
+  </Wrapper>
+  <Background />
+</section>
+
+<style lang="scss">
+  .welcome {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    .title {
+      position: relative;
+      height: 50vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    video {
+      max-height: 90vh;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+</style>

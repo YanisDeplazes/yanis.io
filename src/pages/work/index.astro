@@ -1,0 +1,19 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Contact from '../../components/sections/Contact.astro';
+import Work from '../../components/sections/Work.astro';
+import { works } from '../../data/works.json'; // Import the data
+---
+
+<Layout
+  title="yanis.io - Work"
+  description="A collection of my creative projects, blending technology, design, and interactive media."
+  image="/seo/work.jpg"
+>
+  <Work
+    title="Work Archive"
+    description="A journey through my creative work—capturing moments, building experiences, and experimenting across different mediums."
+    data={works}
+  />
+  <Contact />
+</Layout>

@@ -1,0 +1,21 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Gallery from '../../components/sections/Gallery.astro';
+import ContactSection from '../../components/sections/Contact.astro';
+import { overview } from '../../data/gallery.json'; // Import the data
+---
+
+<Layout
+  title="yanis.io - Gallery"
+  description="A curated selection of my photography and visual exploration"
+  image="/seo/work.jpg"
+>
+  {
+    overview.content ? (
+      <Gallery galleryData={overview.content} title="Gallery - Overview" />
+    ) : (
+      <p class="no-images">No images available for this event.</p>
+    )
+  }
+  <ContactSection />
+</Layout>

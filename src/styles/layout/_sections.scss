@@ -1,0 +1,28 @@
+section {
+  min-height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow: hidden;
+  color: white;
+  & .wrapper {
+    padding-top: 200px;
+    padding-bottom: 75px;
+  }
+}
+
+.wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 1500px;
+  margin-left: auto;
+  margin-right: auto;
+  width: calc(100% - 2 * var(--padding-side));
+}
+
+section.work_preview {
+  .wrapper {
+    height: calc(100% - 275px);
+    max-width: unset;
+    width: fit-content;
+  }
+}

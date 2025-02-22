@@ -1,0 +1,23 @@
+{
+  "name": "",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.3",
+    "@studio-freight/lenis": "^1.0.42",
+    "astro": "^4.14.4",
+    "gsap": "^3.12.5",
+    "typescript": "^5.5.4"
+  },
+  "devDependencies": {
+    "prettier-plugin-astro": "^0.14.1",
+    "sass-embedded": "^1.77.8"
+  }
+}

@@ -1,12 +1,14 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import ContactSection from '../../components/sections/Contact.astro';
+
+import Image from '../../assets/images/default.png';
 ---
 
 <Layout
   title="Contact — Yanis Deplazes"
   description="Get in touch for collaborations, inquiries, or just to connect—let's create something meaningful together."
-  image="/seo/contact.jpg"
+  imageSrc={Image.src}
 >
   <h1 class="display-none">Contact</h1>
   <ContactSection />

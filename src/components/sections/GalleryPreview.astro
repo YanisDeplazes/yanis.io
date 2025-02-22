@@ -4,6 +4,8 @@ import HiddenLink from '../HiddenLink.astro';
 const section = {
   title: 'Gallery',
 };
+
+import Video from '/src/assets/videos/gallery.mp4';
 ---
 
 <section class="gallery">
@@ -14,7 +16,7 @@ const section = {
       </div>
       <div class="video border radius">
         <video width="500" height="1000" playsinline autoplay muted loop>
-          <source src="./videos/gallery.mp4" type="video/mp4" />
+          <source src={Video} type="video/mp4" />
         </video>
       </div>
       <span class="tags">

@@ -5,12 +5,14 @@ import About from '../components/sections/About.astro';
 import WorkPreview from '../components/sections/WorkPreview.astro';
 import GalleryPreview from '../components/sections/GalleryPreview.astro';
 import Contact from '../components/sections/Contact.astro';
+
+import Image from '../assets/images/default.png';
 ---
 
 <Layout
   title="Yanis Deplazes - Portfolio"
   description="A creative space showcasing my work in web development, interactive media, and photography."
-  image="/seo/home.jpg"
+  imageSrc={Image.src}
 >
   <Hero />
   <About />

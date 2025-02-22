@@ -3,12 +3,14 @@ import Layout from '../../layouts/Layout.astro';
 import Contact from '../../components/sections/Contact.astro';
 import Work from '../../components/sections/Work.astro';
 import { works } from '../../data/works.json'; // Import the data
+
+import Image from '../../assets/images/projects/wolken.jpg';
 ---
 
 <Layout
   title="Work — Yanis Deplazes"
   description="A collection of my creative projects, blending technology, design, and interactive media."
-  image="/seo/work.jpg"
+  imageSrc={Image.src}
 >
   <Work
     title="Work Archive"

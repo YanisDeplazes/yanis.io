@@ -3,12 +3,43 @@ import Layout from '../../../layouts/Layout.astro';
 import Gallery from '../../../components/sections/Gallery.astro';
 import ContactSection from '../../../components/sections/Contact.astro';
 import { candid } from '../../../data/gallery.json'; // Import the data
+
+const newestElement = candid.content.reduce((latest, item) => {
+  const currentNum = parseInt(
+    item.imageUrl.match(/(\d+)\.jpg$/)?.[1] || '0',
+    10,
+  );
+  const latestNum = parseInt(
+    latest.imageUrl.match(/(\d+)\.jpg$/)?.[1] || '0',
+    10,
+  );
+  return currentNum > latestNum ? item : latest;
+}, candid.content[0]); // Start with the first item
+
+const imageUrl = newestElement.imageUrl; // Get the highest-numbered candid image
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/gallery/candid/**/*.{jpg,jpeg,png,webp}',
+);
+
+// Convert `/images/` path into `/src/assets/images/`
+const formattedImagePath = imageUrl.replace('/images/', '/src/assets/images/');
+
+if (!images[formattedImagePath]) {
+  throw new Error(
+    `"${formattedImagePath}" does not exist in import.meta.glob()`,
+  );
+}
+
+// Import and resolve the image URL
+const imageModule = await images[formattedImagePath]();
+const image = imageModule.default;
 ---
 
 <Layout
   title="Candid Gallery — Yanis Deplazes"
   description=" Unscripted moments and raw, authentic photography."
-  image="/seo/candid.jpg"
+  imageSrc={image.src}
 >
   {
     candid.content ? (

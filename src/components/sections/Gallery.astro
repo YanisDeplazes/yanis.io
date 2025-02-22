@@ -1,9 +1,50 @@
 ---
+import type { any } from 'astro/zod';
 import Wrapper from '../../layouts/Wrapper.astro';
 import GalleryNavigation from '../GalleryNavigation.astro';
+import { Image } from 'astro:assets';
 
 // Get the passed gallery data
 const { galleryData, title, year } = Astro.props;
+
+// Import all images dynamically
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/gallery/**/*.{jpg,jpeg,png,webp}',
+);
+
+// Import all MP4 videos dynamically
+const videos = import.meta.glob<{ default: string }>(
+  '/src/assets/images/gallery/**/*.mp4',
+);
+
+// Function to resolve image paths from JSON
+const resolveImage = async (imageUrl: string) => {
+  const formattedPath = `/src/assets${imageUrl}`;
+  return images[formattedPath] ? await images[formattedPath]() : null;
+};
+
+// Function to resolve video paths from JSON
+const resolveVideo = async (videoUrl: string) => {
+  const formattedPath = `/src/assets${videoUrl}`;
+  return videos[formattedPath] ? await videos[formattedPath]() : null;
+};
+
+// **Preload all media** before rendering
+const resolvedGallery = await Promise.all(
+  galleryData.map(async (item: any) => {
+    const resolvedImage = item.imageUrl
+      ? await resolveImage(item.imageUrl)
+      : null;
+    const resolvedThumbnail = item.thumbnail
+      ? await resolveImage(item.thumbnail)
+      : null;
+    const resolvedVideo = item.videoUrl
+      ? await resolveVideo(item.videoUrl)
+      : null;
+
+    return { ...item, resolvedImage, resolvedThumbnail, resolvedVideo };
+  }),
+);
 ---
 
 <section class="gallery">
@@ -17,33 +58,38 @@ const { galleryData, title, year } = Astro.props;
         )
       }
       <h1 class="fahkwang-bold font-size-1 color-white text-center">{title}</h1>
-
       <GalleryNavigation />
     </div>
 
     <div class="content masonry">
       {
-        galleryData.map((item: any) => (
+        resolvedGallery.map((item) => (
           <div class="item">
             {item.videoUrl ? (
               <div class="video-container">
-                <video class="video-player" poster={item.thumbnail}>
-                  <source src={item.videoUrl} type="video/mp4" />
+                <video
+                  class="video-player"
+                  poster={item.resolvedThumbnail?.default.src}
+                >
+                  <source src={item.resolvedVideo?.default} type="video/mp4" />
                   {item.videoAlt && (
                     <track
                       kind="captions"
-                      label={item.videoAlt + ' - Yanis Deplazes'}
+                      label={`${item.videoAlt} - Yanis Deplazes`}
                     />
                   )}
                   Your browser does not support the video tag.
                 </video>
                 <button class="play-button">▶</button>
               </div>
-            ) : (
-              <img
-                src={item.imageUrl}
-                alt={item.imageAlt + ' - Yanis Deplazes'}
+            ) : item.resolvedImage ? (
+              <Image
+                src={item.resolvedImage.default}
+                alt={item.imageAlt || 'Gallery Image'}
+                format="webp"
               />
+            ) : (
+              <p>Image not found</p>
             )}
           </div>
         ))
@@ -51,6 +97,7 @@ const { galleryData, title, year } = Astro.props;
     </div>
   </Wrapper>
 </section>
+
 <div id="lightbox" class="lightbox">
   <span class="close">&times;</span>
   <button id="prev-button" class="nav-button left">&larr;</button>

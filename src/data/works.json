@@ -3,35 +3,35 @@
     {
       "title": "Real Time 3D Cloud Coverage Visualizer",
       "type": "Three.js",
-      "videoUrl": "images/projects/wolken.gif",
+      "gifUrl": "images/projects/wolken.gif",
       "imageUrl": "images/projects/wolken.jpg",
       "link": "https://github.com/YanisDeplazes/Real-Time-3D-Cloud-Coverage-Visualizer"
     },
     {
       "title": "Yanis Film Diary",
       "type": "Web",
-      "videoUrl": "images/projects/film.gif",
+      "gifUrl": "images/projects/film.gif",
       "imageUrl": "images/projects/film.png",
       "link": "https://github.com/YanisDeplazes/Yanis-Film-Diary"
     },
     {
       "title": "AMENRA - Diaken",
       "type": "Generative Art",
-      "videoUrl": "images/projects/amenra.gif",
+      "gifUrl": "images/projects/amenra.gif",
       "imageUrl": "images/projects/amenra.jpg",
       "link": "https://www.behance.net/gallery/198633655/AMENRA-Diaken-(RUNWAY)"
     },
     {
       "title": "Tilted",
       "type": "Game Development",
-      "videoUrl": "images/projects/tilted.gif",
+      "gifUrl": "images/projects/tilted.gif",
       "imageUrl": "images/projects/tilted.jpg",
       "link": "https://www.behance.net/gallery/194269613/tilted-(Unity-Game)"
     },
     {
       "title": "HSCL Redesign",
       "type": "UX / UI",
-      "videoUrl": "images/projects/hscl.gif",
+      "gifUrl": "images/projects/hscl.gif",
       "imageUrl": "images/projects/hscl.png",
       "link": "https://www.behance.net/gallery/194721225/HSCL-UX"
     }

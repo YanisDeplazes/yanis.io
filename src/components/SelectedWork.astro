@@ -1,9 +1,30 @@
 ---
-const { title, type, imageUrl, videoUrl, link } = Astro.props;
+const { title, type, imageUrl, gifUrl, link } = Astro.props;
 
-import Image from './Image.astro';
 import C2a from './C2a.astro';
 import HiddenLink from './HiddenLink.astro';
+import { Image } from 'astro:assets';
+
+// Import all images dynamically from `src/assets/images/projects/`
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/projects/*.{jpg,jpeg,png,gif,webp}',
+);
+
+// Format paths to match imported files
+const formattedImagePath = `/src/assets/${imageUrl}`;
+const formattedGifPath = `/src/assets/${gifUrl}`;
+
+// Load the images dynamically if they exist
+const imageModule = images[formattedImagePath]
+  ? await images[formattedImagePath]()
+  : null;
+const gifModule = images[formattedGifPath]
+  ? await images[formattedGifPath]()
+  : null;
+
+// Extract the actual `ImageMetadata` object
+const image = imageModule?.default || null;
+const gif = gifModule?.default || null;
 ---
 
 <article class="work-selected border radius">
@@ -16,10 +37,23 @@ import HiddenLink from './HiddenLink.astro';
     </div>
   </div>
   <div class="image">
-    <Image url={imageUrl} alt={title} />
+    {
+      image ? (
+        <Image src={image} alt={title} width={800} height={600} format="webp" />
+      ) : (
+        <p>Image not found</p>
+      )
+    }
   </div>
+
   <div class="video">
-    <Image url={videoUrl} alt={title} />
+    {
+      gif ? (
+        <Image src={gif} alt={title} width={800} height={600} format="webp" />
+      ) : (
+        <p>GIF not found</p>
+      )
+    }
   </div>
   <HiddenLink url={link} title={title} target="_blank" />
 </article>
@@ -90,6 +124,11 @@ import HiddenLink from './HiddenLink.astro';
       left: 0;
       transition: 0.4s ease;
       filter: brightness(0.9);
+      img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+      }
     }
 
     .image {

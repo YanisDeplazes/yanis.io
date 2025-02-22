@@ -3,6 +3,8 @@ import Wrapper from '../../layouts/Wrapper.astro';
 import Background from '../../components/Background.astro';
 import YanisDeplazes from '../svgs/YanisDeplazes.astro';
 
+import Video from '/src/assets/videos/hero.mp4';
+
 const title = {
   subtitle: 'Creative Coder',
   name: 'Yanis Deplazes',
@@ -19,7 +21,7 @@ const title = {
       <YanisDeplazes />
     </div>
     <video width="1000" height="1500" playsinline autoplay muted loop>
-      <source src="./videos/hero.mp4" type="video/mp4" />
+      <source src={Video} type="video/mp4" />
     </video>
   </Wrapper>
   <Background />

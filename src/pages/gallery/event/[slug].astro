@@ -3,9 +3,9 @@ import Layout from '../../../layouts/Layout.astro';
 import Gallery from '../../../components/sections/Gallery.astro';
 import ContactSection from '../../../components/sections/Contact.astro';
 import { events } from '../../../data/events.json';
+import Image from '../../../assets/images/gallery/events/2024/04_Copenhagen/47.jpg';
 
-// Generate static paths for all events
-export async function getStaticPaths() {
+export function getStaticPaths() {
   return events.map((event) => ({
     params: { slug: event.title.toLowerCase().replace(/\s+/g, '-') },
     props: { event },
@@ -19,7 +19,7 @@ const { event } = Astro.props;
 <Layout
   title={event.title + ' ' + event.year + ' — Yanis Deplazes'}
   description={`Explore ${event.title} from ${event.year}`}
-  image="/seo/portraits.jpg"
+  imageSrc={Image.src}
 >
   {
     event.content ? (

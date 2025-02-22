@@ -39,7 +39,7 @@ const gif = gifModule?.default || null;
   <div class="image">
     {
       image ? (
-        <Image src={image} alt={title} width={800} height={600} format="webp" />
+        <Image src={image} alt={title} format="webp" />
       ) : (
         <p>Image not found</p>
       )
@@ -47,13 +47,7 @@ const gif = gifModule?.default || null;
   </div>
 
   <div class="video">
-    {
-      gif ? (
-        <Image src={gif} alt={title} width={800} height={600} format="webp" />
-      ) : (
-        <p>GIF not found</p>
-      )
-    }
+    {gif ? <Image src={gif} alt={title} format="webp" /> : <p>GIF not found</p>}
   </div>
   <HiddenLink url={link} title={title} target="_blank" />
 </article>

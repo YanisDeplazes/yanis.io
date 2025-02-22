@@ -14,12 +14,46 @@ export function getStaticPaths() {
 
 // Get event data from props
 const { event } = Astro.props;
+
+function newestElement(): string {
+  for (const item of event.content) {
+    if (item.imageUrl) {
+      return item.imageUrl;
+    }
+  }
+
+  for (const item of event.content) {
+    if (item.thumbnail) {
+      return item.thumbnail;
+    }
+  }
+  return Image.src;
+}
+
+const imageUrl = newestElement(); // Get the highest-numbered candid image
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/gallery/events/**/*.{jpg,jpeg,png,webp}',
+);
+// Convert `/images/` path into `/src/assets/images/`
+const formattedImagePath = imageUrl.replace('/images/', '/src/assets/images/');
+console.log(imageUrl);
+
+if (!images[formattedImagePath]) {
+  throw new Error(
+    `"${formattedImagePath}" does not exist in import.meta.glob()`,
+  );
+}
+
+// Import and resolve the image URL
+const imageModule = await images[formattedImagePath]();
+const image = imageModule.default;
 ---
 
 <Layout
   title={event.title + ' ' + event.year + ' — Yanis Deplazes'}
   description={`Explore ${event.title} from ${event.year}`}
-  imageSrc={Image.src}
+  imageSrc={image.src}
 >
   {
     event.content ? (

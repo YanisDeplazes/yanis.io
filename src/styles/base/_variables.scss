@@ -1,3 +1,5 @@
+$breakpoint-tablet: 768px;
+
 :root {
   // Colors
   --accent: 136, 58, 234;
@@ -10,12 +12,6 @@
     white 60%
   );
 
-  // Spacing & Layout
-  --padding-side: 40px;
-  --radius-side: 40px;
-  --padding-inner: 20px;
-  --radius-inner: 20px;
-
   --space-3xs: clamp(0.3125rem, 0.3125rem + 0vw, 0.3125rem);
   --space-2xs: clamp(0.5625rem, 0.5408rem + 0.1087vw, 0.625rem);
   --space-xs: clamp(0.875rem, 0.8533rem + 0.1087vw, 0.9375rem);
@@ -25,4 +21,15 @@
   --space-xl: clamp(3.375rem, 3.2446rem + 0.6522vw, 3.75rem);
   --space-2xl: clamp(4.5rem, 4.3261rem + 0.8696vw, 5rem);
   --space-3xl: clamp(6.75rem, 6.4891rem + 1.3043vw, 7.5rem);
+
+  // Spacing & Layout
+  --padding-side: 20px;
+  --radius-side: 40px;
+  --padding-inner: 20px;
+  --radius-inner: 20px;
+
+  @media (min-width: $breakpoint-tablet) {
+    --padding-side: 40px;
+    --padding-inner: 20px;
+  }
 }

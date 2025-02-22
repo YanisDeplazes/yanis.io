@@ -1,6 +1,6 @@
 ---
 import Wrapper from '../../layouts/Wrapper.astro';
-
+import HiddenLink from '../HiddenLink.astro';
 const section = {
   title: 'Gallery',
 };
@@ -22,7 +22,11 @@ const section = {
         <div class="letter-spacing font-size-p">Events</div>
         <div class="letter-spacing font-size-p">Portraits</div>
       </span>
-      <a href="./gallery"></a>
+      <HiddenLink
+        url="./gallery"
+        title="Yanis Deplazes Gallery"
+        target="_self"
+      />
     </div>
   </Wrapper>
 </section>
@@ -85,15 +89,6 @@ const section = {
         }
       }
 
-      a {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #00000000;
-        transition: 0.2s ease;
-      }
       &::after {
         pointer-events: none;
         position: absolute;

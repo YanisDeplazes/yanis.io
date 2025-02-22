@@ -2,14 +2,18 @@
 const { title, type, imageUrl, videoUrl, link } = Astro.props;
 
 import Image from './Image.astro';
+import C2a from './C2a.astro';
+import HiddenLink from './HiddenLink.astro';
 ---
 
-<div class="work border radius">
+<article class="work-selected border radius">
   <div class="container">
+    <span class="type color-dark letter-spacing font-size-small">{type}</span>
+
     <div class="title color-dark">
       <h3 class="button lato-bold font-size-5">{title}</h3>
+      <C2a url={link} title={title} target="_blank" />
     </div>
-    <span class="type color-dark letter-spacing font-size-small">{type}</span>
   </div>
   <div class="image">
     <Image url={imageUrl} alt={title} />
@@ -17,13 +21,13 @@ import Image from './Image.astro';
   <div class="video">
     <Image url={videoUrl} alt={title} />
   </div>
-  <a href={link} target="_blank"> </a>
-</div>
+  <HiddenLink url={link} title={title} target="_blank" />
+</article>
 
 <style lang="scss">
   $breakpoint-tablet: 768px;
 
-  .work {
+  .work-selected {
     width: 100%;
     height: auto;
     aspect-ratio: 2 / 3;
@@ -38,19 +42,19 @@ import Image from './Image.astro';
 
     .container {
       display: flex;
-      flex-direction: column-reverse;
+      flex-direction: column;
       position: relative;
       z-index: 1;
-      height: -webkit-fill-available;
       gap: var(--space-2xs);
       padding: var(--padding-inner);
-      height: calc(100% - 2 * var(--padding-inner));
+      height: -webkit-fill-available;
+      align-items: stretch;
+      justify-content: flex-end;
     }
 
     .title {
       display: flex;
       gap: var(--space-xs);
-      align-items: center;
       justify-content: space-between;
 
       .button {
@@ -59,20 +63,6 @@ import Image from './Image.astro';
         padding: 0.5em 1em;
         border-radius: 40px;
         transition: all 0.3s ease-in;
-      }
-
-      &::after {
-        background-color: white;
-        aspect-ratio: 1 / 1;
-        width: auto;
-        height: 100%;
-        max-height: calc(38px);
-        border-radius: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: 0.2s ease;
-        content: url('data:image/svg+xml,<svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24.9999 8V21C24.9999 21.2652 24.8946 21.5196 24.7071 21.7071C24.5195 21.8946 24.2652 22 23.9999 22C23.7347 22 23.4804 21.8946 23.2928 21.7071C23.1053 21.5196 22.9999 21.2652 22.9999 21V10.4137L8.70745 24.7075C8.51981 24.8951 8.26531 25.0006 7.99995 25.0006C7.73458 25.0006 7.48009 24.8951 7.29245 24.7075C7.1048 24.5199 6.99939 24.2654 6.99939 24C6.99939 23.7346 7.1048 23.4801 7.29245 23.2925L21.5862 9H10.9999C10.7347 9 10.4804 8.89464 10.2928 8.70711C10.1053 8.51957 9.99995 8.26522 9.99995 8C9.99995 7.73478 10.1053 7.48043 10.2928 7.29289C10.4804 7.10536 10.7347 7 10.9999 7H23.9999C24.2652 7 24.5195 7.10536 24.7071 7.29289C24.8946 7.48043 24.9999 7.73478 24.9999 8Z" fill="%23101010"/></svg>');
       }
     }
 
@@ -102,15 +92,6 @@ import Image from './Image.astro';
       filter: brightness(0.9);
     }
 
-    a {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-    }
-
     .image {
       transform: scale(1);
     }
@@ -133,9 +114,6 @@ import Image from './Image.astro';
           h3 {
             background-color: #101010;
             color: white;
-          }
-          &::after {
-            transform: rotate(45deg); // Rotate **around its center**
           }
         }
       }

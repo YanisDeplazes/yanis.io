@@ -86,6 +86,7 @@ const resolvedGallery = await Promise.all(
                 src={item.resolvedImage.default}
                 alt={item.imageAlt || 'Gallery Image'}
                 format="webp"
+                loading="lazy"
               />
             ) : (
               <p>Image not found</p>
@@ -142,7 +143,7 @@ const resolvedGallery = await Promise.all(
         video {
           width: 100%; /* Ensure items take up the full column width */
           height: 100%;
-          opacity: 1;
+          opacity: 0;
           transform: scale(0.8);
           transition: all 1.5s ease-in-out;
         }
@@ -201,6 +202,7 @@ const resolvedGallery = await Promise.all(
 
           img,
           video {
+            opacity: 1;
             transform: scale(1);
           }
           img {
@@ -301,127 +303,79 @@ const resolvedGallery = await Promise.all(
     ) as HTMLElement[];
     if (items.length === 0) return;
 
-    const createMasonryLayout = (): void => {
-      const columnHeights: number[] = [0, 0]; // To track heights for two columns
-      const totalMedia = items.length; // Total number of items
+    const columnHeights: number[] = [0, 0]; // Tracks height of two columns
 
-      // Handle the case where there's only one item
-      if (items.length === 1) {
-        items[0].style.position = 'relative';
-        items[0].style.maxHeight = '90vh';
-        items[0].style.height = '100%';
-        items[0].style.width = 'auto';
-        items[0].style.margin = 'auto';
-        container.style.height = `${items[0].offsetHeight}px`;
-        container.style.opacity = '1';
-        container.style.visibility = 'visible';
-
-        const media = items[0].querySelector('img, video') as
-          | HTMLImageElement
-          | HTMLVideoElement
-          | null;
-
-        if (media) {
-          media.style.maxHeight = '90vh';
-          media.style.width = '100%';
-          media.style.height = '100%';
-          media.style.objectFit = 'contain'; // Ensures proper fitting within bounds
-        }
-
-        return;
-      }
-
-      let loadedMedia = 0; // Counter for loaded images
-
-      const checkAllMediaLoaded = () => {
-        if (loadedMedia === totalMedia) {
-          container.style.visibility = 'visible';
-          console.log('All images loaded');
-        }
-      };
+    function createMasonryLayout(): void {
+      let tallestColumnHeight = 0;
 
       items.forEach((item, index) => {
-        // Alternate between two columns
-        const columnIndex = index % 2;
-
-        // Set the top position based on the column height
+        const columnIndex = index % 2; // Alternate columns
         const top = columnHeights[columnIndex];
+
         item.style.transform = `translateY(${top}px)`;
 
-        // Update the column height
-        columnHeights[columnIndex] += item.offsetHeight + gap;
+        // Store height for next element placement
+        const itemHeight = item.getBoundingClientRect().height;
+        columnHeights[columnIndex] += itemHeight + gap;
 
-        // Get the media element inside the item
-        const media = item.querySelector('img, video') as HTMLImageElement;
-
-        // Define the event handler for media load
-        const handleMediaLoad = () => {
-          loadedMedia += 1; // Increment the counter when the image loads
-          media.removeEventListener('load', handleMediaLoad); // Remove listener once loaded
-
-          // Check if all images have loaded
-          checkAllMediaLoaded();
-        };
-
-        container.style.height = `${columnHeights}px`;
-        // Attach correct event listeners for images & videos
-        if (media.tagName.toLowerCase() === 'img') {
-          media.addEventListener('load', handleMediaLoad);
-          if (media.complete) handleMediaLoad();
-        } else if (media.tagName.toLowerCase() === 'video') {
-          media.addEventListener('loadeddata', handleMediaLoad); // Fires when enough data is loaded to start playing
-          media.addEventListener('canplaythrough', handleMediaLoad); // Fires when the video can be played fully
-        }
-
-        // If the image is already loaded from cache, manually call the handler
-        if (media.complete) {
-          handleMediaLoad();
-        }
+        // Track tallest column height for container resizing
+        tallestColumnHeight = Math.max(
+          tallestColumnHeight,
+          columnHeights[columnIndex],
+        );
       });
 
-      // Set the height of the container based on the tallest column
-      const containerHeight = Math.max(...columnHeights);
-      container.style.height = `${containerHeight}px`;
-      container.style.opacity = '1';
-    };
+      // Batch DOM updates
+      requestAnimationFrame(() => {
+        if (container) {
+          // Ensure container is still available
+          container.style.height = `${tallestColumnHeight}px`;
+          container.style.opacity = '1';
+          container.style.visibility = 'visible';
+        }
+      });
+    }
 
-    // Initialize the layout
+    // Debounced resize function to reduce reflow
+    let resizeTimer: number;
+    function handleResize() {
+      clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        columnHeights.fill(0); // Reset column heights
+        createMasonryLayout();
+      }, 200);
+    }
+
     createMasonryLayout();
-
-    // Recalculate on window resize
-    window.addEventListener('resize', createMasonryLayout);
+    window.addEventListener('resize', handleResize);
   }
 
-  // Function to add the 'reveal' class when the image is 20vh in the viewport
+  // Lazy load images/videos using Intersection Observer
   function revealOnScroll(itemSelector: string): void {
-    const items = document.querySelectorAll(itemSelector);
-
-    const observer = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio > 0) {
-          const item = entry.target as HTMLElement;
-          const viewportHeight = window.innerHeight;
-          const imageTop = item.getBoundingClientRect().top;
-
-          // Check if the image is 20vh within the view
-          if (imageTop < viewportHeight) {
-            item.classList.add('reveal');
-            observer.unobserve(item); // Stop observing once it has been revealed
+    const observer = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal');
+            observer.unobserve(entry.target); // Stop observing once revealed
           }
-        }
-      });
-    });
+        });
+      },
+      { threshold: 0.2 }, // Trigger when 20% of the element is visible
+    );
 
-    items.forEach((item) => {
-      observer.observe(item);
-    });
+    document
+      .querySelectorAll(itemSelector)
+      .forEach((item) => observer.observe(item));
   }
 
-  // Call the function on window load
-  window.onload = () => {
-    initMasonryGrid('.masonry', '.item', 100); // Set gap to 100px
-    revealOnScroll('.item'); // Call the reveal function
-  };
+  // Delay execution to prevent render-blocking
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      initMasonryGrid('.masonry', '.item', 100);
+      revealOnScroll('.item');
+    }, 300); // Allow other critical rendering tasks to complete first
+  });
 
   function openLightbox(imageUrl: string): void {
     const lightbox = document.getElementById('lightbox') as HTMLElement;

@@ -1,36 +1,37 @@
 ---
-const currentPath = Astro.url.pathname;
+const currentPath =
+  Astro.url.pathname.endsWith('/') && Astro.url.pathname !== '/'
+    ? Astro.url.pathname.slice(0, -1)
+    : Astro.url.pathname;
 ---
 
 <nav>
   <ul>
     <li>
+      <a href="/gallery" class={currentPath === '/gallery' ? 'active' : ''}
+        >Gallery</a
+      >
+    </li>
+    <li>
       <a
-        href="/gallery"
-        class={currentPath.startsWith('/gallery') ? 'active' : ''}
-        >Gallery
-      </a>
-      <li>
-        <a
-          href="/gallery/event"
-          class={currentPath.startsWith('/gallery/event') ? 'active' : ''}
-          >Events</a
-        >
-      </li>
-      <li>
-        <a
-          href="/gallery/candid"
-          class={currentPath.startsWith('/gallery/candid') ? 'active' : ''}
-          >Candid</a
-        >
-      </li>
-      <li>
-        <a
-          href="/gallery/portraits"
-          class={currentPath.startsWith('/gallery/portraits') ? 'active' : ''}
-          >Portraits</a
-        >
-      </li>
+        href="/gallery/event"
+        class={currentPath.startsWith('/gallery/event') ? 'active' : ''}
+        >Events</a
+      >
+    </li>
+    <li>
+      <a
+        href="/gallery/candid"
+        class={currentPath.startsWith('/gallery/candid') ? 'active' : ''}
+        >Candid</a
+      >
+    </li>
+    <li>
+      <a
+        href="/gallery/portraits"
+        class={currentPath.startsWith('/gallery/portraits') ? 'active' : ''}
+        >Portraits</a
+      >
     </li>
   </ul>
 

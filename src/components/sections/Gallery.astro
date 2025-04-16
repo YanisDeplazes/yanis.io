@@ -79,7 +79,7 @@ const resolvedGallery = await Promise.all(
                   )}
                   Your browser does not support the video tag.
                 </video>
-                {item.videoAlt && <figcaption>{item.videoAlt}</figcaption>}
+                <button class="play-button">▶</button>
               </figure>
             ) : item.resolvedImage ? (
               <figure>
@@ -165,12 +165,13 @@ const resolvedGallery = await Promise.all(
 
         .video-container {
           position: relative;
-          width: 100%;
           display: flex;
           align-items: center;
           justify-content: center;
-
+          overflow: hidden;
           .video-player {
+            filter: blur(5px);
+
             width: 100%;
             height: auto;
             cursor: pointer;

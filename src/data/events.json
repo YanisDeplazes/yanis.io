@@ -1,6 +1,18 @@
 {
   "events": [
     {
+      "title": "Nightmerdam pt 4",
+      "year": 2025,
+      "types": ["Performance"],
+      "content": [
+        {
+          "videoUrl": "/images/gallery/events/2025/03_nightmerdam/1.mp4",
+          "videoAlt": "Nightmerdam pt 4",
+          "thumbnail": "/images/gallery/events/2025/03_nightmerdam/thumbnail.jpg"
+        }
+      ]
+    },
+    {
       "title": "Suburbia x Strange Therapy",
       "year": 2025,
       "types": ["Concert"],

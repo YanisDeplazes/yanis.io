@@ -65,7 +65,7 @@ const resolvedGallery = await Promise.all(
         resolvedGallery.map((item) => (
           <div class="item">
             {item.videoUrl ? (
-              <div class="video-container">
+              <figure class="video-container">
                 <video
                   class="video-player"
                   poster={item.resolvedThumbnail?.default.src}
@@ -79,15 +79,18 @@ const resolvedGallery = await Promise.all(
                   )}
                   Your browser does not support the video tag.
                 </video>
-                <button class="play-button">▶</button>
-              </div>
+                {item.videoAlt && <figcaption>{item.videoAlt}</figcaption>}
+              </figure>
             ) : item.resolvedImage ? (
-              <Image
-                src={item.resolvedImage.default}
-                alt={item.imageAlt || 'Gallery Image'}
-                format="webp"
-                loading="lazy"
-              />
+              <figure>
+                <Image
+                  src={item.resolvedImage.default}
+                  alt={item.imageAlt || 'Gallery Image'}
+                  format="webp"
+                  loading="lazy"
+                />
+                {item.imageAlt && <figcaption>{item.imageAlt}</figcaption>}
+              </figure>
             ) : (
               <p>Image not found</p>
             )}
@@ -137,6 +140,18 @@ const resolvedGallery = await Promise.all(
         @media screen and (min-width: 754px) {
           position: absolute;
           max-width: calc(50% - var(--space-m));
+        }
+
+        figcaption {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0 0 0 0);
+          white-space: nowrap;
+          border: 0;
         }
 
         img,

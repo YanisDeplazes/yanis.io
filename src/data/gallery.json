@@ -66,30 +66,6 @@
   "candid": {
     "content": [
       {
-        "imageUrl": "/images/gallery/candid/77.jpg",
-        "imageAlt": "Candid - 77"
-      },
-      {
-        "imageUrl": "/images/gallery/candid/76.jpg",
-        "imageAlt": "Candid - 76"
-      },
-      {
-        "imageUrl": "/images/gallery/candid/75.jpg",
-        "imageAlt": "Candid - 75"
-      },
-      {
-        "imageUrl": "/images/gallery/candid/74.jpg",
-        "imageAlt": "Candid - 74"
-      },
-      {
-        "imageUrl": "/images/gallery/candid/73.jpg",
-        "imageAlt": "Candid - 73"
-      },
-      {
-        "imageUrl": "/images/gallery/candid/72.jpg",
-        "imageAlt": "Candid - 72"
-      },
-      {
         "imageUrl": "/images/gallery/candid/71.jpg",
         "imageAlt": "Candid - 71"
       },
@@ -453,6 +429,54 @@
       {
         "imageUrl": "/images/gallery/portraits/1.jpg",
         "imageAlt": "Portrait - Jordan and Eden"
+      }
+    ]
+  },
+  "experimental": {
+    "content": [
+      {
+        "imageUrl": "/images/gallery/experimental/11.jpg",
+        "imageAlt": "Experimental - 11"
+      },
+      {
+        "imageUrl": "/images/gallery/experimental/10.jpg",
+        "imageAlt": "Experimental - 10"
+      },
+      {
+        "imageUrl": "/images/gallery/experimental/9.jpg",
+        "imageAlt": "Experimental - 9"
+      },
+      {
+        "imageUrl": "/images/gallery/experimental/8.jpg",
+        "imageAlt": "Experimental - 8"
+      },
+      {
+        "imageUrl": "/images/gallery/experimental/7.jpg",
+        "imageAlt": "Experimental - 7"
+      },
+      {
+        "imageUrl": "/images/gallery/experimental/6.jpg",
+        "imageAlt": "Experimental - 6"
+      },
+      {
+        "imageUrl": "/images/gallery/experimental/5.jpg",
+        "imageAlt": "Experimental - 5"
+      },
+      {
+        "imageUrl": "/images/gallery/experimental/4.jpg",
+        "imageAlt": "Experimental - 4"
+      },
+      {
+        "imageUrl": "/images/gallery/experimental/3.jpg",
+        "imageAlt": "Experimental - 3"
+      },
+      {
+        "imageUrl": "/images/gallery/experimental/2.jpg",
+        "imageAlt": "Experimental - 2"
+      },
+      {
+        "imageUrl": "/images/gallery/experimental/1.jpg",
+        "imageAlt": "Experimental - 1"
       }
     ]
   }

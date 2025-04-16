@@ -48,12 +48,46 @@ const cheerio = require('cheerio');
       }
     });
 
-    if (imageEntries.length > 0) {
+    const videoEntries = [];
+
+    $('video').each((_, el) => {
+      const $video = $(el);
+      const $source = $video.find('source');
+      const $track = $video.find('track');
+
+      const src = $video.attr('src') || $source.attr('src');
+      const poster = $video.attr('poster') || '';
+      const label = $track.attr('label') || '';
+
+      const title = label || 'Video';
+      const description = label || 'Video content';
+      if (
+        src &&
+        label &&
+        !src.startsWith('data:') &&
+        !src.startsWith('blob:')
+      ) {
+        const videoUrl = src.startsWith('http') ? src : `${BASE_URL}${src}`;
+        const posterUrl = poster.startsWith('http') ? poster : `${BASE_URL}${poster}`;
+
+        videoEntries.push(`
+      <video:video>
+        ${poster ? `<video:thumbnail_loc>${posterUrl}</video:thumbnail_loc>` : ''}
+        <video:title><![CDATA[${title}]]></video:title>
+        <video:description><![CDATA[${description}]]></video:description>
+        <video:player_loc>${videoUrl}</video:player_loc>
+      </video:video>`);
+      }
+    })
+
+    if (imageEntries.length > 0 || videoEntries.length > 0) {
       sitemapEntries.push(`
   <url>
     <loc>${pageUrl}</loc>
     ${imageEntries.join('\n')}
+    ${videoEntries.join('\n')}
   </url>`);
+
     }
   }
 
@@ -64,6 +98,6 @@ ${sitemapEntries.join('\n')}
 </urlset>`;
 
 
-  fs.writeFileSync(path.join(DIST_DIR, 'image-sitemap.xml'), sitemap);
-  console.log('✅ Image sitemap generated');
+  fs.writeFileSync(path.join(DIST_DIR, 'media-sitemap.xml'), sitemap);
+  console.log('Media sitemap generated');
 })();

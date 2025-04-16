@@ -1,6 +1,55 @@
 {
   "events": [
     {
+      "title": "Galatea V",
+      "year": 2025,
+      "types": ["Performance"],
+      "content": [
+        {
+          "videoUrl": "/images/gallery/events/2025/03_galatea/1.mp4",
+          "videoAlt": "Prima Ballerina performance at galatea ATTO V",
+          "thumbnail": "/images/gallery/events/2025/03_galatea/2.jpg"
+        },
+        {
+          "videoUrl": "/images/gallery/events/2025/03_galatea/2.mp4",
+          "videoAlt": "Yslam Boys performance at galatea ATTO V",
+          "thumbnail": "/images/gallery/events/2025/03_galatea/8.jpg"
+        },
+        {
+          "imageUrl": "/images/gallery/events/2025/03_galatea/1.jpg",
+          "imageAlt": "Suburbia x Strange Therapy - 1"
+        },
+        {
+          "imageUrl": "/images/gallery/events/2025/03_galatea/2.jpg",
+          "imageAlt": "Suburbia x Strange Therapy - 1"
+        },
+        {
+          "imageUrl": "/images/gallery/events/2025/03_galatea/3.jpg",
+          "imageAlt": "Suburbia x Strange Therapy - 1"
+        },
+        {
+          "imageUrl": "/images/gallery/events/2025/03_galatea/8.jpg",
+          "imageAlt": "Suburbia x Strange Therapy - 1"
+        },
+        {
+          "imageUrl": "/images/gallery/events/2025/03_galatea/4.jpg",
+          "imageAlt": "Suburbia x Strange Therapy - 1"
+        },
+        {
+          "imageUrl": "/images/gallery/events/2025/03_galatea/5.jpg",
+          "imageAlt": "Suburbia x Strange Therapy - 1"
+        },
+        {
+          "imageUrl": "/images/gallery/events/2025/03_galatea/6.jpg",
+          "imageAlt": "Suburbia x Strange Therapy - 1"
+        },
+        {
+          "imageUrl": "/images/gallery/events/2025/03_galatea/7.jpg",
+          "imageAlt": "Suburbia x Strange Therapy - 1"
+        }
+      ]
+    },
+    {
       "title": "Nightmerdam pt 4",
       "year": 2025,
       "types": ["Performance"],

@@ -379,6 +379,14 @@
   "portraits": {
     "content": [
       {
+        "imageUrl": "/images/gallery/portraits/19.jpg",
+        "imageAlt": "Portrait - Elisabet"
+      },
+      {
+        "imageUrl": "/images/gallery/portraits/18.jpg",
+        "imageAlt": "Portrait - Binna"
+      },
+      {
         "imageUrl": "/images/gallery/portraits/17.jpg",
         "imageAlt": "Portrait - Luna"
       },

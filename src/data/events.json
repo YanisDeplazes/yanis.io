@@ -17,35 +17,35 @@
         },
         {
           "imageUrl": "/images/gallery/events/2025/03_galatea/1.jpg",
-          "imageAlt": "Suburbia x Strange Therapy - 1"
+          "videoAlt": "Prima Ballerina performance at galatea ATTO V - 1"
         },
         {
           "imageUrl": "/images/gallery/events/2025/03_galatea/2.jpg",
-          "imageAlt": "Suburbia x Strange Therapy - 1"
+          "videoAlt": "Prima Ballerina performance at galatea ATTO V - 2"
         },
         {
           "imageUrl": "/images/gallery/events/2025/03_galatea/3.jpg",
-          "imageAlt": "Suburbia x Strange Therapy - 1"
+          "videoAlt": "Prima Ballerina performance at galatea ATTO V - 3"
         },
         {
           "imageUrl": "/images/gallery/events/2025/03_galatea/8.jpg",
-          "imageAlt": "Suburbia x Strange Therapy - 1"
+          "videoAlt": "Yslam Boys performance at galatea ATTO V - 8"
         },
         {
           "imageUrl": "/images/gallery/events/2025/03_galatea/4.jpg",
-          "imageAlt": "Suburbia x Strange Therapy - 1"
+          "videoAlt": "Yslam Boys performance at galatea ATTO V - 4"
         },
         {
           "imageUrl": "/images/gallery/events/2025/03_galatea/5.jpg",
-          "imageAlt": "Suburbia x Strange Therapy - 1"
+          "videoAlt": "Yslam Boys performance at galatea ATTO V - 5"
         },
         {
           "imageUrl": "/images/gallery/events/2025/03_galatea/6.jpg",
-          "imageAlt": "Suburbia x Strange Therapy - 1"
+          "videoAlt": "Yslam Boys performance at galatea ATTO V - 6"
         },
         {
           "imageUrl": "/images/gallery/events/2025/03_galatea/7.jpg",
-          "imageAlt": "Suburbia x Strange Therapy - 1"
+          "videoAlt": "Yslam Boys performance at galatea ATTO V - 7"
         }
       ]
     },
@@ -58,6 +58,10 @@
           "videoUrl": "/images/gallery/events/2025/03_nightmerdam/1.mp4",
           "videoAlt": "Nightmerdam pt 4",
           "thumbnail": "/images/gallery/events/2025/03_nightmerdam/thumbnail.jpg"
+        },
+        {
+          "imageUrl": "/images/gallery/events/2025/03_nightmerdam/1.jpg",
+          "videoAlt": "Nightmerdam pt 4 - 1"
         }
       ]
     },

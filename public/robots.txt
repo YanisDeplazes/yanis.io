@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
 Sitemap: https://yanis.io/sitemap.xml
+Sitemap: https://yanis.io/image-sitemap.xml

@@ -38,6 +38,12 @@
   ],
   "works": [
     {
+      "title": "Atmos",
+      "year": 2025,
+      "types": ["Embedded", "Web", "Prototyping"],
+      "link": "https://github.com/YanisDeplazes/Real-Time-3D-Cloud-Coverage-Visualizer"
+    },
+    {
       "title": "Analyrics",
       "year": 2024,
       "types": ["Web"],

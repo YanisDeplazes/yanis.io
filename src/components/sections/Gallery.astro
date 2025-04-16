@@ -74,7 +74,7 @@ const resolvedGallery = await Promise.all(
                   {item.videoAlt && (
                     <track
                       kind="captions"
-                      label={`${item.videoAlt} - Yanis Deplazes`}
+                      label={`Yanis Deplazes - ${item.videoAlt}`}
                     />
                   )}
                   Your browser does not support the video tag.
@@ -85,7 +85,7 @@ const resolvedGallery = await Promise.all(
               <figure>
                 <Image
                   src={item.resolvedImage.default}
-                  alt={item.imageAlt || 'Gallery Image'}
+                  alt={`Yanis Deplazes -  ${item.imageAlt}`}
                   format="webp"
                   loading="lazy"
                 />

@@ -1,96 +1,42 @@
 ---
+// Imports
 import Wrapper from '../../layouts/Wrapper.astro';
-import GalleryNavigation from '../GalleryNavigation.astro';
-import { Image } from 'astro:assets';
+import ImageWrapper from '../wrappers/ImageWrapper.astro';
 
-// Get the passed gallery data
-const { galleryData, title, year } = Astro.props;
+const { galleryData } = Astro.props;
 
-// Import all images dynamically
+// Dynamic imports
 const images = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/images/gallery/**/*.{jpg,jpeg,png,webp}',
+  '/src/assets/images/galleries/**/*.{jpg,jpeg,png,webp}',
 );
 
-// Import all MP4 videos dynamically
-const videos = import.meta.glob<{ default: string }>(
-  '/src/assets/images/gallery/**/*.mp4',
-);
+// Resolvers
+const resolveImage = async (url: string) => images[`/src/assets${url}`]?.();
 
-// Function to resolve image paths from JSON
-const resolveImage = async (imageUrl: string) => {
-  const formattedPath = `/src/assets${imageUrl}`;
-  return images[formattedPath] ? await images[formattedPath]() : null;
-};
-
-// Function to resolve video paths from JSON
-const resolveVideo = async (videoUrl: string) => {
-  const formattedPath = `/src/assets${videoUrl}`;
-  return videos[formattedPath] ? await videos[formattedPath]() : null;
-};
-
-// **Preload all media** before rendering
+// Resolve all gallery media
 const resolvedGallery = await Promise.all(
-  galleryData.map(async (item: any) => {
-    const resolvedImage = item.imageUrl
-      ? await resolveImage(item.imageUrl)
-      : null;
-    const resolvedThumbnail = item.thumbnail
+  galleryData.map(async (item: any) => ({
+    ...item,
+    resolvedImage: item.imageUrl ? await resolveImage(item.imageUrl) : null,
+    resolvedThumbnail: item.thumbnail
       ? await resolveImage(item.thumbnail)
-      : null;
-    const resolvedVideo = item.videoUrl
-      ? await resolveVideo(item.videoUrl)
-      : null;
-
-    return { ...item, resolvedImage, resolvedThumbnail, resolvedVideo };
-  }),
+      : null,
+  })),
 );
 ---
 
-<section class="gallery">
+<section class="gallery" data-background="var(--color-project)">
   <Wrapper>
-    <div class="title">
-      {
-        year && (
-          <p class="text-center">
-            <span class="button font-size-small">{year}</span>
-          </p>
-        )
-      }
-      <h1 class="fahkwang-bold font-size-1 color-white text-center">{title}</h1>
-      <GalleryNavigation />
-    </div>
-
-    <div class="content masonry">
+    <div class="content masonry gallery">
       {
         resolvedGallery.map((item) => (
-          <div class="item">
-            {item.videoUrl ? (
-              <figure class="video-container">
-                <video
-                  class="video-player"
-                  poster={item.resolvedThumbnail?.default.src}
-                >
-                  <source src={item.resolvedVideo?.default} type="video/mp4" />
-                  {item.videoAlt && (
-                    <track
-                      kind="captions"
-                      label={`Yanis Deplazes - ${item.videoAlt}`}
-                    />
-                  )}
-                  Your browser does not support the video tag.
-                </video>
-                <button class="play-button">▶</button>
-              </figure>
-            ) : item.resolvedImage ? (
-              <figure>
-                <Image
-                  src={item.resolvedImage.default}
-                  alt={`Yanis Deplazes -  ${item.imageAlt}`}
-                  format="webp"
-                  loading="lazy"
-                />
-                {item.imageAlt && <figcaption>{item.imageAlt}</figcaption>}
-              </figure>
+          <div class="item reveal-on-scroll">
+            {item.resolvedImage ? (
+              <ImageWrapper
+                src={item.resolvedImage.default}
+                alt={`Yanis Deplazes - ${item.imageAlt}`}
+                caption={item.imageAlt}
+              />
             ) : (
               <p>Image not found</p>
             )}
@@ -101,217 +47,52 @@ const resolvedGallery = await Promise.all(
   </Wrapper>
 </section>
 
-<div id="lightbox" class="lightbox">
-  <span class="close">&times;</span>
-  <button id="prev-button" class="nav-button left">&larr;</button>
-  <img class="lightbox-content" id="lightbox-img" />
-  <video class="lightbox-video" id="lightbox-video" controls></video>
-  <button id="next-button" class="nav-button right">&rarr;</button>
-</div>
-
 <style lang="scss">
   .gallery {
-    .title {
-      h1 {
-        margin-block-start: 0;
-        margin-block-end: 0;
-      }
-    }
-
     .masonry {
       opacity: 0;
       position: relative;
       visibility: hidden;
 
-      @media screen and (max-width: 754px) {
+      @media (max-width: 754px) {
         height: unset !important;
         display: flex;
         flex-direction: column;
-        gap: 5vw;
+        gap: var(--space-l);
       }
 
       .item {
-        position: relative;
+        position: absolute;
         height: auto;
-        width: 100%;
-        @media screen and (max-width: 754px) {
-          transform: translateY(0) !important;
-        }
-        @media screen and (min-width: 754px) {
-          position: absolute;
-          max-width: calc(50% - var(--space-m));
-        }
-        figure {
-          margin-inline-start: 0px;
-          margin-inline-end: 0px;
-        }
-
-        figcaption {
-          position: absolute;
-          width: 1px;
-          height: 1px;
-          padding: 0;
-          margin: -1px;
-          overflow: hidden;
-          clip: rect(0 0 0 0);
-          white-space: nowrap;
-          border: 0;
-        }
-
-        img,
-        video {
-          width: 100%; /* Ensure items take up the full column width */
-          height: 100%;
-          opacity: 0;
-          transform: scale(0.8);
-          transition: all 1.5s ease-in-out;
-        }
-
-        .video-container {
-          position: relative;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-          .video-player {
-            filter: blur(5px);
-
-            width: 100%;
-            height: auto;
-            cursor: pointer;
-            transition: ease-in-out;
-            &.playing {
-              max-height: 90vh;
-              width: auto;
-              margin-left: auto;
-              margin-right: auto;
-            }
-          }
-
-          .play-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.6);
-            border: none;
-            color: white;
-            font-size: 40px;
-            padding: 15px 20px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: opacity 0.3s ease;
-            opacity: 1;
-          }
-
-          .play-button.hidden {
-            opacity: 0;
-            pointer-events: none;
-          }
-        }
-
-        &:nth-child(odd) {
-          left: 0; /* Align the odd items to the left */
-        }
-
-        &:nth-child(even) {
-          right: 0; /* Align the even items to the right */
-        }
-        &.reveal {
-          animation: reveal 1.5s ease-in-out forwards;
-
-          img,
-          video {
-            opacity: 1;
-            transform: scale(1);
-          }
-          img {
-            cursor: zoom-in;
-          }
-        }
       }
     }
-  }
-
-  @keyframes reveal {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  .lightbox {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    justify-content: center;
-    align-items: center;
-    video {
-      max-height: 90vh;
-      max-width: 90vw;
-    }
-  }
-
-  .lightbox-content {
-    max-width: 90%;
-    max-height: 90%;
-    display: block;
-    margin: auto;
-  }
-
-  .close {
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    color: white;
-    font-size: 40px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-
-  .nav-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.6);
-    border: none;
-    color: white;
-    font-size: 30px;
-    padding: 15px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: opacity 0.3s ease;
-  }
-
-  .left {
-    left: 20px;
-  }
-
-  .right {
-    right: 20px;
-  }
-
-  .nav-button:hover {
-    background: rgba(255, 255, 255, 0.3);
-  }
-
-  .nav-button:disabled {
-    opacity: 0.3;
-    pointer-events: none;
   }
 </style>
 
 <script>
+  function getColumnCount(): number {
+    const width = window.innerWidth;
+    if (width < 900) return 1;
+    return 2;
+  }
+
+  function resolveClamp(varName: string): number {
+    const temp = document.createElement('div');
+    temp.style.position = 'absolute';
+    temp.style.visibility = 'hidden';
+    temp.style.height = `var(${varName})`;
+    document.body.appendChild(temp);
+
+    const px = parseFloat(getComputedStyle(temp).height);
+    document.body.removeChild(temp);
+
+    return px;
+  }
+
   function initMasonryGrid(
-    containerSelector: string,
-    itemSelector: string,
-    gap: number,
+    containerSelector = '.masonry',
+    itemSelector = '.item',
+    gap = 24,
   ): void {
     const container = document.querySelector(
       containerSelector,
@@ -323,213 +104,52 @@ const resolvedGallery = await Promise.all(
     ) as HTMLElement[];
     if (items.length === 0) return;
 
-    const columnHeights: number[] = [0, 0]; // Tracks height of two columns
+    let columnCount = getColumnCount();
 
-    function createMasonryLayout(): void {
-      let tallestColumnHeight = 0;
+    const layout = () => {
+      columnCount = getColumnCount();
+      const columnHeights = Array(columnCount).fill(0);
+
+      const containerWidth = container.clientWidth;
+      const totalGap = (columnCount - 1) * gap;
+      const columnWidthPx = (containerWidth - totalGap) / columnCount;
+
+      let tallest = 0;
 
       items.forEach((item, index) => {
-        const columnIndex = index % 2; // Alternate columns
-        const top = columnHeights[columnIndex];
+        const col = index % columnCount;
+        const top = columnHeights[col];
+        const left = col * (columnWidthPx + gap);
 
+        item.style.position = 'absolute';
+        item.style.width = `${columnWidthPx}px`;
+        item.style.left = `${left}px`;
         item.style.transform = `translateY(${top}px)`;
 
-        // Store height for next element placement
-        const itemHeight = item.getBoundingClientRect().height;
-        columnHeights[columnIndex] += itemHeight + gap;
-
-        // Track tallest column height for container resizing
-        tallestColumnHeight = Math.max(
-          tallestColumnHeight,
-          columnHeights[columnIndex],
-        );
+        const height = item.offsetHeight;
+        columnHeights[col] += height + gap;
+        tallest = Math.max(tallest, columnHeights[col]);
       });
 
-      // Batch DOM updates
-      requestAnimationFrame(() => {
-        if (container) {
-          // Ensure container is still available
-          container.style.height = `${tallestColumnHeight}px`;
-          container.style.opacity = '1';
-          container.style.visibility = 'visible';
-        }
-      });
-    }
+      container.style.position = 'relative';
+      container.style.height = `${tallest}px`;
+      container.style.opacity = '1';
+      container.style.visibility = 'visible';
+    };
 
-    // Debounced resize function to reduce reflow
-    let resizeTimer: number;
-    function handleResize() {
-      clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(() => {
-        columnHeights.fill(0); // Reset column heights
-        createMasonryLayout();
-      }, 200);
-    }
+    let resizeRaf: number | null = null;
+    const onResize = () => {
+      if (resizeRaf !== null) cancelAnimationFrame(resizeRaf);
+      resizeRaf = requestAnimationFrame(layout);
+    };
 
-    createMasonryLayout();
-    window.addEventListener('resize', handleResize);
+    layout();
+    window.addEventListener('resize', onResize);
   }
 
-  // Lazy load images/videos using Intersection Observer
-  function revealOnScroll(itemSelector: string): void {
-    const observer = new IntersectionObserver(
-      (entries, observer) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('reveal');
-            observer.unobserve(entry.target); // Stop observing once revealed
-          }
-        });
-      },
-      { threshold: 0.2 }, // Trigger when 20% of the element is visible
-    );
-
-    document
-      .querySelectorAll(itemSelector)
-      .forEach((item) => observer.observe(item));
-  }
-
-  // Delay execution to prevent render-blocking
   document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-      initMasonryGrid('.masonry', '.item', 100);
-      revealOnScroll('.item');
-    }, 300); // Allow other critical rendering tasks to complete first
-  });
-
-  function openLightbox(imageUrl: string): void {
-    const lightbox = document.getElementById('lightbox') as HTMLElement;
-    const lightboxImg = document.getElementById(
-      'lightbox-img',
-    ) as HTMLImageElement;
-
-    if (lightbox && lightboxImg) {
-      lightbox.style.display = 'flex'; // Show the lightbox
-      lightboxImg.src = imageUrl; // Set the clicked image
-
-      // Close when clicking outside the image
-      lightbox.addEventListener('click', (event: MouseEvent) => {
-        if (event.target === lightbox) {
-          closeLightbox();
-        }
-      });
-    }
-  }
-
-  function closeLightbox(): void {
-    const lightbox = document.getElementById('lightbox') as HTMLElement;
-    if (lightbox) {
-      lightbox.style.display = 'none';
-    }
-  }
-
-  // Attach event listeners after DOM is loaded
-  window.addEventListener('DOMContentLoaded', () => {
-    const items = document.querySelectorAll('.item');
-    const close = document.querySelector('.close');
-
-    items.forEach((item) => {
-      item.addEventListener('click', () => {
-        const img = item.querySelector('img') as HTMLImageElement;
-        if (img) {
-          openLightbox(img.src);
-        }
-      });
-    });
-    if (close) {
-      close?.addEventListener('click', () => {
-        closeLightbox();
-      });
-    }
-  });
-  document.addEventListener('DOMContentLoaded', () => {
-    const lightbox = document.getElementById('lightbox') as HTMLElement;
-    const lightboxImg = document.getElementById(
-      'lightbox-img',
-    ) as HTMLImageElement;
-    const lightboxVideo = document.getElementById(
-      'lightbox-video',
-    ) as HTMLVideoElement;
-    const closeBtn = document.querySelector('.close') as HTMLElement;
-    const prevButton = document.getElementById(
-      'prev-button',
-    ) as HTMLButtonElement;
-    const nextButton = document.getElementById(
-      'next-button',
-    ) as HTMLButtonElement;
-
-    let currentIndex = 0;
-    let mediaItems: { type: 'image' | 'video'; src: string }[] = [];
-
-    function openLightbox(index: number) {
-      if (index < 0 || index >= mediaItems.length) return; // Prevent invalid index
-
-      currentIndex = index;
-      const { src, type } = mediaItems[index];
-
-      lightbox.style.display = 'flex'; // Show the lightbox
-
-      if (type === 'image') {
-        lightboxImg.src = src;
-        lightboxImg.style.display = 'block';
-        lightboxVideo.style.display = 'none';
-        lightboxVideo.pause(); // Stop video if switching to image
-      } else {
-        lightboxVideo.src = src;
-        lightboxVideo.style.display = 'block';
-        lightboxImg.style.display = 'none';
-        lightboxVideo.play(); // Auto-play video
-      }
-
-      // Enable/disable navigation buttons
-      prevButton.style.display = currentIndex > 0 ? 'block' : 'none';
-      nextButton.style.display =
-        currentIndex < mediaItems.length - 1 ? 'block' : 'none';
-    }
-
-    function closeLightbox() {
-      lightbox.style.display = 'none';
-      lightboxVideo.pause(); // Stop video when closing
-      lightboxVideo.src = ''; // Reset video source
-    }
-
-    function nextMedia() {
-      if (currentIndex < mediaItems.length - 1) {
-        openLightbox(currentIndex + 1);
-      }
-    }
-
-    function prevMedia() {
-      if (currentIndex > 0) {
-        openLightbox(currentIndex - 1);
-      }
-    }
-
-    // Attach event listeners for gallery items
-    document.querySelectorAll('.item').forEach((item, index) => {
-      const img = item.querySelector('img') as HTMLImageElement | null;
-      const video = item.querySelector(
-        'video source',
-      ) as HTMLSourceElement | null;
-
-      if (img) {
-        mediaItems.push({ type: 'image', src: img.src });
-      } else if (video) {
-        mediaItems.push({ type: 'video', src: video.src });
-      }
-
-      item.addEventListener('click', () => {
-        openLightbox(index);
-      });
-    });
-
-    // Close lightbox event
-    if (closeBtn) {
-      closeBtn.addEventListener('click', closeLightbox);
-    }
-
-    // Navigation event listeners
-    prevButton.addEventListener('click', prevMedia);
-    nextButton.addEventListener('click', nextMedia);
+    const gap = resolveClamp('--space-5xl');
+    console.log(gap);
+    initMasonryGrid('.masonry.gallery', '.item', gap);
   });
 </script>

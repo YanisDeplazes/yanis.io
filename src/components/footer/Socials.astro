@@ -1,0 +1,45 @@
+---
+import InstagramSvg from '../svgs/InstagramSvg.astro';
+import GithubSvg from '../svgs/GithubSvg.astro';
+import BehanceSvg from '../svgs/BehanceSvg.astro';
+import VimeoSvg from '../svgs/VimeoSvg.astro';
+import LinkedinSvg from '../svgs/LinkedinSvg.astro';
+
+const links = [
+  { name: 'Instagram', href: 'https://instagram.com/yanisdeplazes' },
+  { name: 'Vimeo', href: 'https://vimeo.com/yanisdeplazes' },
+  { name: 'GitHub', href: 'https://github.com/yanisdeplazes' },
+  { name: 'Behance', href: 'https://behance.net/yanisdeplazes' },
+  { name: 'LinkedIn', href: 'https://linkedin.com/in/yanisdeplazes' },
+];
+---
+
+<nav class="socials">
+  <ul class="list" id="desktopNav">
+    {
+      links.map(({ name, href }) => (
+        <li>
+          <a
+            href={href}
+            class="color-primary link title-font font-size-6 text-uppercase"
+          >
+            {name}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style lang="scss">
+  .socials {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .list {
+      display: flex;
+      gap: var(--space-s);
+    }
+  }
+</style>

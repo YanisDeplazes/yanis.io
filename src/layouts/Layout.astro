@@ -3,6 +3,8 @@ interface Props {
   title: string;
   description: string;
   imageSrc: any;
+  infos?: string[];
+  pageColor?: string;
 }
 
 import Header from './Header.astro';
@@ -19,9 +21,8 @@ const {
   title = 'Yanis Deplazes',
   description = 'My Portfolio',
   imageSrc = 'default.png',
+  infos = [],
 } = Astro.props;
-
-console.log(imageSrc);
 ---
 
 <!doctype html>
@@ -63,11 +64,73 @@ console.log(imageSrc);
 
     <meta name="theme-color" content="#000000" />
   </head>
-  <body>
-    <Header />
-    <slot />
+  <body style={`--color-project: ${Astro.props.pageColor}`}>
+    <Header infos={infos} />
+    <main>
+      <slot />
+    </main>
     <Footer />
+    <script type="module">
+      function revealOnScroll(options = {}) {
+        const {
+          selector = '.reveal-on-scroll',
+          threshold = 0.2,
+          rootMargin = '0px',
+          once = true,
+          revealedClass = 'revealed',
+        } = options;
 
-    <script src="../scripts/gsapScroll.js"></script>
+        const observer = new IntersectionObserver(
+          (entries, obs) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add(revealedClass);
+                if (once) obs.unobserve(entry.target);
+              }
+            });
+          },
+          {
+            threshold,
+            rootMargin,
+          },
+        );
+
+        document
+          .querySelectorAll(selector)
+          .forEach((el) => observer.observe(el));
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          revealOnScroll();
+        }, 1000);
+      });
+      const sections = document.querySelectorAll('[data-background]');
+
+      function updateBackground() {
+        const viewportCenter = window.scrollY + window.innerHeight / 2;
+
+        for (const section of sections) {
+          const rect = section.getBoundingClientRect();
+          const sectionTop = window.scrollY + rect.top;
+          const sectionBottom = sectionTop + rect.height;
+
+          if (viewportCenter >= sectionTop && viewportCenter < sectionBottom) {
+            const color = section.getAttribute('data-background');
+            if (color) {
+              document.body.style.backgroundColor = color;
+            }
+            break; // No need to check others
+          }
+        }
+      }
+
+      window.addEventListener('scroll', updateBackground);
+      window.addEventListener('resize', updateBackground);
+
+      // Run once as soon as possible
+      window.addEventListener('DOMContentLoaded', updateBackground);
+      window.addEventListener('load', updateBackground);
+    </script>
   </body>
 </html>

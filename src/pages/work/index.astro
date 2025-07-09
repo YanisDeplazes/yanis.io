@@ -1,21 +1,38 @@
 ---
+// src/pages/work/index.astro
 import Layout from '../../layouts/Layout.astro';
-import Contact from '../../components/sections/Contact.astro';
+import Image from '../../assets/images/default.png';
+import Title from '../../components/sections/Title.astro';
 import Work from '../../components/sections/Work.astro';
-import { works } from '../../data/works.json'; // Import the data
+import PageContent from '../../layouts/PageContent.astro';
 
-import Image from '../../assets/images/projects/wolken.jpg';
+const title = 'Work';
+const suffix = 'Yanis Deplazes';
+const description =
+  'Browse all creative, code-based, and media work by Yanis Deplazes.';
+const infos = ['List', 'Grid'];
 ---
 
 <Layout
-  title="Work — Yanis Deplazes"
-  description="A collection of my creative projects, blending technology, design, and interactive media."
+  title={`${title} — ${suffix}`}
+  description={description}
   imageSrc={Image.src}
+  infos={infos}
 >
-  <Work
-    title="Work Archive"
-    description="A journey through my creative work—capturing moments, building experiences, and experimenting across different mediums."
-    data={works}
-  />
-  <Contact />
+  <Title title={title} />
+
+  <PageContent>
+    <p>
+      A selection of current work in progress—open-ended, evolving, and in
+      motion.
+    </p>
+  </PageContent>
+  <Work filterOngoing={true} />
+  <PageContent>
+    <p>
+      A collection of completed projects across media, tech, and visual
+      exploration.
+    </p>
+  </PageContent>
+  <Work filterOngoing={false} />
 </Layout>

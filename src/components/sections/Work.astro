@@ -1,51 +1,58 @@
 ---
 import Wrapper from '../../layouts/Wrapper.astro';
-import WorkComponent from '../Work.astro';
-import GalleryNavigation from '../GalleryNavigation.astro';
+import WorkWrapper from '../wrappers/WorkWrapper.astro';
+import { getCollection } from 'astro:content';
 
-type WorkItem = {
-  title: string;
-  types: string;
-  year: number;
-};
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/**/*.{jpg,jpeg,png,webp}',
+);
 
-const { title, description, data } = Astro.props;
-const isGalleryPage = Astro.url.pathname.includes('gallery');
-const isEventPage = Astro.url.pathname.includes('/gallery/event');
+const resolveImage = async (url: string) => images[`/src/assets${url}`]?.();
 
-// Function to generate the event link dynamically
-const generateLink = (work: WorkItem & { link?: string }) =>
-  work.link
-    ? work.link
-    : isEventPage
-      ? `/gallery/event/${work.title.toLowerCase().replace(/\s+/g, '-')}`
-      : null;
+interface Props {
+  filterOngoing: boolean;
+  className?: string;
+}
+
+const { filterOngoing, className = '' } = Astro.props;
+
+const work = (await getCollection('work'))
+  .filter(({ data }) => data.ongoing === filterOngoing)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const resolvedWork = await Promise.all(
+  work.map(async ({ data, slug }) => ({
+    slug,
+    date: new Date(data.date).getFullYear(),
+    title: data.title,
+    type: data.type.join(', '),
+    ongoing: data.ongoing,
+    resolvedThumbnail: data.thumbnail
+      ? (await resolveImage(data.thumbnail))?.default
+      : undefined,
+  })),
+);
 ---
 
-<section class="work">
+<section class={`work ${className}`} data-background="var(--color-section-7)">
   <Wrapper>
-    <div class="title">
-      <h1 class="fahkwang-bold font-size-1 color-white text-center">
-        {title}
-      </h1>
+    <div class={`content ${filterOngoing ? 'ongoing' : 'completed'}`}>
       {
-        isGalleryPage ? (
-          <GalleryNavigation />
-        ) : (
-          <p class="font-size-p">{description}</p>
+        resolvedWork.map(
+          (item) =>
+            item.resolvedThumbnail && (
+              <div class="item reveal-on-scroll">
+                <WorkWrapper
+                  slug={item.slug}
+                  date={item.date}
+                  title={item.title}
+                  type={item.type}
+                  src={item.resolvedThumbnail}
+                  ongoing={item.ongoing}
+                />
+              </div>
+            ),
         )
-      }
-    </div>
-    <div class="works">
-      {
-        data?.map((work: WorkItem) => (
-          <WorkComponent
-            title={work.title}
-            types={work.types}
-            link={generateLink(work)}
-            year={work.year}
-          />
-        ))
       }
     </div>
   </Wrapper>
@@ -53,21 +60,32 @@ const generateLink = (work: WorkItem & { link?: string }) =>
 
 <style lang="scss">
   .work {
-    .title {
-      h1 {
-        margin-block-start: 0;
-        margin-block-end: 0;
-      }
-      p {
-        margin-block-end: 150px;
-        text-align: center;
+    .content.ongoing {
+      display: flex;
+      align-items: center;
+      .item {
+        width: 100%;
+        max-width: 100%;
+        aspect-ratio: 4 / 3;
+        justify-self: start;
       }
     }
-    .works {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-2xs);
-      width: 100%;
+    .content.completed {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      row-gap: calc(100vh);
+      position: relative;
+      .item {
+        height: 70vh;
+        width: auto;
+        max-width: 100%;
+        aspect-ratio: 4 / 3;
+        justify-self: start;
+        &:nth-child(even) {
+          transform: translateY(85vh);
+          justify-self: end;
+        }
+      }
     }
   }
 </style>

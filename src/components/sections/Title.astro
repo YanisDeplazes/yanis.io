@@ -1,0 +1,201 @@
+---
+import ImageWrapper from '../wrappers/ImageWrapper.astro';
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/**/*.{jpg,jpeg,png,webp}',
+);
+
+const resolveImage = async (url: string) => images[`/src/assets${url}`]?.();
+
+interface Props {
+  title: string;
+  thumbnail?: string;
+}
+
+const breakTitle = (
+  text: string,
+  maxLines = 3,
+  minNextWordLength = 5,
+): string => {
+  const words = text.split(' ');
+  if (words.length <= 1) return text;
+
+  const lines: string[] = [];
+  let currentLine = '';
+
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i];
+    const nextWord = words[i + 1];
+
+    currentLine += (currentLine ? ' ' : '') + word;
+
+    const isLast = i === words.length - 1;
+    const shouldBreak =
+      nextWord &&
+      nextWord.length >= minNextWordLength &&
+      lines.length < maxLines - 1;
+
+    if (shouldBreak || isLast) {
+      lines.push(currentLine);
+      currentLine = '';
+    }
+  }
+
+  if (currentLine && lines.length < maxLines) {
+    lines.push(currentLine);
+  }
+
+  return lines.join('<br>');
+};
+
+const { thumbnail, title } = Astro.props;
+
+const resolvedThumbnail = thumbnail ? await resolveImage(thumbnail) : undefined;
+---
+
+<section
+  class={`title ${resolvedThumbnail ? 'has-thumbnail' : ''}`}
+  data-background="var(--color-section-1)"
+>
+  {
+    resolvedThumbnail && (
+      <div class="thumbnail">
+        <ImageWrapper
+          src={resolvedThumbnail.default}
+          alt="Yanis Deplazes"
+          caption="yanis"
+        />
+      </div>
+    )
+  }
+
+  <div class="title-container">
+    <div class="scaling-box color-primary text-uppercase">
+      <h1 id="auto-heading">
+        <span
+          class="title-font-extra-bold"
+          set:html={breakTitle(title, 3, 5)}
+        />
+      </h1>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  .title {
+    height: 16vw;
+    padding-top: 0;
+    padding-bottom: 0;
+    .thumbnail {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .title-container {
+      position: fixed;
+      width: 100%;
+      height: auto;
+      overflow: hidden;
+      top: 92px;
+      left: 0;
+      transition:
+        transform 0.05s linear,
+        top 0.05s linear;
+
+      .scaling-box {
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .scaling-box h1 {
+        white-space: nowrap;
+        display: inline-block;
+        margin: 0;
+        transform-origin: left center;
+        line-height: 1;
+        text-align: center;
+      }
+    }
+    &.has-thumbnail {
+      height: 100vh;
+      padding-bottom: 50vh;
+
+      .title-container {
+        top: 100%;
+        transform: (translateY(-100%));
+      }
+    }
+  }
+</style>
+<script>
+  function updateTitlePosition() {
+    const el = document.querySelector('.title-container');
+    const section = document.querySelector('.title');
+    if (!(el instanceof HTMLElement) || !(section instanceof HTMLElement))
+      return;
+
+    const hasThumbnail = section.classList.contains('has-thumbnail');
+    const scrollY = window.scrollY;
+
+    const start = 0;
+    const end = 1200;
+    const progress = Math.min(
+      Math.max((scrollY - start) / (end - start), 0),
+      1,
+    );
+
+    let top, translateY, scale, opacity;
+
+    if (hasThumbnail) {
+      top = 100 - 50 * progress; // 100% → 50%
+      translateY = -100 + 50 * progress; // -100% → -50%
+      scale = 1 - 0.7 * progress; // 1 → 0.3
+      el.style.top = `${top}%`;
+    } else {
+      top = 92 + (window.innerHeight / 2 - 92) * progress;
+      translateY = -50 * progress;
+      scale = 1 - 0.7 * progress;
+      el.style.top = `${top}px`;
+    }
+
+    opacity = 1 - 0.7 * progress; // 100% → 30%
+
+    el.style.opacity = `${opacity}`;
+
+    el.style.transform = `translateY(${translateY}%) scale(${scale}) `;
+  }
+
+  function scaleHeading() {
+    const heading = document.getElementById('auto-heading');
+    if (!(heading instanceof HTMLElement)) return;
+
+    const box = heading.parentElement;
+    if (!(box instanceof HTMLElement)) return;
+
+    heading.style.transform = 'scale(1)';
+    heading.style.display = 'inline-block';
+
+    const scale = box.clientWidth / heading.scrollWidth;
+    heading.style.transform = `scale(${scale})`;
+
+    const textHeight = heading.scrollHeight;
+    box.style.height = `${textHeight * scale}px`;
+  }
+
+  window.addEventListener('load', () => {
+    updateTitlePosition();
+    scaleHeading();
+  });
+  window.addEventListener('resize', () => {
+    updateTitlePosition();
+    scaleHeading();
+  });
+  window.addEventListener('scroll', updateTitlePosition);
+  window.addEventListener('DOMContentLoaded', updateTitlePosition);
+</script>

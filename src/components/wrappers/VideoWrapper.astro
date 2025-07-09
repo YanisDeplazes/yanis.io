@@ -1,0 +1,69 @@
+---
+// src/components/GalleryVideo.astro
+
+interface Props {
+  videoSrc: string;
+  posterSrc?: string;
+  alt?: string;
+}
+const { videoSrc, posterSrc, alt } = Astro.props;
+---
+
+<figure class="video-container">
+  <video class="video-player" poster={posterSrc}>
+    <source src={videoSrc} type="video/mp4" />
+    {alt && <track kind="captions" label={`Yanis Deplazes - ${alt}`} />}
+    Your browser does not support the video tag.
+  </video>
+  <button class="play-button">▶</button>
+</figure>
+
+<style lang="scss">
+  .video-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    object-fit: contain;
+
+    .video-player {
+      filter: blur(2px);
+      width: 100%;
+      height: auto;
+      max-height: 70vh;
+      max-width: 100%;
+      cursor: pointer;
+      transition: ease-in-out;
+
+      &.playing {
+        max-height: 90vh;
+        width: auto;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    .play-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
+      color: white;
+      font-size: 40px;
+      padding: 15px 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+      opacity: 1;
+
+      &.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+  }
+</style>

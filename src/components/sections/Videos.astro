@@ -1,0 +1,61 @@
+---
+// Imports
+import Wrapper from '../../layouts/Wrapper.astro';
+import VideoWrapper from '../wrappers/VideoWrapper.astro';
+
+const { videoData } = Astro.props;
+
+// Dynamic imports
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/galleries/**/*.{jpg,jpeg,png,webp}',
+);
+const videos = import.meta.glob<{ default: string }>(
+  '/src/assets/images/galleries/**/*.mp4',
+);
+
+// Resolvers
+const resolveImage = async (url: string) => images[`/src/assets${url}`]?.();
+const resolveVideo = async (url: string) => videos[`/src/assets${url}`]?.();
+
+// Resolve all gallery media
+const resolvedGallery = await Promise.all(
+  videoData.map(async (item: any) => ({
+    ...item,
+    resolvedImage: item.imageUrl ? await resolveImage(item.imageUrl) : null,
+    resolvedThumbnail: item.thumbnail
+      ? await resolveImage(item.thumbnail)
+      : null,
+    resolvedVideo: item.videoUrl ? await resolveVideo(item.videoUrl) : null,
+  })),
+);
+---
+
+<section class="videos" data-background="var(--color-project)">
+  <Wrapper>
+    <div class="content">
+      {
+        resolvedGallery.map((item) => (
+          <div class="item reveal-on-scroll">
+            {item.videoUrl ? (
+              <VideoWrapper
+                videoSrc={item.resolvedVideo?.default}
+                posterSrc={item.resolvedThumbnail?.default.src}
+                alt={item.videoAlt}
+              />
+            ) : (
+              <p>Video not found</p>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </Wrapper>
+</section>
+
+<style lang="scss">
+  .videos .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6xl);
+  }
+</style>

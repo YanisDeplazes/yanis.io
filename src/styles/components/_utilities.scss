@@ -5,6 +5,7 @@
 
 .border {
   border: 1px solid #fff3;
+
   &.radius {
     border-radius: 40px;
   }
@@ -15,23 +16,21 @@
 }
 
 .color-white {
-  color: white;
+  color: var(--color-white);
 }
 
 .color-light {
-  color: #dfded9;
+  color: var(--color-light);
 }
 
 .color-dark {
-  color: #101010;
+  color: var(--color-dark);
 }
 
-.link {
-  transition: all 0.2s ease-out;
-  &:hover {
-    color: #dfded9;
-  }
+.color-primary {
+  color: var(--color-primary);
 }
+
 
 .button {
   background-color: white;

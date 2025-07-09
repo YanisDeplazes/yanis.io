@@ -1,16 +1,31 @@
 $breakpoint-tablet: 768px;
 
 :root {
-  // Colors
+  --color-primary: #d42d2d;
+
+  --color-section-1: #101010; // Deep black
+  --color-section-2: #4D2D30; // Moody wine
+  --color-section-3: #606D5D; // Moss green
+  --color-section-4: #548687; // Soft cyan green
+  --color-section-5: #808080; // Mid gray
+  --color-section-6: #9395D3; // Dusty lavender
+  --color-section-7: #FFF1F1; // Faded rose white
+  --color-section-8: #1E1E2E; // Twilight navy
+  --color-section-9: #2B3640; // Graphite blue
+  --color-section-10: #C9A66B; // Warm gold (accent)
+  --color-section-11: #E7E7E7; // Soft white
+  --color-section-12: #2A2B3C; // Deep steel
+
+  --color-dark: #101010;
+  --color-light: #6E6E6E;
+  --color-white: #dfded9;
   --accent: 136, 58, 234;
   --accent-light: 224, 204, 250;
   --accent-dark: 49, 10, 101;
-  --accent-gradient: linear-gradient(
-    45deg,
-    rgb(var(--accent)),
-    rgb(var(--accent-light)) 30%,
-    white 60%
-  );
+  --accent-gradient: linear-gradient(45deg,
+      rgb(var(--accent)),
+      rgb(var(--accent-light)) 30%,
+      white 60%);
 
   --space-3xs: clamp(0.3125rem, 0.3125rem + 0vw, 0.3125rem);
   --space-2xs: clamp(0.5625rem, 0.5408rem + 0.1087vw, 0.625rem);
@@ -21,6 +36,9 @@ $breakpoint-tablet: 768px;
   --space-xl: clamp(3.375rem, 3.2446rem + 0.6522vw, 3.75rem);
   --space-2xl: clamp(4.5rem, 4.3261rem + 0.8696vw, 5rem);
   --space-3xl: clamp(6.75rem, 6.4891rem + 1.3043vw, 7.5rem);
+  --space-4xl: clamp(9rem, 8.7rem + 1.74vw, 10rem); // 144px to 160px
+  --space-5xl: clamp(12rem, 11.6rem + 2.6vw, 13.75rem); // 192px to 220px
+  --space-6xl: clamp(15rem, 14.5rem + 3.48vw, 17.5rem); // 240px to 280px
 
   // Spacing & Layout
   --padding-side: 20px;
@@ -32,4 +50,5 @@ $breakpoint-tablet: 768px;
     --padding-side: 40px;
     --padding-inner: 20px;
   }
+
 }

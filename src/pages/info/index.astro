@@ -1,0 +1,28 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Image from '../../assets/images/default.png';
+import Title from '../../components/sections/Title.astro';
+import PageContent from '../../layouts/PageContent.astro';
+
+const title = 'Info';
+const suffix = 'Yanis Deplazes';
+const description =
+  'A space where I showcase my work — working across different media and technologies.';
+---
+
+<Layout
+  title={`${title} — ${suffix}`}
+  description={description}
+  imageSrc={Image.src}
+>
+  <Title title={title} />
+
+  <PageContent>
+    <p>Hey I'm Yanis.</p>
+    <p>
+      Blending computer science and design as a creative coder to turn ideas
+      into reality. Currently studying Digital Ideation at HSLU. Also often
+      behind the lens, mostly shooting film photography.
+    </p>
+  </PageContent>
+</Layout>

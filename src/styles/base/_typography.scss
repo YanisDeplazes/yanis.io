@@ -1,67 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Fahkwang:wght@200;300;400;500;600;700&family=Roboto:wght@100..900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Syne:wght@400..800&display=swap');
 $breakpoint-tablet: 768px;
 
 html {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
-code {
-  font-family:
-    Menlo,
-    Monaco,
-    Lucida Console,
-    Liberation Mono,
-    DejaVu Sans Mono,
-    Bitstream Vera Sans Mono,
-    Courier New,
-    monospace;
+
+.title-font {
+  font-family: "Syne", sans-serif;
+  font-weight: 500;
+  font-style: normal;
 }
 
-// Fahkwang Font Variants
-@mixin fahkwang-style($weight, $italic: false) {
-  font-family: 'Fahkwang', serif;
-  font-weight: $weight;
-  font-style: if($italic, italic, normal);
+.title-font-bold {
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-style: normal;
 }
 
-.fahkwang-extralight {
-  @include fahkwang-style(200);
-}
-.fahkwang-light {
-  @include fahkwang-style(300);
-}
-.fahkwang-regular {
-  @include fahkwang-style(400);
-}
-.fahkwang-medium {
-  @include fahkwang-style(500);
-}
-.fahkwang-semibold {
-  @include fahkwang-style(600);
-}
-.fahkwang-bold {
-  @include fahkwang-style(700);
+.title-font-extra-bold {
+  font-family: "Syne", sans-serif;
+  font-weight: 800;
+  font-style: normal;
 }
 
-.fahkwang-extralight-italic {
-  @include fahkwang-style(200, true);
-}
-.fahkwang-light-italic {
-  @include fahkwang-style(300, true);
-}
-.fahkwang-regular-italic {
-  @include fahkwang-style(400, true);
-}
-.fahkwang-medium-italic {
-  @include fahkwang-style(500, true);
-}
-.fahkwang-semibold-italic {
-  @include fahkwang-style(600, true);
-}
-.fahkwang-bold-italic {
-  @include fahkwang-style(700, true);
-}
+
 
 .font-size-1 {
   font-size: 2.986rem;
@@ -134,4 +97,8 @@ h6 {
 
 .text-center {
   text-align: center;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
 }

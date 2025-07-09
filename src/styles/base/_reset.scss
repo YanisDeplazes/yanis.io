@@ -1,8 +1,10 @@
 html {
-  background: #101010;
+  color: white;
 
   body {
+    background-color: #101010;
     margin: 0;
+    transition: background-color 0.4s ease-in-out
   }
 }
 

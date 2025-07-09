@@ -1,0 +1,55 @@
+---
+const links = [
+  { name: 'Selected', path: '/' },
+  { name: 'Work', path: '/work' },
+  { name: 'Info', path: '/info' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="navigation">
+  <ul class="list">
+    {
+      links.map(({ name, path }) => (
+        <li class={currentPath.endsWith(path) ? 'active' : ''}>
+          <a
+            href={path}
+            class="color-primary link title-font font-size-5 text-uppercase"
+          >
+            {name}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style lang="scss">
+  .navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .list {
+      display: flex;
+      gap: var(--space-xl);
+
+      li {
+        position: relative;
+        &.active {
+          a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 1px;
+            background-color: var(--color-primary);
+            left: 0;
+            bottom: 0px;
+          }
+        }
+      }
+    }
+  }
+</style>

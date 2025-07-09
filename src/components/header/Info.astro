@@ -1,0 +1,24 @@
+---
+interface Props {
+  infos?: string[];
+}
+
+const { infos = [] } = Astro.props;
+---
+
+{
+  infos.length > 0 && (
+    <div class="info color-primary text-uppercase font-size-p">
+      {infos.map((item) => (
+        <span>[{item}]</span>
+      ))}
+    </div>
+  )
+}
+
+<style lang="scss">
+  .info {
+    display: flex;
+    gap: var(--space-s);
+  }
+</style>

@@ -1,0 +1,72 @@
+---
+import { getCollection, getEntryBySlug } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Image from '../../assets/images/default.png';
+import Title from '../../components/sections/Title.astro';
+import Gallery from '../../components/sections/Gallery.astro';
+import Videos from '../../components/sections/Videos.astro';
+import PageContent from '../../layouts/PageContent.astro';
+
+const { slug } = Astro.params;
+const project = await getEntryBySlug('work', slug);
+if (!project) {
+  throw new Error(`Project not found: ${slug}`);
+}
+
+const title = project.data.title;
+const suffix = 'Yanis Deplazes';
+const description = project.data.description;
+
+const { Content } = await project.render();
+const types = project.data.type;
+const isOngoing = project.data.ongoing;
+const year = new Date(project.data.date).getFullYear();
+
+const fallbackColors = [
+  'var(--color-section-1)',
+  'var(--color-section-2)',
+  'var(--color-section-3)',
+  'var(--color-section-4)',
+  'var(--color-section-5)',
+  'var(--color-section-6)',
+  'var(--color-section-7)',
+  'var(--color-section-8)',
+  'var(--color-section-9)',
+  'var(--color-section-10)',
+  'var(--color-section-11)',
+  'var(--color-section-12)',
+];
+const projectColor =
+  project.data.color ||
+  fallbackColors[Math.floor(Math.random() * fallbackColors.length)];
+
+const infos = [...types, isOngoing ? `${year} – Present` : String(year)];
+
+export async function getStaticPaths() {
+  const work = await getCollection('work');
+  return work.map((project) => ({
+    params: { slug: project.slug },
+  }));
+}
+---
+
+<Layout
+  title={`${title} — ${suffix}`}
+  infos={infos}
+  description={description}
+  imageSrc={Image.src}
+  pageColor={projectColor}
+>
+  <Title thumbnail={project.data.thumbnail} title={title} />
+
+  <PageContent>
+    <Content />
+  </PageContent>
+
+  {project.data.videos && <Videos videoData={project.data.videos.content} />}
+  {
+    project.data.gallery && (
+      <Gallery galleryData={project.data.gallery.content} />
+    )
+  }
+</Layout>

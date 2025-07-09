@@ -1,38 +1,38 @@
 ---
 import Wrapper from '../layouts/Wrapper.astro';
-import Navigation from '../components/Navigation.astro';
+
+import Logo from '../components/header/Logo.astro';
+import Navigation from '../components/header/Navigation.astro';
+import Info from '../components/header/Info.astro';
+
+interface Props {
+  infos?: string[];
+}
+
+const { infos = [] } = Astro.props;
 ---
 
 <header>
   <Wrapper>
-    <div class="container border radius">
-      <div class="fahkwang-bold color-white font-size-5">
-        <a href="/">Yanis</a>
-      </div>
+    <div class="container">
+      <Logo />
+      <Info infos={infos} />
       <Navigation />
     </div>
   </Wrapper>
+  <div class="fade"></div>
 </header>
 
 <style lang="scss">
   header {
     width: 100vw;
     position: fixed;
-    z-index: 100;
+    z-index: 10;
     height: auto;
     .container {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 15px;
-
-      padding: calc(var(--padding-inner) * 0.5) var(--padding-inner);
-      gap: 80px;
-      position: relative;
-      background-color: #1010101b;
-      max-width: calc(1500px - 2 * var(--padding-inner));
-      margin-left: auto;
-      margin-right: auto;
     }
   }
 </style>

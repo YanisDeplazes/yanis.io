@@ -4,11 +4,11 @@
 @import 'base/reset';
 
 // Import layout styles
-// @import 'layout/header';
-// @import 'layout/footer';
-@import 'layout/sections';
+@import 'layout/layout';
+
 
 // Import component styles
 // @import 'components/buttons';
-// @import 'components/cards';
+@import 'components/reveal';
 @import 'components/utilities';
+@import 'components/sections';

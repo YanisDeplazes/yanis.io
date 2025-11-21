@@ -170,7 +170,9 @@ import PreviousSVG from '../svgs/PreviousSVG.astro';
     const createVideo = (media: HTMLVideoElement): void => {
       const lightboxVideo = document.createElement('video');
       lightboxVideo.controls = true;
-
+      lightboxVideo.autoplay = true;
+      lightboxVideo.disablePictureInPicture = true;
+      
       const source = document.createElement('source');
       const videoSource = media.querySelector('source')?.src;
       const videoPoster = media.poster;

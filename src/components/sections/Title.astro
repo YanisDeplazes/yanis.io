@@ -9,6 +9,7 @@ const resolveImage = async (url: string) => images[`/src/assets${url}`]?.();
 interface Props {
   title: string;
   thumbnail?: string;
+  video?: string;
 }
 
 const breakTitle = (
@@ -47,29 +48,55 @@ const breakTitle = (
   return lines.join('<br>');
 };
 
-const { thumbnail, title } = Astro.props;
+const { thumbnail, video, title } = Astro.props;
 
-const resolvedThumbnail = thumbnail ? await resolveImage(thumbnail) : undefined;
+let resolvedThumbnail;
+if (thumbnail) {
+  const resolved = await resolveImage(thumbnail);
+  resolvedThumbnail = resolved?.default; // Use the URL string directly
+}
+
+let resolvedVideo;
+if (video) {
+  resolvedVideo = video; // If video is passed as a string (URL), assign directly
+}
 ---
 
 <section
-  class={`title ${resolvedThumbnail ? 'has-thumbnail' : ''}`}
-  data-background="var(--color-section-1)"
->
+  class={`title ${resolvedThumbnail ? 'has-thumbnail' : ''} ${resolvedVideo ? 'has-video' : ''}`}
+      data-background="var(--color-dark)"
+  >
   {
     resolvedThumbnail && (
       <div class="thumbnail">
         <ImageWrapper
-          src={resolvedThumbnail.default}
+          src={resolvedThumbnail}
           alt="Yanis Deplazes"
-          caption="yanis"
+          caption="Yanis"
         />
       </div>
     )
   }
 
+  {
+    resolvedVideo && (
+      <div class="video-container">
+        <video
+          class="video"
+          autoplay
+          muted
+          loop
+          playsinline
+        >
+          <source src={resolvedVideo} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    )
+  }
+
   <div class="title-container">
-    <div class="scaling-box color-primary text-uppercase">
+    <div class="scaling-box">
       <h1 id="auto-heading">
         <span
           class="title-font-extra-bold"
@@ -82,9 +109,10 @@ const resolvedThumbnail = thumbnail ? await resolveImage(thumbnail) : undefined;
 
 <style lang="scss">
   .title {
-    height: 16vw;
+    height: 100vh;
     padding-top: 0;
     padding-bottom: 0;
+    
     .thumbnail {
       position: absolute;
       top: 0;
@@ -93,8 +121,25 @@ const resolvedThumbnail = thumbnail ? await resolveImage(thumbnail) : undefined;
       height: 100vh;
       overflow: hidden;
     }
+
+    .video-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .video {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+
     .title-container {
-      position: fixed;
+      position: absolute;
       width: 100%;
       height: auto;
       overflow: hidden;
@@ -122,55 +167,27 @@ const resolvedThumbnail = thumbnail ? await resolveImage(thumbnail) : undefined;
         text-align: center;
       }
     }
+
     &.has-thumbnail {
       height: 100vh;
       padding-bottom: 50vh;
 
       .title-container {
         top: 100%;
-        transform: (translateY(-100%));
+        transform: translateY(-100%);
+      }
+    }
+
+    &.has-video {
+      .title-container {
+        top: 100%;
+        transform: translateY(-100%);
       }
     }
   }
 </style>
+
 <script>
-  function updateTitlePosition() {
-    const el = document.querySelector('.title-container');
-    const section = document.querySelector('.title');
-    if (!(el instanceof HTMLElement) || !(section instanceof HTMLElement))
-      return;
-
-    const hasThumbnail = section.classList.contains('has-thumbnail');
-    const scrollY = window.scrollY;
-
-    const start = 0;
-    const end = 1200;
-    const progress = Math.min(
-      Math.max((scrollY - start) / (end - start), 0),
-      1,
-    );
-
-    let top, translateY, scale, opacity;
-
-    if (hasThumbnail) {
-      top = 100 - 50 * progress; // 100% → 50%
-      translateY = -100 + 50 * progress; // -100% → -50%
-      scale = 1 - 0.7 * progress; // 1 → 0.3
-      el.style.top = `${top}%`;
-    } else {
-      top = 92 + (window.innerHeight / 2 - 92) * progress;
-      translateY = -50 * progress;
-      scale = 1 - 0.7 * progress;
-      el.style.top = `${top}px`;
-    }
-
-    opacity = 1 - 0.7 * progress; // 100% → 30%
-
-    el.style.opacity = `${opacity}`;
-
-    el.style.transform = `translateY(${translateY}%) scale(${scale}) `;
-  }
-
   function scaleHeading() {
     const heading = document.getElementById('auto-heading');
     if (!(heading instanceof HTMLElement)) return;
@@ -189,13 +206,12 @@ const resolvedThumbnail = thumbnail ? await resolveImage(thumbnail) : undefined;
   }
 
   window.addEventListener('load', () => {
-    updateTitlePosition();
     scaleHeading();
   });
+
   window.addEventListener('resize', () => {
-    updateTitlePosition();
     scaleHeading();
   });
-  window.addEventListener('scroll', updateTitlePosition);
-  window.addEventListener('DOMContentLoaded', updateTitlePosition);
+
+  
 </script>

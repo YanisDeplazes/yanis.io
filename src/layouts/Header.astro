@@ -3,20 +3,14 @@ import Wrapper from '../layouts/Wrapper.astro';
 
 import Logo from '../components/header/Logo.astro';
 import Navigation from '../components/header/Navigation.astro';
-import Info from '../components/header/Info.astro';
 
-interface Props {
-  infos?: string[];
-}
 
-const { infos = [] } = Astro.props;
 ---
 
 <header>
   <Wrapper>
     <div class="container">
       <Logo />
-      <Info infos={infos} />
       <Navigation />
     </div>
   </Wrapper>
@@ -29,10 +23,32 @@ const { infos = [] } = Astro.props;
     position: fixed;
     z-index: 10;
     height: auto;
+    background-color: var(--color-project);
+    border-bottom: 5px solid var(--color-project);
+    transition: all 0.4s ease-in-out;
+
     .container {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: var(--space-2xs) 0px;
+      gap: var(--space-m);
+      @media (max-width: 754px) {
+        &::before{
+          content: "";
+          width: 30px;
+        }
+            }
     }
+    &::after{
+      content: "";
+      width: 100%;
+      height: 1px;
+      bottom: 0;
+      left: 0;
+      position: absolute;
+      background-color: var(--color-primary);
+    }
+
   }
 </style>

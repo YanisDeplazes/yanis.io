@@ -1,0 +1,255 @@
+---
+import CloseSVG from '../svgs/CloseSVG.astro';
+import NextSVG from '../svgs/NextSVG.astro';
+import PreviousSVG from '../svgs/PreviousSVG.astro';
+---
+
+<div class="lightbox">
+  <div class="wrapper">
+    <div class="lightbox-content">
+      <figure></figure>
+      <button class="close-btn">
+        <CloseSVG />
+      </button>
+      <button class="next-btn">
+        <NextSVG />
+      </button>
+      <button class="previous-btn">
+        <PreviousSVG />
+      </button>
+    </div>
+  </div>
+</div>
+
+<style lang="scss" is:global>
+  .lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.3s ease,
+      visibility 0s 0.3s;
+
+    & .wrapper {
+      position: relative;
+      margin: var(--padding-side);
+      height: calc(100% - 2 * var(--padding-side));
+      width: calc(100% - 2 * var(--padding-side));
+    }
+
+    &-content {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    &.active {
+      opacity: 1;
+      visibility: visible;
+      transition:
+        opacity 0.3s ease,
+        visibility 0s 0s;
+    }
+
+    p {
+      opacity: 0.5;
+    }
+
+    .close-btn,
+    .previous-btn,
+    .next-btn {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      transition: transform 0.2s ease;
+      background-color: #d42d2d2e;
+      border-radius: 999px;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+
+      svg {
+        width: 25px;
+        height: 25px;
+        stroke: var(--color-primary);
+      }
+    }
+
+    .previous-btn,
+    .next-btn {
+      top: 50%;
+      transition: transformY(-50%);
+    }
+    .next-btn {
+      right: 0px;
+    }
+    .previous-btn {
+      left: 0px;
+    }
+    .close-btn {
+      top: 0;
+      right: 0;
+    }
+
+    figure {
+      margin: var(--padding-side);
+      height: calc(100% - 2 * var(--padding-side));
+      width: calc(100% - 2 * var(--padding-side));
+      img,
+      video {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const body = document.querySelector('body') as HTMLElement;
+    const lightbox = document.querySelector('.lightbox') as HTMLElement;
+    const closeButton = lightbox.querySelector('.close-btn') as HTMLElement;
+    const figures = document.querySelectorAll(
+      'figure',
+    ) as NodeListOf<HTMLElement>;
+    const lightboxFigure = lightbox.querySelector('figure') as HTMLElement;
+
+    let currentIndex: number = 0;
+
+    if (!lightbox || !closeButton || !figures || !lightboxFigure) return;
+
+    // Function to update the lightbox content with a new image or video
+    const updateLightboxContent = (index: number): void => {
+      const figure = figures[index];
+      const media = figure.querySelector('img, video') as
+        | HTMLImageElement
+        | HTMLVideoElement;
+
+      if (!media) return;
+
+      lightboxFigure.innerHTML = ''; // Clear existing content
+
+      // Check if it's an HTMLImageElement or HTMLVideoElement
+      if (media instanceof HTMLImageElement) {
+        createImage(media); // media is of type HTMLImageElement
+        const altText = media.alt || 'No description available'; // Alt text for image
+        const altElement = document.createElement('p');
+        altElement.textContent = altText; // Add alt text as a paragraph below the image
+        lightboxFigure.appendChild(altElement);
+      } else if (media instanceof HTMLVideoElement) {
+        createVideo(media); // media is of type HTMLVideoElement
+      }
+    };
+
+    // Function to create and append the image to the lightbox
+    const createImage = (media: HTMLImageElement): void => {
+      const lightboxImage = document.createElement('img');
+      lightboxImage.src = media.src;
+      lightboxFigure.appendChild(lightboxImage);
+    };
+
+    // Function to create and append the video to the lightbox
+    const createVideo = (media: HTMLVideoElement): void => {
+      const lightboxVideo = document.createElement('video');
+      lightboxVideo.controls = true;
+
+      const source = document.createElement('source');
+      const videoSource = media.querySelector('source')?.src;
+      const videoPoster = media.poster;
+
+      if (videoSource) {
+        source.src = videoSource;
+        lightboxVideo.appendChild(source);
+        lightboxFigure.appendChild(lightboxVideo);
+      }
+      if (videoPoster) {
+        lightboxVideo.poster = videoPoster;
+      }
+    };
+
+    // Function to stop the currently playing video
+    const stopCurrentVideo = (): void => {
+      const currentVideo = lightboxFigure.querySelector(
+        'video',
+      ) as HTMLVideoElement;
+      if (currentVideo) {
+        currentVideo.pause(); // Stop the video
+        currentVideo.currentTime = 0; // Reset the video to the start
+      }
+    };
+
+    // Function to handle opening the lightbox when an image or video is clicked
+    const openLightbox = (index: number): void => {
+      lightbox.classList.add('active');
+      body.style.overflow = 'hidden';
+      currentIndex = index;
+      updateLightboxContent(currentIndex);
+    };
+
+    // Function to handle closing the lightbox
+    const closeLightbox = (): void => {
+      lightbox.classList.remove('active');
+      body.style.overflow = 'auto';
+      stopCurrentVideo(); // Stop the video when closing the lightbox
+    };
+
+    // Function to navigate to the next media
+    const goToNext = (event: Event): void => {
+      event.stopPropagation(); // Prevent triggering the lightbox click event
+      currentIndex = (currentIndex + 1) % (figures.length - 1); // Wrap around to the first item when reaching the end
+      updateLightboxContent(currentIndex);
+    };
+
+    // Function to navigate to the previous media
+    const goToPrevious = (event: Event): void => {
+      event.stopPropagation(); // Prevent triggering the lightbox click event
+      currentIndex = (currentIndex - 2 + figures.length) % (figures.length - 1); // Wrap around to the last item when reaching the start
+      updateLightboxContent(currentIndex);
+    };
+
+    // Event listener for each figure to open the lightbox
+    figures.forEach((figure, index) => {
+      figure.addEventListener('click', () => openLightbox(index));
+    });
+
+    // Close button functionality
+    closeButton.addEventListener('click', closeLightbox);
+
+    // Close the lightbox if the user clicks outside the media (on the lightbox overlay)
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        // Check if the key pressed is "Esc"
+        closeLightbox();
+      }
+    });
+
+    // Event listeners for next and previous buttons
+    const nextButton = lightbox.querySelector('.next-btn') as HTMLElement;
+    const prevButton = lightbox.querySelector('.previous-btn') as HTMLElement;
+
+    if (nextButton) nextButton.addEventListener('click', goToNext);
+    if (prevButton) prevButton.addEventListener('click', goToPrevious);
+  });
+</script>

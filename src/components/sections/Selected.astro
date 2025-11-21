@@ -1,30 +1,9 @@
 ---
 import Wrapper from '../../layouts/Wrapper.astro';
 import SelectedWrapper from '../wrappers/SelectedWrapper.astro';
-import { getCollection } from 'astro:content';
+import { getSortedWork } from '../../utils/workUtils.ts';
 
-const images = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/images/**/*.{jpg,jpeg,png,webp}',
-);
-
-const resolveImage = async (url: string) => images[`/src/assets${url}`]?.();
-const work = (await getCollection('work'))
-  .filter(({ data }) => data.selected === true)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-
-const resolvedSelected = await Promise.all(
-  work.map(async ({ data, slug }) => ({
-    slug,
-    date: new Date(data.date).getFullYear(),
-    title: data.title,
-    type: data.type.join(', '),
-    ongoing: data.ongoing,
-    color: data.color,
-    resolvedThumbnail: data.thumbnail
-      ? (await resolveImage(data.thumbnail))?.default
-      : undefined,
-  })),
-);
+const resolvedSelected = await getSortedWork((data) => data.selected === true);
 ---
 
 <section class="selection">
@@ -34,19 +13,17 @@ const resolvedSelected = await Promise.all(
         resolvedSelected.map(
           (item) =>
             item.resolvedThumbnail && (
-              <section
-                class="item reveal-on-scroll"
-                data-background={item.color}
-              >
+              <div class="item reveal-on-scroll" data-title={item.title}>
                 <SelectedWrapper
                   slug={item.slug}
-                  date={item.date}
+                  start={item.start}
+                  end={item.end}
                   title={item.title}
                   type={item.type}
                   src={item.resolvedThumbnail}
                   ongoing={item.ongoing}
                 />
-              </section>
+              </div>
             ),
         )
       }
@@ -57,9 +34,20 @@ const resolvedSelected = await Promise.all(
 <style lang="scss">
   .selection {
     .content {
-      display: flex;
+      display: grid;
+      width: 100%;
+      grid-template-columns: repeat(1, 1fr);
+      grid-template-rows: repeat(1, 1fr);
       align-items: center;
-      flex-direction: column;
+      gap: var(--space-3xs);
+
+      @media (min-width: 755px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media (min-width: 1100px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
   }
 </style>

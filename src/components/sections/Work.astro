@@ -1,53 +1,34 @@
 ---
 import Wrapper from '../../layouts/Wrapper.astro';
 import WorkWrapper from '../wrappers/WorkWrapper.astro';
-import { getCollection } from 'astro:content';
+import { getSortedWork } from '../../utils/workUtils.ts';
 
-const images = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/images/**/*.{jpg,jpeg,png,webp}',
-);
+// Get all work (ongoing and finished)
+const allWork = await getSortedWork((data) => data.ongoing !== undefined); // Get all work (both ongoing and finished)
 
-const resolveImage = async (url: string) => images[`/src/assets${url}`]?.();
+// Separate ongoing and finished work
+const ongoingWork = allWork.filter(item => item.ongoing === true);
+const finishedWork = allWork.filter(item => item.ongoing === false);
 
-interface Props {
-  filterOngoing: boolean;
-  className?: string;
-}
-
-const { filterOngoing, className = '' } = Astro.props;
-
-const work = (await getCollection('work'))
-  .filter(({ data }) => data.ongoing === filterOngoing)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-
-const resolvedWork = await Promise.all(
-  work.map(async ({ data, slug }) => ({
-    slug,
-    date: new Date(data.date).getFullYear(),
-    title: data.title,
-    type: data.type.join(', '),
-    ongoing: data.ongoing,
-    resolvedThumbnail: data.thumbnail
-      ? (await resolveImage(data.thumbnail))?.default
-      : undefined,
-  })),
-);
+// Combine the lists, ongoing first
+const resolvedWork = [...ongoingWork, ...finishedWork];
 ---
 
-<section class={`work ${className}`} data-background="var(--color-section-7)">
+<section class={`work ${Astro.props.className || ''}`}>
   <Wrapper>
-    <div class={`content ${filterOngoing ? 'ongoing' : 'completed'}`}>
+    <div class={`content`}>
       {
         resolvedWork.map(
           (item) =>
             item.resolvedThumbnail && (
-              <div class="item reveal-on-scroll">
+              <div class="item">
                 <WorkWrapper
                   slug={item.slug}
-                  date={item.date}
+                  start={item.start}
                   title={item.title}
                   type={item.type}
                   src={item.resolvedThumbnail}
+                  end={item.end}
                   ongoing={item.ongoing}
                 />
               </div>
@@ -59,33 +40,9 @@ const resolvedWork = await Promise.all(
 </section>
 
 <style lang="scss">
-  .work {
-    .content.ongoing {
-      display: flex;
-      align-items: center;
-      .item {
-        width: 100%;
-        max-width: 100%;
-        aspect-ratio: 4 / 3;
-        justify-self: start;
-      }
-    }
-    .content.completed {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      row-gap: calc(100vh);
-      position: relative;
-      .item {
-        height: 70vh;
-        width: auto;
-        max-width: 100%;
-        aspect-ratio: 4 / 3;
-        justify-self: start;
-        &:nth-child(even) {
-          transform: translateY(85vh);
-          justify-self: end;
-        }
-      }
-    }
+  .work .content {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
   }
 </style>

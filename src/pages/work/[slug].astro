@@ -1,47 +1,57 @@
 ---
-import { getCollection, getEntryBySlug } from 'astro:content';
+interface ProjectData {
+  title: string;
+  description: string;
+  start: Date;
+  end?: Date;
+  type: string[];
+  thumbnail: string;
+  selected: boolean;
+  ongoing: boolean;
+  gallery?: {
+    content?: { imageUrl?: string; alt?: string; videoUrl?: string }[];
+  };
+}
+
+interface Project {
+  id: string;
+  data: ProjectData;
+  body: string;
+  filePath: string;
+  digest: string;
+  rendered: {
+    html: string;
+    metadata: any;
+  };
+  collection: string;
+  slug: string;
+  render: () => Promise<any>;
+}
+
+import { getCollection, getEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Image from '../../assets/images/default.png';
-import Title from '../../components/sections/Title.astro';
 import Gallery from '../../components/sections/Gallery.astro';
-import Videos from '../../components/sections/Videos.astro';
-import PageContent from '../../layouts/PageContent.astro';
+import Lightbox from '../../components/sections/Lightbox.astro';
+import Description from '../../components/sections/Description.astro';
 
 const { slug } = Astro.params;
-const project = await getEntryBySlug('work', slug);
-if (!project) {
+
+const loadProject = await getEntry('work', slug);
+
+if (!loadProject) {
   throw new Error(`Project not found: ${slug}`);
 }
 
-const title = project.data.title;
+const { title, description, end, type, ongoing, start, gallery } =
+  loadProject.data;
+
 const suffix = 'Yanis Deplazes';
-const description = project.data.description;
 
-const { Content } = await project.render();
-const types = project.data.type;
-const isOngoing = project.data.ongoing;
-const year = new Date(project.data.date).getFullYear();
+// Render project content
+const { Content } = await loadProject.render();
 
-const fallbackColors = [
-  'var(--color-section-1)',
-  'var(--color-section-2)',
-  'var(--color-section-3)',
-  'var(--color-section-4)',
-  'var(--color-section-5)',
-  'var(--color-section-6)',
-  'var(--color-section-7)',
-  'var(--color-section-8)',
-  'var(--color-section-9)',
-  'var(--color-section-10)',
-  'var(--color-section-11)',
-  'var(--color-section-12)',
-];
-const projectColor =
-  project.data.color ||
-  fallbackColors[Math.floor(Math.random() * fallbackColors.length)];
-
-const infos = [...types, isOngoing ? `${year} – Present` : String(year)];
-
+// Generate static paths for all projects (slug-based)
 export async function getStaticPaths() {
   const work = await getCollection('work');
   return work.map((project) => ({
@@ -52,21 +62,19 @@ export async function getStaticPaths() {
 
 <Layout
   title={`${title} — ${suffix}`}
-  infos={infos}
   description={description}
   imageSrc={Image.src}
-  pageColor={projectColor}
 >
-  <Title thumbnail={project.data.thumbnail} title={title} />
-
-  <PageContent>
+  <Description
+    title={title}
+    start={start}
+    end={end}
+    ongoing={ongoing}
+    type={type.join(', ')}
+  >
     <Content />
-  </PageContent>
+  </Description>
 
-  {project.data.videos && <Videos videoData={project.data.videos.content} />}
-  {
-    project.data.gallery && (
-      <Gallery galleryData={project.data.gallery.content} />
-    )
-  }
+  {gallery && <Gallery galleryData={gallery.content} />}
+  <Lightbox galleryData={gallery?.content} />
 </Layout>

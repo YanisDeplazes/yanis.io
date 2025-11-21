@@ -1,37 +1,49 @@
 ---
 title: 'Experimental Visuals'
 description: ''
-date: 2025-04-20
+start: 2025-04-20
+end: 2025-10-11
 slug: 'experimental-visuals'
-type: ['mixed']
-thumbnail: '/images/galleries/experimental/11.jpg'
-color: 'var(--color-section-1)'
+type: ['stills']
+thumbnail: '/images/galleries/experimental/14.jpg'
 selected: false
 ongoing: true
 gallery:
   content:
+    - imageUrl: '/images/galleries/experimental/16.jpg'
+      alt: 'Experimental - 16'
+    - imageUrl: '/images/galleries/experimental/15.jpg'
+      alt: 'Experimental - 15'
+    - imageUrl: '/images/galleries/experimental/14.jpg'
+      alt: 'Experimental - 14'
+    - imageUrl: '/images/galleries/experimental/13.jpg'
+      alt: 'Experimental - 13'
+    - imageUrl: '/images/galleries/experimental/12.jpg'
+      alt: 'Experimental - 12'
     - imageUrl: '/images/galleries/experimental/11.jpg'
-      imageAlt: 'Experimental - 11'
+      alt: 'Experimental - 11'
     - imageUrl: '/images/galleries/experimental/10.jpg'
-      imageAlt: 'Experimental - 10'
+      alt: 'Experimental - 10'
     - imageUrl: '/images/galleries/experimental/9.jpg'
-      imageAlt: 'Experimental - 9'
+      alt: 'Experimental - 9'
     - imageUrl: '/images/galleries/experimental/8.jpg'
-      imageAlt: 'Experimental - 8'
+      alt: 'Experimental - 8'
     - imageUrl: '/images/galleries/experimental/7.jpg'
-      imageAlt: 'Experimental - 7'
+      alt: 'Experimental - 7'
     - imageUrl: '/images/galleries/experimental/6.jpg'
-      imageAlt: 'Experimental - 6'
+      alt: 'Experimental - 6'
     - imageUrl: '/images/galleries/experimental/5.jpg'
-      imageAlt: 'Experimental - 5'
+      alt: 'Experimental - 5'
     - imageUrl: '/images/galleries/experimental/4.jpg'
-      imageAlt: 'Experimental - 4'
+      alt: 'Experimental - 4'
     - imageUrl: '/images/galleries/experimental/3.jpg'
-      imageAlt: 'Experimental - 3'
+      alt: 'Experimental - 3'
     - imageUrl: '/images/galleries/experimental/2.jpg'
-      imageAlt: 'Experimental - 2'
+      alt: 'Experimental - 2'
     - imageUrl: '/images/galleries/experimental/1.jpg'
-      imageAlt: 'Experimental - 1'
+      alt: 'Experimental - 1'
 ---
 
-**Experimental Visuals** is an ongoing series exploring unconventional aesthetics through mixed media. Blending analog textures, digital manipulation, and raw compositions, it serves as a space for visual experimentation without constraints.
+**Experimental Visuals** is an ongoing series that pushes the boundaries of traditional photography. Focusing on the entire process—from manipulating film (pushing, pulling, distorting) to using unconventional techniques
+
+This work explores raw, abstract aesthetics. The resulting images are chaotic, surreal, and full of texture, where the process itself becomes as important as the final composition.

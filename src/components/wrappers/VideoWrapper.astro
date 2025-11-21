@@ -25,8 +25,10 @@ const { videoSrc, posterSrc, alt } = Astro.props;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-
     object-fit: contain;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    margin: 0;
 
     .video-player {
       filter: blur(2px);
@@ -67,3 +69,4 @@ const { videoSrc, posterSrc, alt } = Astro.props;
     }
   }
 </style>
+

@@ -1,74 +1,121 @@
 ---
 import { Image } from 'astro:assets';
+import Info from '../sections/Info.astro';
 
 interface Props {
   slug: string;
-  date: number;
+  start: Date;
   title: string;
   type: string;
-  src: ImageMetadata;
+  end?: Date;
   ongoing?: boolean;
   caption?: string;
+  src: ImageMetadata;
 }
 
-const { slug, date, title, type, src, ongoing = false } = Astro.props;
+const { slug, start, end, title, type, src, ongoing = false } = Astro.props;
 ---
 
 <div class="work">
-  <a href={`/work/${slug}`}>
-    <figure>
-      <Image src={src} alt={title} format="webp" loading="lazy" />
-      {title && <figcaption>{title}</figcaption>}
-    </figure>
-
+  <a href={`/work/${slug}`} class="work-link">
     <div class="overlay">
-      <div class="details text-uppercase color-primary">
-        <span>[{ongoing ? `${date} – Present` : date}]</span>
-        <span>[{type}]</span>
-      </div>
-      <h2
-        class="title title-font-bold font-size-6 text-uppercase color-primary"
-      >
+      <h2 class="title title-font-bold font-size-4">
         {title}
       </h2>
+      <Info start={start} end={end} ongoing={ongoing} type={type} />
     </div>
+
+    <figure class="floating-image">
+      <Image src={src} alt={title} format="webp" loading="lazy" />
+    </figure>
   </a>
 </div>
+<script>
+  const works = document.querySelectorAll<HTMLElement>('.work');
+
+  works.forEach((work) => {
+    const img = work.querySelector<HTMLElement>('.floating-image');
+    const link = work.querySelector<HTMLElement>('.work-link');
+    if (!img || !link) return;
+
+    const rect = link.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    work.addEventListener('mousemove', (e: MouseEvent) => {
+      // Adjust for scroll offset
+      const offsetX = (e.clientX + window.scrollX - centerX) * 0.2;
+      const offsetY = (e.clientY + window.scrollY - centerY) * 0.2;
+      img.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(1.05)`;
+    });
+
+    work.addEventListener('mouseenter', () => {
+      img.style.opacity = '1';
+    });
+
+    work.addEventListener('mouseleave', () => {
+      img.style.opacity = '0';
+      img.style.transform = 'translate(-50%, -50%) scale(1)';
+    });
+  });
+</script>
 
 <style lang="scss">
   .work {
     position: relative;
-    padding: var(--space-m) 0px;
+    &::after {
+      content: '';
+      background-color: var(--color-primary);
+      height: 1px;
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      opacity: 0.5;
+    }
 
-    figure {
-      margin: 0;
-
-      img {
-        aspect-ratio: 4 / 3;
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-        transition: all 1.5s ease-in-out;
-      }
-
-      figcaption {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0 0 0 0);
-        white-space: nowrap;
-        border: 0;
+    &:hover {
+      .overlay .title,
+      .overlay .details {
+        opacity: 0.7;
       }
     }
 
     .overlay {
       opacity: 1;
       transition: all 1.5s ease-in-out;
-      & .title {
-        margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+
+      .details {
+        transition: all 0.2s ease-in-out;
+        text-align: right;
+      }
+    }
+
+    .floating-image {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300px;
+      height: 200px;
+      pointer-events: none;
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0;
+      transition:
+        opacity 0.5s ease,
+        transform 0.2s ease;
+      z-index: 10;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        will-change: transform;
       }
     }
   }

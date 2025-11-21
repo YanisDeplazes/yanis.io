@@ -1,26 +1,41 @@
 <div class="logo">
-  <a
-    href="/"
-    class="color-primary site-title title-font-bold font-size-5 text-uppercase"
-  >
+  <a href="/" class="site-title title-font-bold font-size-5">
     Yanis Deplazes
   </a>
-  <p class="color-primary description text-uppercase font-size-p">
-    Visual Artist<br />From Switzerland
+  <p class="description font-size-p">
+    Visual Artist From Switzerland
   </p>
 </div>
 
 <style lang="scss">
   .logo {
     display: flex;
-    gap: var(--space-s);
+    gap: var(--space-3xs);
+    align-items: center;
+    flex-direction: column;
+    @media (min-width: 755px) {
+      align-items: end;
+      flex-direction: row;
+      height: 40px;
+      gap: var(--space-s);
+    }
+
     .site-title {
       position: relative;
-      top: -4px; // Visually align
+
+      top: 3px; // Visually align
+      @media (max-width: 754px) {
+        font-size: 12px !important;
+      }
     }
     .description {
       margin-block-start: 0;
       margin-block-end: 0;
+      text-align: center;
+      @media (min-width: 755px) {
+        max-width: 168px;
+        text-align: left;
+      }
     }
   }
 </style>

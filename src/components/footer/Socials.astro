@@ -1,10 +1,4 @@
 ---
-import InstagramSvg from '../svgs/InstagramSvg.astro';
-import GithubSvg from '../svgs/GithubSvg.astro';
-import BehanceSvg from '../svgs/BehanceSvg.astro';
-import VimeoSvg from '../svgs/VimeoSvg.astro';
-import LinkedinSvg from '../svgs/LinkedinSvg.astro';
-
 const links = [
   { name: 'Instagram', href: 'https://instagram.com/yanisdeplazes' },
   { name: 'Vimeo', href: 'https://vimeo.com/yanisdeplazes' },
@@ -21,7 +15,8 @@ const links = [
         <li>
           <a
             href={href}
-            class="color-primary link title-font font-size-6 text-uppercase"
+            target="_blank"
+            class="link title-font font-size-6"
           >
             {name}
           </a>
@@ -36,9 +31,10 @@ const links = [
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     .list {
       display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: var(--space-s);
     }
   }

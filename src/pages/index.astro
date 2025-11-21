@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Image from '../assets/images/default.png';
 import Selected from '../components/sections/Selected.astro';
 import Title from '../components/sections/Title.astro';
+import Video from '../assets/videos/hero.mp4';
 
 const title = 'Portfolio';
 const suffix = 'Yanis Deplazes';
@@ -15,6 +16,6 @@ const description =
   description={description}
   imageSrc={Image.src}
 >
-  <Title title={suffix} />
+  <Title video={Video} title={`${title}`} />
   <Selected />
 </Layout>

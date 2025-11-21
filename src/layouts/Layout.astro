@@ -3,7 +3,6 @@ interface Props {
   title: string;
   description: string;
   imageSrc: any;
-  infos?: string[];
   pageColor?: string;
 }
 
@@ -15,13 +14,12 @@ import '../styles/main.scss';
 const baseUrl = 'https://yanis.io';
 const currentPath = Astro.url.pathname;
 const url = `${baseUrl}${currentPath}`;
+const pageColor = Astro.props.pageColor || 'var(--color-section-1)';
 
-// Ensure props always have default values
 const {
   title = 'Yanis Deplazes',
   description = 'My Portfolio',
   imageSrc = 'default.png',
-  infos = [],
 } = Astro.props;
 ---
 
@@ -64,8 +62,8 @@ const {
 
     <meta name="theme-color" content="#000000" />
   </head>
-  <body style={`--color-project: ${Astro.props.pageColor}`}>
-    <Header infos={infos} />
+  <body style={`--color-project: ${pageColor}`}>
+    <Header />
     <main>
       <slot />
     </main>
@@ -105,32 +103,20 @@ const {
           revealOnScroll();
         }, 1000);
       });
-      const sections = document.querySelectorAll('[data-background]');
+    </script>
 
-      function updateBackground() {
-        const viewportCenter = window.scrollY + window.innerHeight / 2;
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const navigation = document.querySelector('header .list');
+        const hamburger = document.querySelector('header .hamburger');
 
-        for (const section of sections) {
-          const rect = section.getBoundingClientRect();
-          const sectionTop = window.scrollY + rect.top;
-          const sectionBottom = sectionTop + rect.height;
+        if (!navigation || !hamburger) return;
 
-          if (viewportCenter >= sectionTop && viewportCenter < sectionBottom) {
-            const color = section.getAttribute('data-background');
-            if (color) {
-              document.body.style.backgroundColor = color;
-            }
-            break; // No need to check others
-          }
-        }
-      }
-
-      window.addEventListener('scroll', updateBackground);
-      window.addEventListener('resize', updateBackground);
-
-      // Run once as soon as possible
-      window.addEventListener('DOMContentLoaded', updateBackground);
-      window.addEventListener('load', updateBackground);
+        hamburger.addEventListener('click', () => {
+          navigation.classList.toggle('open');
+          hamburger.classList.toggle('open');
+        });
+      });
     </script>
   </body>
 </html>

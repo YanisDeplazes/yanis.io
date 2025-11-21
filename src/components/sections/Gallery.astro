@@ -1,7 +1,7 @@
 ---
-// Imports
 import Wrapper from '../../layouts/Wrapper.astro';
 import ImageWrapper from '../wrappers/ImageWrapper.astro';
+import VideoWrapper from '../wrappers/VideoWrapper.astro';
 
 const { galleryData } = Astro.props;
 
@@ -9,39 +9,49 @@ const { galleryData } = Astro.props;
 const images = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/images/galleries/**/*.{jpg,jpeg,png,webp}',
 );
+const videos = import.meta.glob<{ default: string }>(
+  '/src/assets/images/galleries/**/*.mp4',
+);
 
 // Resolvers
 const resolveImage = async (url: string) => images[`/src/assets${url}`]?.();
+const resolveVideo = async (url: string) => videos[`/src/assets${url}`]?.();
 
 // Resolve all gallery media
 const resolvedGallery = await Promise.all(
   galleryData.map(async (item: any) => ({
     ...item,
     resolvedImage: item.imageUrl ? await resolveImage(item.imageUrl) : null,
-    resolvedThumbnail: item.thumbnail
-      ? await resolveImage(item.thumbnail)
-      : null,
+    resolvedVideo: item.videoUrl ? await resolveVideo(item.videoUrl) : null,
   })),
 );
 ---
 
-<section class="gallery" data-background="var(--color-project)">
+<section class="gallery">
   <Wrapper>
     <div class="content masonry gallery">
       {
-        resolvedGallery.map((item) => (
-          <div class="item reveal-on-scroll">
-            {item.resolvedImage ? (
+        resolvedGallery.map((item) =>
+          item.resolvedVideo && item.resolvedImage ? (
+            <div class="item video-item reveal-on-scroll">
+              <VideoWrapper
+                videoSrc={item.resolvedVideo.default}
+                alt={`Yanis Deplazes - ${item.alt}`}
+                posterSrc={item.resolvedImage.default.src}
+              />
+            </div>
+          ) : item.resolvedImage ? (
+            <div class="item image-item reveal-on-scroll">
               <ImageWrapper
                 src={item.resolvedImage.default}
-                alt={`Yanis Deplazes - ${item.imageAlt}`}
-                caption={item.imageAlt}
+                alt={`Yanis Deplazes - ${item.alt}`}
+                caption={item.alt}
               />
-            ) : (
-              <p>Image not found</p>
-            )}
-          </div>
-        ))
+            </div>
+          ) : (
+            <p>Media not found</p> // In case there's neither a video nor an image
+          ),
+        )
       }
     </div>
   </Wrapper>
@@ -50,11 +60,13 @@ const resolvedGallery = await Promise.all(
 <style lang="scss">
   .gallery {
     .masonry {
-      opacity: 0;
       position: relative;
-      visibility: hidden;
+      @media (min-width: 1000px) {
+        opacity: 0;
+        visibility: hidden;
+      }
 
-      @media (max-width: 754px) {
+      @media (max-width: 999px) {
         height: unset !important;
         display: flex;
         flex-direction: column;
@@ -62,8 +74,8 @@ const resolvedGallery = await Promise.all(
       }
 
       .item {
-        position: absolute;
         height: auto;
+        width: 100%;
       }
     }
   }
@@ -72,7 +84,7 @@ const resolvedGallery = await Promise.all(
 <script>
   function getColumnCount(): number {
     const width = window.innerWidth;
-    if (width < 900) return 1;
+    if (width < 1000) return 1;
     return 2;
   }
 
@@ -89,10 +101,70 @@ const resolvedGallery = await Promise.all(
     return px;
   }
 
+  function getItemHeight(item: HTMLElement, width: string): number {
+    item.style.width = `${width}`;
+    let height = item.clientHeight;
+    return height;
+  }
+
+  function getTop(
+    isVideo: boolean,
+    index: number,
+    imageIndex: number,
+    rowGap: number,
+    columns: Array<2>,
+  ): number {
+    let top;
+
+    if (isVideo) {
+      top = Math.max(columns[0], columns[1]) + (index === 0 ? 0 : rowGap);
+    } else {
+      top =
+        Math.min(columns[0], columns[1]) +
+        (index === 0 || (index === 1 && imageIndex !== 0) ? 0 : rowGap);
+    }
+    return top;
+  }
+
+  function getWidth(
+    isVideo: boolean,
+    columnWidthPx: number,
+    columnCount: number,
+  ) {
+    return isVideo ? '100%' : columnCount === 1 ? '100%' : `${columnWidthPx}px`;
+  }
+
+  function setItemStyles(
+    item: HTMLElement,
+    width: string,
+    height: string,
+    top: number,
+    isRight: boolean,
+  ): void {
+    item.style.width = width;
+    item.style.height = height;
+    item.style.top = `${top}px`;
+    if (isRight) {
+      item.style.right = '0';
+    }
+  }
+  function setContainerStyles(
+    container: HTMLElement,
+    position: string,
+    height: string,
+    opacity: number,
+    visibility: string,
+  ): void {
+    container.style.position = position;
+    container.style.height = height; // Set the height based on the tallest column
+    container.style.opacity = `${opacity}`; // Ensure the container is visible
+    container.style.visibility = visibility; // Make the container visible after positioning
+  }
+
   function initMasonryGrid(
     containerSelector = '.masonry',
     itemSelector = '.item',
-    gap = 24,
+    gap = 50,
   ): void {
     const container = document.querySelector(
       containerSelector,
@@ -104,52 +176,72 @@ const resolvedGallery = await Promise.all(
     ) as HTMLElement[];
     if (items.length === 0) return;
 
-    let columnCount = getColumnCount();
+    // A function to ensure images are loaded and then proceed with layout calculation
+    const processItems = () => {
+      let columnCount = getColumnCount();
+      if (columnCount === 1) {
+        items.forEach((item, index) => {
+          item.style.position = 'unset';
+          item.style.width = '100%';
+          item.style.height = 'auto';
+        });
+        container.style.height = '100%';
+        return;
+      }
 
-    const layout = () => {
-      columnCount = getColumnCount();
-      const columnHeights = Array(columnCount).fill(0);
+      let columns = new Array(columnCount).fill(0);
+      let containerWidth = container.clientWidth;
+      let columnGap = gap;
+      let rowGap = gap;
 
-      const containerWidth = container.clientWidth;
-      const totalGap = (columnCount - 1) * gap;
-      const columnWidthPx = (containerWidth - totalGap) / columnCount;
-
-      let tallest = 0;
+      const columnWidthPx = (containerWidth - columnGap) / columnCount;
+      let imageIndex = 0;
 
       items.forEach((item, index) => {
-        const col = index % columnCount;
-        const top = columnHeights[col];
-        const left = col * (columnWidthPx + gap);
-
         item.style.position = 'absolute';
-        item.style.width = `${columnWidthPx}px`;
-        item.style.left = `${left}px`;
-        item.style.transform = `translateY(${top}px)`;
+        item.style.width = '';
+        item.style.height = '';
+        item.style.top = '';
+        item.style.left = '';
 
-        const height = item.offsetHeight;
-        columnHeights[col] += height + gap;
-        tallest = Math.max(tallest, columnHeights[col]);
+        const isVideo: boolean = item.classList.contains('video-item');
+        const width = getWidth(isVideo, columnWidthPx, getColumnCount());
+        const height = getItemHeight(item, width);
+        const top = getTop(isVideo, index, imageIndex, rowGap, columns);
+        const colIndex = columns[0] <= columns[1] ? 0 : 1;
+        const updatedColumnHeight = top + height;
+
+        if (isVideo) {
+          columns[0] = columns[1] = updatedColumnHeight;
+        } else {
+          columns[colIndex] = updatedColumnHeight;
+        }
+
+        const isRight = isVideo ? false : !!colIndex;
+        imageIndex = isVideo ? 0 : +1;
+        setItemStyles(item, width, height + 'px', top, isRight);
       });
 
-      container.style.position = 'relative';
-      container.style.height = `${tallest}px`;
-      container.style.opacity = '1';
-      container.style.visibility = 'visible';
+      setContainerStyles(
+        container,
+        'relative',
+        `${Math.max(columns[0], columns[1])}px`,
+        1,
+        'visible',
+      );
     };
 
-    let resizeRaf: number | null = null;
-    const onResize = () => {
-      if (resizeRaf !== null) cancelAnimationFrame(resizeRaf);
-      resizeRaf = requestAnimationFrame(layout);
-    };
+    // Call the layout function on window load and resize
+    window.addEventListener('load', processItems); // Ensure all images are loaded before processing
+    window.addEventListener('resize', processItems); // Recalculate on window resize
 
-    layout();
-    window.addEventListener('resize', onResize);
+    // Initial layout call to set the grid before images load
+    processItems();
   }
 
+  // Initialize the masonry grid once the DOM is ready
   document.addEventListener('DOMContentLoaded', () => {
     const gap = resolveClamp('--space-5xl');
-    console.log(gap);
-    initMasonryGrid('.masonry.gallery', '.item', gap);
+    initMasonryGrid('.masonry.gallery', '.item', gap); // Initialize Masonry Grid
   });
 </script>

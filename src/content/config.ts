@@ -1,4 +1,3 @@
-// src/content/config.ts
 import { defineCollection, z } from 'astro:content';
 
 const work = defineCollection({
@@ -6,47 +5,28 @@ const work = defineCollection({
     .object({
       title: z.string(),
       description: z.string(),
-      date: z.date(),
-      type: z.array(z.enum(['stills', 'moving', 'code', 'design', 'mixed'])),
+      start: z.date(),
+      end: z.date().optional(),
+      type: z.array(z.enum(['stills', 'moving', 'code', 'design', 'mixed', 'installation'])),
       thumbnail: z.string().optional(),
       selected: z.boolean().default(false),
       ongoing: z.boolean().default(false),
-      color: z.string().optional(),
-      videos: z
-        .object({
-          content: z
-            .array(
-              z.object({
-                videoUrl: z.string(),
-                videoAlt: z.string(),
-                thumbnail: z.string(),
-              }),
-            )
-            .optional(),
-        })
-        .optional(),
+
+      // Refactor to ensure both imageUrl and videoUrl are properly handled
       gallery: z
         .object({
           content: z
             .array(
               z.object({
-                imageUrl: z.string(),
-                imageAlt: z.string(),
+                imageUrl: z.string().optional(),
+                alt: z.string().optional(),
+                videoUrl: z.string().optional(),
               }),
             )
             .optional(),
         })
         .optional(),
     })
-    .superRefine((data, ctx) => {
-      if (data.selected && !data.color) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: '`color` is required when `selected` is true',
-          path: ['color'],
-        });
-      }
-    }),
 });
 
 export const collections = {

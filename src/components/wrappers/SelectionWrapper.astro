@@ -22,12 +22,12 @@ const { slug, date, title, type, src, ongoing = false } = Astro.props;
     </figure>
 
     <div class="overlay">
-      <div class="details text-uppercase color-primary">
+      <div class="details">
         <span>[{ongoing ? `${date} – Present` : date}]</span>
         <span>[{type}]</span>
       </div>
       <h2
-        class="title title-font-bold font-size-6 text-uppercase color-primary"
+        class="title title-font-bold font-size-4"
       >
         {title}
       </h2>

@@ -1,14 +1,16 @@
 .reveal-on-scroll {
   opacity: 1; // keep the container stable and visible
 
-  img {
+  figure {
     opacity: 0;
   }
 
+
   &.revealed {
-    img {
+    figure {
       animation: imgScaleFadeIn 1s ease-in-out forwards;
     }
+     
   }
 }
 

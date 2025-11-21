@@ -1,15 +1,21 @@
 ---
 title: 'Yanis Film Diary'
 description: 'A visual diary built as a web app to archive film photographs.'
-date: 2024-07-01
+start: 2024-07-01
 slug: 'yanis-film-diary'
 type: ['code']
-thumbnail: '/images/work/yanis-film-diary.jpg'
+thumbnail: '/images/galleries/work/yanis-film-diary/1.jpg'
 selected: true
-color: 'var(--color-section-11)'
 ongoing: false
+gallery:
+  content:
+    - imageUrl: '/images/galleries/work/yanis-film-diary/1.jpg'
+      videoUrl: '/images/galleries/work/yanis-film-diary/1.mp4'
+      alt: 'Yanis Film Diary - 1'
 ---
 
 **Yanis Film Diary** is a digital photo archive website, showcasing analog film shots through a minimalist, scroll-touch based interface. Built for reflection, memory, and visual storytelling.
 
-[GitHub Repository](https://github.com/YanisDeplazes/Yanis-Film-Diary)
+<p>
+    <a href="https://github.com/YanisDeplazes/Yanis-Film-Diary" target=_blank>Github</a>
+</p>

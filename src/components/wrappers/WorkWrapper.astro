@@ -33,6 +33,9 @@ const { slug, start, end, title, type, src, ongoing = false } = Astro.props;
 <script>
   const works = document.querySelectorAll<HTMLElement>('.work');
 
+  // Check if the device supports mouse input
+  const isMouseDevice = window.matchMedia('(pointer: fine)').matches;
+
   works.forEach((work) => {
     const img = work.querySelector<HTMLElement>('.floating-image');
     const link = work.querySelector<HTMLElement>('.work-link');
@@ -42,21 +45,23 @@ const { slug, start, end, title, type, src, ongoing = false } = Astro.props;
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
 
-    work.addEventListener('mousemove', (e: MouseEvent) => {
-      // Adjust for scroll offset
-      const offsetX = (e.clientX + window.scrollX - centerX) * 0.2;
-      const offsetY = (e.clientY + window.scrollY - centerY) * 0.2;
-      img.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(1.05)`;
-    });
+    if (isMouseDevice) {
+      work.addEventListener('mousemove', (e: MouseEvent) => {
+        // Adjust for scroll offset
+        const offsetX = (e.clientX + window.scrollX - centerX) * 0.2;
+        const offsetY = (e.clientY + window.scrollY - centerY) * 0.2;
+        img.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(1.05)`;
+      });
 
-    work.addEventListener('mouseenter', () => {
-      img.style.opacity = '1';
-    });
+      work.addEventListener('mouseenter', () => {
+        img.style.opacity = '1';
+      });
 
-    work.addEventListener('mouseleave', () => {
-      img.style.opacity = '0';
-      img.style.transform = 'translate(-50%, -50%) scale(1)';
-    });
+      work.addEventListener('mouseleave', () => {
+        img.style.opacity = '0';
+        img.style.transform = 'translate(-50%, -50%) scale(1)';
+      });
+    }
   });
 </script>
 
@@ -83,11 +88,25 @@ const { slug, start, end, title, type, src, ongoing = false } = Astro.props;
 
     .overlay {
       opacity: 1;
-      transition: all 1.5s ease-in-out;
+      transition: opacity 1.5s ease-in-out;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: var(--space-m);
+      row-gap: var(--space-3xs);
+      flex-direction: column-reverse;
+      margin-block: var(--space-2xs);
+
+      .title {
+        margin-block: 0;
+        margin-block-end: var(--space-2xs);
+        @media (min-width: 1000px) {
+          margin-block: var(--space-2xs);
+        }
+      }
+      @media (min-width: 1000px) {
+        flex-direction: row;
+        align-items: center;
+      }
 
       .details {
         transition: all 0.2s ease-in-out;

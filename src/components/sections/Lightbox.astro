@@ -172,7 +172,7 @@ import PreviousSVG from '../svgs/PreviousSVG.astro';
       lightboxVideo.controls = true;
       lightboxVideo.autoplay = true;
       lightboxVideo.disablePictureInPicture = true;
-      
+
       const source = document.createElement('source');
       const videoSource = media.querySelector('source')?.src;
       const videoPoster = media.poster;
@@ -204,6 +204,7 @@ import PreviousSVG from '../svgs/PreviousSVG.astro';
       body.style.overflow = 'hidden';
       currentIndex = index;
       updateLightboxContent(currentIndex);
+      toggleNavigationButtons();
     };
 
     // Function to handle closing the lightbox
@@ -225,6 +226,22 @@ import PreviousSVG from '../svgs/PreviousSVG.astro';
       event.stopPropagation(); // Prevent triggering the lightbox click event
       currentIndex = (currentIndex - 2 + figures.length) % (figures.length - 1); // Wrap around to the last item when reaching the start
       updateLightboxContent(currentIndex);
+    };
+
+    // Function to toggle visibility of next and previous buttons based on the number of items
+    const toggleNavigationButtons = (): void => {
+      const nextButton = lightbox.querySelector('.next-btn') as HTMLElement;
+      const prevButton = lightbox.querySelector('.previous-btn') as HTMLElement;
+      console.log(figures)
+      if (figures.length <= 2) {
+        // Hide both buttons if there’s only one figure or less
+        if (nextButton) nextButton.style.display = 'none';
+        if (prevButton) prevButton.style.display = 'none';
+      } else {
+        // Show both buttons if there are more than one figure
+        if (nextButton) nextButton.style.display = 'block';
+        if (prevButton) prevButton.style.display = 'block';
+      }
     };
 
     // Event listener for each figure to open the lightbox

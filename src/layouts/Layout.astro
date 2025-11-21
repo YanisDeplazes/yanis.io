@@ -62,7 +62,7 @@ const {
 
     <meta name="theme-color" content="#000000" />
   </head>
-  <body style={`--color-project: ${pageColor}`}>
+  <body style={`--color-project: ${pageColor}; opacity: 0`}>
     <Header />
     <main>
       <slot />
@@ -116,6 +116,16 @@ const {
           navigation.classList.toggle('open');
           hamburger.classList.toggle('open');
         });
+      });
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        window.onload = () => {
+          const bodyElement = document.querySelector('body') as HTMLElement;
+          if (bodyElement) {
+            bodyElement.style.opacity = '1';
+          }
+        };
       });
     </script>
   </body>

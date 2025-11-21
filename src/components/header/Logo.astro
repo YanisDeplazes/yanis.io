@@ -12,7 +12,7 @@
     display: flex;
     gap: var(--space-3xs);
     align-items: center;
-    flex-direction: column;
+    flex-direction: column-reverse;
     @media (min-width: 755px) {
       align-items: end;
       flex-direction: row;
@@ -22,16 +22,16 @@
 
     .site-title {
       position: relative;
-
       top: 3px; // Visually align
-      @media (max-width: 754px) {
-        font-size: 12px !important;
-      }
+
     }
     .description {
       margin-block-start: 0;
       margin-block-end: 0;
       text-align: center;
+      @media (max-width: 754px) {
+        font-size: 12px !important;
+      }
       @media (min-width: 755px) {
         max-width: 168px;
         text-align: left;

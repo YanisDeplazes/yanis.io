@@ -1,5 +1,5 @@
 # Portfolio — Yanis Deplazes
 
-A space where I showcase my work — capturing moments, building worlds, and shaping ideas through technology and visuals.
+Visual Artist from Switzerland - Exploring people through multimedia.
 
 [yanis.io](https://yanis.io)

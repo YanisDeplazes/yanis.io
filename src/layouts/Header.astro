@@ -3,8 +3,6 @@ import Wrapper from '../layouts/Wrapper.astro';
 
 import Logo from '../components/header/Logo.astro';
 import Navigation from '../components/header/Navigation.astro';
-
-
 ---
 
 <header>
@@ -25,7 +23,6 @@ import Navigation from '../components/header/Navigation.astro';
     height: auto;
     background-color: var(--color-project);
     border-bottom: 5px solid var(--color-project);
-    transition: all 0.4s ease-in-out;
 
     .container {
       display: flex;
@@ -33,15 +30,9 @@ import Navigation from '../components/header/Navigation.astro';
       align-items: center;
       padding: var(--space-2xs) 0px;
       gap: var(--space-m);
-      @media (max-width: 754px) {
-        &::before{
-          content: "";
-          width: 30px;
-        }
-            }
     }
-    &::after{
-      content: "";
+    &::after {
+      content: '';
       width: 100%;
       height: 1px;
       bottom: 0;
@@ -49,6 +40,5 @@ import Navigation from '../components/header/Navigation.astro';
       position: absolute;
       background-color: var(--color-primary);
     }
-
   }
 </style>

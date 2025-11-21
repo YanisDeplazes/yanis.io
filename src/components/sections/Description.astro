@@ -38,7 +38,7 @@ const { title, start, end, ongoing, type } = Astro.props;
     .container {
       position: relative;
       padding-bottom: var(--space-s);
-      @media (min-width: 755px) {
+      @media (min-width: 1000px) {
         display: flex;
         justify-items: center;
         gap: var(--space-3xl);
@@ -60,14 +60,14 @@ const { title, start, end, ongoing, type } = Astro.props;
         .title {
           margin-block-start: var(--space-3xs);
         }
-        @media (min-width: 755px) {
+        @media (min-width: 1000px) {
           width: 50%;
         }
       }
       .content {
         width: 100%;
 
-        @media (min-width: 755px) {
+        @media (min-width: 1000px) {
           width: 50%;
         }
         .info {

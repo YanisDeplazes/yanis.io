@@ -3,6 +3,7 @@ interface Props {
   title: string;
   description: string;
   imageSrc: any;
+  pageColor?: string;
 }
 
 import Header from './Header.astro';
@@ -13,15 +14,13 @@ import '../styles/main.scss';
 const baseUrl = 'https://yanis.io';
 const currentPath = Astro.url.pathname;
 const url = `${baseUrl}${currentPath}`;
+const pageColor = Astro.props.pageColor || 'var(--color-section-1)';
 
-// Ensure props always have default values
 const {
   title = 'Yanis Deplazes',
   description = 'My Portfolio',
   imageSrc = 'default.png',
 } = Astro.props;
-
-console.log(imageSrc);
 ---
 
 <!doctype html>
@@ -63,11 +62,61 @@ console.log(imageSrc);
 
     <meta name="theme-color" content="#000000" />
   </head>
-  <body>
+  <body style={`--color-project: ${pageColor}`}>
     <Header />
-    <slot />
+    <main>
+      <slot />
+    </main>
     <Footer />
+    <script type="module">
+      function revealOnScroll(options = {}) {
+        const {
+          selector = '.reveal-on-scroll',
+          threshold = 0.2,
+          rootMargin = '0px',
+          once = true,
+          revealedClass = 'revealed',
+        } = options;
 
-    <script src="../scripts/gsapScroll.js"></script>
+        const observer = new IntersectionObserver(
+          (entries, obs) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add(revealedClass);
+                if (once) obs.unobserve(entry.target);
+              }
+            });
+          },
+          {
+            threshold,
+            rootMargin,
+          },
+        );
+
+        document
+          .querySelectorAll(selector)
+          .forEach((el) => observer.observe(el));
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          revealOnScroll();
+        }, 1000);
+      });
+    </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const navigation = document.querySelector('header .list');
+        const hamburger = document.querySelector('header .hamburger');
+
+        if (!navigation || !hamburger) return;
+
+        hamburger.addEventListener('click', () => {
+          navigation.classList.toggle('open');
+          hamburger.classList.toggle('open');
+        });
+      });
+    </script>
   </body>
 </html>

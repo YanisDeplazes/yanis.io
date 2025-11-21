@@ -1,21 +1,19 @@
 ---
+// src/pages/work/index.astro
 import Layout from '../../layouts/Layout.astro';
-import Contact from '../../components/sections/Contact.astro';
+import Image from '../../assets/images/default.png';
 import Work from '../../components/sections/Work.astro';
-import { works } from '../../data/works.json'; // Import the data
 
-import Image from '../../assets/images/projects/wolken.jpg';
+const title = 'Archive';
+const suffix = 'Yanis Deplazes';
+const description =
+  'Browse all creative, code-based, and media work by Yanis Deplazes.';
 ---
 
 <Layout
-  title="Work — Yanis Deplazes"
-  description="A collection of my creative projects, blending technology, design, and interactive media."
+  title={`${title} — ${suffix}`}
+  description={description}
   imageSrc={Image.src}
 >
-  <Work
-    title="Work Archive"
-    description="A journey through my creative work—capturing moments, building experiences, and experimenting across different mediums."
-    data={works}
-  />
-  <Contact />
+  <Work />
 </Layout>

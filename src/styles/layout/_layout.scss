@@ -1,0 +1,12 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--color-project);
+    transition: background-color 0.4s ease-in-out;
+
+    main {
+        padding-top: 90px;
+        flex: 1;
+    }
+}

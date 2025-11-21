@@ -1,0 +1,39 @@
+---
+interface Props {
+  start?: Date;
+  end?: Date;
+  ongoing?: boolean;
+  type?: string;
+}
+
+const { start, end, ongoing, type } = Astro.props;
+
+const yearStart = start ? new Date(start).getFullYear() : undefined;
+const yearEnd = end ? new Date(end).getFullYear() : undefined;
+
+const date = [
+  ongoing
+    ? `${yearStart} - Present`
+    : yearEnd === yearStart
+      ? `${yearEnd}`
+      : yearEnd
+        ? `${yearStart} - ${yearEnd}`
+        : `${yearStart}`,
+];
+---
+
+{
+  date && type && (
+    <div class="info">
+      <span>[{date}]</span><span>[{type}]</span>
+    </div>
+  )
+}
+
+<style lang="scss">
+  .info{
+    letter-spacing: 5%;
+    display: flex;
+    gap: var(--space-3xs)
+  }
+</style>

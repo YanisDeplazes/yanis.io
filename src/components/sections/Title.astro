@@ -1,8 +1,11 @@
 ---
 import ImageWrapper from '../wrappers/ImageWrapper.astro';
+import Image from '../../assets/images/default.png';
+
 const images = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/images/**/*.{jpg,jpeg,png,webp}',
 );
+
 
 const resolveImage = async (url: string) => images[`/src/assets${url}`]?.();
 
@@ -81,7 +84,7 @@ if (video) {
   {
     resolvedVideo && (
       <div class="video-container">
-        <video preload="none" class="video" autoplay muted loop playsinline>
+        <video preload="none" class="video" autoplay muted loop playsinline poster={`${Image.src}`}>
           <source src={resolvedVideo} type="video/mp4" />
           <track
             kind="captions"

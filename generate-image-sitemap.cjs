@@ -72,7 +72,7 @@ const cheerio = require('cheerio');
 
         videoEntries.push(`
       <video:video>
-        ${poster ? `<video:thumbnail_loc>${posterUrl}</video:thumbnail_loc>` : ''}
+        <video:thumbnail_loc>${posterUrl}</video:thumbnail_loc>
         <video:title><![CDATA[${title}]]></video:title>
         <video:description><![CDATA[${description}]]></video:description>
         <video:player_loc>${videoUrl}</video:player_loc>

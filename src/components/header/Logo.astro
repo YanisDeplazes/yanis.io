@@ -3,7 +3,7 @@
     Yanis Deplazes
   </a>
   <p class="description font-size-p">
-    Visual Artist From Switzerland
+    <span>Visual Artist</span><span>Based in Switzerland</span>
   </p>
 </div>
 
@@ -23,18 +23,26 @@
     .site-title {
       position: relative;
       top: 3px; // Visually align
-
+      @media (max-width: 754px) {
+        font-size: 24.3px;
+      }
     }
     .description {
       margin-block-start: 0;
       margin-block-end: 0;
       text-align: center;
+      span:first-of-type {
+        &::after {
+          content: ' ';
+        }
+      }
       @media (max-width: 754px) {
         font-size: 12px !important;
       }
       @media (min-width: 755px) {
-        max-width: 168px;
-        text-align: left;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
   }

@@ -4,5 +4,5 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    ignore:
-      - dependency-type: "development"
+    allow:
+      - dependency-type: "production"

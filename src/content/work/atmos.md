@@ -22,7 +22,3 @@ gallery:
 <p>
     <b>Atmos</b> is an immersive IoT installation that transforms real-time weather data into light, sound, and holographic visuals. Bridging embedded systems and web interfaces, it reimagines weather as a multi-sensory experience that’s intuitive, artistic, and interactive.
 </p>
-
-<p>
-    <a href="https://github.com/YanisDeplazes/Real-Time-3D-Cloud-Coverage-Visualizer" target=_blank>Github</a>
-</p>

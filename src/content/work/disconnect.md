@@ -16,17 +16,18 @@ gallery:
       alt: 'Disconnect - 1'
     - imageUrl: '/images/galleries/events/2025/05_thick/2.png'
       alt: 'Disconnect - 2'
+lists:
+  - title: "Exhibited at"
+    items:
+      - "FC Hyena, Amsterdam"
+      - "OT301, Amsterdam"
+      - "MA'DAM, Amsterdam"
+  - title: "Collaboration with"
+    items:
+      - "<a href='https://www.instagram.com/vdk.png' target='_blank'>Henry VDK</a>"
+      - "<a href='https://www.instagram.com/daniel_vitikainen/' target='_blank'>Daniel Vitikainen</a>"
 ---
 
-**Disconnect** is a visual installation created for <a href="https://www.instagram.com/thick.collective/" target="_blank">Thick Collective</a> , featured at multiple events in Amsterdam. The project focused on creating immersive VJ visuals for live performances and installations, enhancing the atmosphere and narrative of the events.
+This visual installation was developed during my residency in Amsterdam and is part of a collaborative project with <a href="https://www.instagram.com/thick.collective/" target="_blank">Thick Collective</a>. Originally it was commissioned for an event at A'DAM Tower and has since then been showcased at two additional venues across the city. 
 
-## Exhibited at
-
-- 2025 Nov 29 - FC Hyena, Amsterdam: Documentary Premiere
-- 2025 Sep 26 - OT301, Amsterdam: ECHO Recordings and AOS
-- 2025 May 16 - MA'DAM, Amsterdam: Disconnect
-
-## Collaboration with
-
-- <a href="https://www.instagram.com/vdk.png/" target="_blank">Henry VDK</a>
-- <a href="https://www.instagram.com/daniel_vitikainen/" target="_blank">Daniel Vitikainen</a>
+By blending videography and post-production techniques with TouchDesigner and After Effects, dynamic visuals for live performances were created that explore the theme of "disconnection in a digital world.”.

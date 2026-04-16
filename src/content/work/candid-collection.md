@@ -192,6 +192,14 @@ gallery:
       alt: 'Candid - 2'
     - imageUrl: '/images/galleries/candid/1.jpg'
       alt: 'Candid - 1'
+lists:
+  - title: "Locations"
+    items:
+      - "Zurich"
+      - "Lucerne"
+      - "Madagascar"
+      - "TODO"
+
 ---
 
 **Candid Photography** is an ongoing collection capturing spontaneous, unposed moments in everyday life. Focused on raw emotion and authentic scenes, the series explores the beauty of fleeting interactions through a documentary lens.

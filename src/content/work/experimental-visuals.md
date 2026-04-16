@@ -42,6 +42,11 @@ gallery:
       alt: 'Experimental - 2'
     - imageUrl: '/images/galleries/experimental/1.jpg'
       alt: 'Experimental - 1'
+lists:
+  - title: "Works"
+    items:
+      - "Frame Zero"
+      - "TODO"
 ---
 
 **Experimental Visuals** is an ongoing series that pushes the boundaries of traditional photography. Focusing on the entire process—from manipulating film (pushing, pulling, distorting) to using unconventional techniques

@@ -1,0 +1,52 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<div class="list">
+  <h2 class="font-size-small paragraph-font">{title}</h2>
+  <ul>
+    <slot />
+  </ul>
+</div>
+
+<style lang="scss">
+  .list {
+    display: flex;
+
+    ul {
+      list-style: none !important;
+      flex: 1;
+      margin: 1em 0;
+      padding-left: 0px;
+      list-style-position: initial !important;
+      display: flex;
+      gap: 0.5em;
+      flex-direction: column;
+      margin-block-start: 15px;
+    }
+
+    h2 {
+      margin: 1em 0;
+      width: 170px;
+      flex-shrink: 0;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-block-start: 18px;
+      font-weight: bold;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .list {
+      flex-direction: column;
+      h2 {
+        width: auto;
+        margin-bottom: 0;
+      }
+    }
+  }
+</style>

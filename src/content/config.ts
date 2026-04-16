@@ -26,6 +26,12 @@ const work = defineCollection({
             .optional(),
         })
         .optional(),
+        lists: z.array(
+          z.object({
+            title: z.string(),
+            items: z.array(z.string()),
+          })
+        ).optional()
     })
 });
 

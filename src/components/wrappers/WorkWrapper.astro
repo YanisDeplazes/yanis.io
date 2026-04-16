@@ -19,7 +19,7 @@ const { slug, start, end, title, type, src, ongoing = false } = Astro.props;
 <div class="work">
   <a href={`/work/${slug}`} class="work-link">
     <div class="overlay">
-      <h2 class="title title-font-bold font-size-4">
+      <h2 class="title title-font-bold font-size-6">
         {title}
       </h2>
       <Info start={start} end={end} ongoing={ongoing} type={type} />

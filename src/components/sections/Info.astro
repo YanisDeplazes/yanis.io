@@ -13,7 +13,7 @@ const yearEnd = end ? new Date(end).getFullYear() : undefined;
 
 const date = [
   ongoing
-    ? `${yearStart} - Present`
+    ? `since ${yearStart}`
     : yearEnd === yearStart
       ? `${yearEnd}`
       : yearEnd
@@ -24,16 +24,18 @@ const date = [
 
 {
   date && type && (
-    <div class="info">
-      <span>[{date}]</span><span>[{type}]</span>
+    <div class="info font-size-small">
+      <span>[{date}]</span>
+      <span>[{type}]</span>
     </div>
   )
 }
 
 <style lang="scss">
-  .info{
-    letter-spacing: 5%;
+  .info {
+    letter-spacing: 1px;
     display: flex;
-    gap: var(--space-3xs)
+    gap: var(--space-3xs);
+    text-transform: uppercase;
   }
 </style>

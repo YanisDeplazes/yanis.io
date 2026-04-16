@@ -14,7 +14,7 @@ import '../styles/main.scss';
 const baseUrl = 'https://yanis.io';
 const currentPath = Astro.url.pathname;
 const url = `${baseUrl}${currentPath}`;
-const pageColor = Astro.props.pageColor || 'var(--color-section-1)';
+const pageColor = Astro.props.pageColor || 'var(--color-background)';
 
 const {
   title = 'Yanis Deplazes',
@@ -63,6 +63,7 @@ const {
     <meta name="theme-color" content="#000000" />
   </head>
   <body style={`--color-project: ${pageColor}; opacity: 0`}>
+    
     <Header />
     <main>
       <slot />

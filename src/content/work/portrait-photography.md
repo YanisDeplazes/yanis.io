@@ -1,9 +1,9 @@
 ---
-title: 'Portrait Collection'
+title: 'Portrait Photography'
 description: 'Portrait Photography Collection of diverse individuals.'
 start: 2020-01-18
 end: 2025-03-30
-slug: 'portrait-collection'
+slug: 'portrait-photography'
 type: ['stills']
 thumbnail: '/images/galleries/portraits/19.jpg'
 selected: false
@@ -50,4 +50,4 @@ gallery:
       alt: 'Portrait - Jordan and Eden'
 ---
 
-**Portrait Collection:** is series capturing the unique personalities and stories of diverse individuals through portrait photography.
+A visual index of uncomissioned portrait photography work. It serves as an open-ended archive exploring identity across diverse environments.

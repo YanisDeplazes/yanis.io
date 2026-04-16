@@ -44,12 +44,12 @@ gallery:
       alt: 'Supreme Masters - 5'
     - imageUrl: '/images/galleries/events/2020/01_Supreme-Masters/6.jpg'
       alt: 'Supreme Masters - 6'
+lists:
+  - title: "Events"
+    items:
+      - "PGL Major Copenhagen 2024"
+      - "Google Cloud Invitational 2023"
+      - "Supreme Masters 2020"
 ---
 
 A photojournalistic exploration of the world’s top CS:GO Events. This project documents major international esports tournaments and the vibrant culture surrounding them. The project includes both photography and videography, showcasing the energy and passion of the esports community.
-
-## Selected Events
-
-- PGL Major Copenhagen 2024 
-- Google Cloud Invitational 2023 
-- Supreme Masters 2020 

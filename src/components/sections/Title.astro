@@ -67,7 +67,7 @@ if (video) {
 
 <section
   class={`title ${resolvedThumbnail ? 'has-thumbnail' : ''} ${resolvedVideo ? 'has-video' : ''}`}
-  data-background="var(--color-dark)"
+  data-background="var(--color-project)"
 >
   {
     resolvedThumbnail && (
@@ -100,7 +100,7 @@ if (video) {
 
   <div class="title-container">
     <div class="scaling-box">
-      <h1 id="auto-heading">
+      <h1 id="auto-heading" class="color-accent">
         <span
           class="title-font-extra-bold"
           set:html={breakTitle(title, 3, 5)}

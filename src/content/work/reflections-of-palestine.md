@@ -14,4 +14,6 @@ gallery:
       imageUrl: '/images/galleries/reflections-of-palestine/1.jpg'
 ---
 
-An installation displaying archival material from Palestine in a room with hanging mirrors. Small moments from Palestine—hopes, dreams, everyday life—become visible. Touching and turning the shards changes the light, awakening reflections and stories, and making the humanity, vulnerability, and resilience of the people palpable. A sensual, shared experience that invites reflection and feeling.
+This installation investigates nature of historical memory. It explores 150 years of Palestinian archival material within a room with suspended mirrors based on Palestinian-controlled territories. The focus was shifted from macro-political conflict to the moments of everyday life, hope, and resilience.
+
+The viewer becomes an active participant by giving them the possibility to move the shards and change the reflections within the room. 

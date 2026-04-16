@@ -44,14 +44,14 @@ gallery:
       alt: 'High And Heads - Sedel 2023 - 3'
     - imageUrl: '/images/galleries/events/2023/09_Sedel-High-And-Heads/4.jpg'
       alt: 'High And Heads - Sedel 2023 - 4'
+lists:
+  - title: "Events"
+    items:
+      - "Ma_Le Halloween"
+      - "Tanz Am Wasser 2024"
+      - "High And Heads - Ma_Le 2024"
+      - "High And Heads - Flüelen 2024"
+      - "High And Heads - Sedel 2023"
 ---
 
 Photography and videography assignments documenting diverse techno events across Europe, capturing the energy, culture, and unique moments of the underground techno scene.
-
-## Selected Events
-
-- Ma_Le Halloween
-- Tanz Am Wasser 2024
-- High And Heads - Ma_Le 2024
-- High And Heads - Flüelen 2024
-- High And Heads - Sedel 2023

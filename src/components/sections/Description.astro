@@ -16,21 +16,21 @@ const { title, start, end, ongoing, type } = Astro.props;
 <section class="project-title">
   <Wrapper>
     <div class="container">
-      <!-- Title -->
       <div class="title-container">
+        <Info start={start} end={end} ongoing={ongoing} type={type} />
         <h1 class="title title-font-bold font-size-3" set:html={title} />
+        <slot name="additional" />
       </div>
 
-      <!-- Content Section -->
       <div class="content">
-        <Info start={start} end={end} ongoing={ongoing} type={type} />
-        <slot />
+        <slot name="details" />
       </div>
     </div>
   </Wrapper>
 </section>
 
 <style lang="scss" is:global>
+  // Your existing styles remain the same
   .project-title {
     padding-top: 0;
     padding-bottom: 0;
@@ -40,14 +40,14 @@ const { title, start, end, ongoing, type } = Astro.props;
       padding-bottom: var(--space-s);
       @media (min-width: 1000px) {
         display: flex;
-        justify-items: center;
+        justify-items: center; // Note: you might want align-items: flex-start or center
         gap: var(--space-3xl);
         row-gap: var(--space-s);
       }
 
       &::after {
         content: '';
-        background-color: var(--color-primary);
+        background-color: var(--color-accent);
         height: 1px;
         width: 100%;
         position: absolute;
@@ -55,48 +55,38 @@ const { title, start, end, ongoing, type } = Astro.props;
         left: 0;
         opacity: 0.5;
       }
-      .title-container {
+
+      .title-container,
+      .content {
         width: 100%;
+        color: var(--color-accent);
+
         .title {
           margin-block-start: var(--space-3xs);
+          margin-bottom: var(--space-xs); // Added some breathing room
         }
+      }
+      .title-container {
         @media (min-width: 1000px) {
-          width: 50%;
+          width: 68%;
         }
       }
       .content {
-        width: 100%;
-
         @media (min-width: 1000px) {
-          width: 50%;
+          width: 32%;
         }
-        .info {
-          margin-block-end: 10px;
-        }
-        a {
-          text-decoration: underline;
-          transition: all 0.2s ease-in-out;
-          &:hover {
-            opacity: 0.8;
-          }
-        }
-        ul {
-          margin: 1em 0;
-          padding-left: 0px;
-          list-style-position: inside;
-          list-style-position: initial !important;
-        }
-        li {
-          margin: 0.5em 0;
-        }
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-          font-family: 'Syne', sans-serif;
-          font-weight: 700;
-          font-style: normal;
+      }
+
+      .content .info {
+        margin-block-end: 10px;
+      }
+
+      a {
+        text-decoration: underline;
+        transition: all 0.2s ease-in-out;
+        font-weight: bold;
+        &:hover {
+          opacity: 0.8;
         }
       }
     }

@@ -42,7 +42,7 @@ const { slug, start, title, end, type, src, ongoing = false } = Astro.props;
       margin: 0;
       height: 100%;
       position: relative;
-      background-color: var(--color-primary);
+      background-color: var(--text-color);
       &::before {
         transition: all 0.4s ease-in-out;
         box-sizing: border-box;
@@ -54,7 +54,7 @@ const { slug, start, title, end, type, src, ongoing = false } = Astro.props;
         top: 0;
         width: 100%;
         z-index: 1;
-        background-color: var(--color-dark);
+        background-color: var(--color-project);
         opacity: 0.5;
         @media (min-width: 755px) {
           opacity: 0;

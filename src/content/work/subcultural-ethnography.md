@@ -56,13 +56,14 @@ gallery:
       alt: 'Subcultural Ethnography - 2'
     - imageUrl: '/images/galleries/subcultural-ethnography/1.jpg'
       alt: 'Subcultural Ethnography - 1'
-    
+
+lists:
+  - title: "Events"
+    items:
+      - "<a href=https://www.instagram.com/suicidecatdoors/' target='_blank'>Suicide Catdoors</a> - LUCERNE"
+      - "<a href='https://www.instagram.com/caniscreamfest/' target='_blank'>CANISCREAM</a> - VOL3, MILAN"
+      - "<a href='https://www.instagram.com/xsittendezernatx/' target='_blank'>Sittendezernat</a> & <a href='https://www.instagram.com/bolzenschuss_band/' target='_blank'>Bolzenschuss</a>, ST. GALLEN"
+      - "<a href='https://www.instagram.com/bearpit_punx/' target='_blank'>BEAR PIT</a>, ST. GALLEN"
 ---
 
 **Subcultural Ethnography:** A photo and video series documenting the raw energy and diverse communities within the Punk subcultures across Europe, with a focus on Hardcore Punk music scenes.
-
-## Documented Events
-- <a href="https://www.instagram.com/suicidecatdoors/" traget="_blank">Suicide Catdoors</a> - Road to Mayhem, LUCERNE
-- <a href="https://www.instagram.com/caniscreamfest/" traget="_blank">CANISCREAM</a> - VOL3, MILAN
-- <a href="https://www.instagram.com/xsittendezernatx/" traget="_blank">Sittendezernat</a> & <a href="https://www.instagram.com/bolzenschuss_band/" traget="_blank">Bolzenschuss</a>, ST. GALLEN
-- <a href="https://www.instagram.com/bearpit_punx/" traget="_blank">BEAR PIT</a>, ST. GALLEN

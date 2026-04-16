@@ -24,6 +24,10 @@ gallery:
       alt: 'Activist Visual Narratives - 2'
     - imageUrl: '/images/galleries/activist-visual-narratives/1.jpg'
       alt: 'Activist Visual Narratives - 1'
+lists:
+  - title: "Locations"
+    items:
+      - "Bern, Switzerland"
 ---
 
 **Activist Visual Narratives** showcases the energy and resilience of individuals at protests, focusing on the power of activism and the fight for social justice. Through these images, the project brings attention to the raw emotions and solidarity of movements, capturing moments that reflect both struggle and hope.

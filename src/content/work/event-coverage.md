@@ -1,5 +1,5 @@
 ---
-title: 'Event Coverage'
+title: 'Event Photo- and Videography'
 description: 'Photography and videography assignments for diverse events.'
 start: 2022-11-07
 end: 2024-07-13
@@ -7,7 +7,7 @@ slug: 'event-coverage'
 type: ['stills', 'moving']
 thumbnail: '/images/galleries/events/2022/11_Polyball/2.jpg'
 selected: false
-ongoing: false
+ongoing: true
 gallery:
   content:
     - imageUrl: '/images/galleries/events/2024/07_SHC/1.jpg'
@@ -44,13 +44,16 @@ gallery:
       alt: 'Polyball - 7'
     - imageUrl: '/images/galleries/events/2022/11_Polyball/8.jpg'
       alt: 'Polyball - 8'
-
+lists:
+  - title: "Clients"
+    items:
+      - "Swiss Hacking Challenge"
+      - "Les Caramels Supersoniques"
+      - "Polyball"
+      - "Ma_Le"
+      - "Tanz Am Wasser"
+      - "High And Heads"
+      - "MSA Dayz"
 ---
 
 Photography and videography assignments from various events, capturing everything from corporate gatherings and live performances to social celebrations. Each project showcases my ability to document the atmosphere, emotions, and key moments that define an event, offering a dynamic blend of stills and moving visuals.
-
-## Selected Events
-
-- Swiss Hacking Challenge 2024 
-- Les Caramels Supersoniques – Stadtkeller 2024 
-- Polyball 2022

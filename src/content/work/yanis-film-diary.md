@@ -12,10 +12,10 @@ gallery:
     - imageUrl: '/images/galleries/work/yanis-film-diary/1.jpg'
       videoUrl: '/images/galleries/work/yanis-film-diary/1.mp4'
       alt: 'Yanis Film Diary - 1'
+lists:
+  - title: "Link"
+    items:
+      - "<a href='https://film.yanis.io' target=_blank>film.yanis.io</a>"
 ---
 
-**Yanis Film Diary** is a digital photo archive website, showcasing analog film shots through a minimalist, scroll-touch based interface. Built for reflection, memory, and visual storytelling.
-
-<p>
-    <a href="https://github.com/YanisDeplazes/Yanis-Film-Diary" target=_blank>Github</a>
-</p>
+**Yanis Film Diary** is a personal journal of my film photography journey, created during the spring semester of 2024 at HSLU. Built using Three.js, the project explores various aspects of web development to transform physical "Film Negative Sleeve" into an interactive website.

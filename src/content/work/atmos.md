@@ -19,6 +19,7 @@ gallery:
     - imageUrl: '/images/galleries/work/atmos/4.jpg'
       alt: 'Atmos - 4'
 ---
+
 <p>
-    <b>Atmos</b> is an immersive IoT installation that transforms real-time weather data into light, sound, and holographic visuals. Bridging embedded systems and web interfaces, it reimagines weather as a multi-sensory experience that’s intuitive, artistic, and interactive.
+  <b>Atmos</b> is a prototype that explores environmental data and synthesizes it into an output of light, sound and holographic projection. This installation aims to transforms the data of our surroundings into a multisensory experience.
 </p>

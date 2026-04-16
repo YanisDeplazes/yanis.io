@@ -1,29 +1,12 @@
 $breakpoint-tablet: 768px;
 
 :root {
-  --color-primary: #FD3D2A;
+  --text-color: #FD3D2A;
+  --color-background: #101010; // Deep black
+  --color-project: #101010;
+  --color-accent: #FD3D2A;
+  --color-background-light: #F7F7FF;
 
-  --color-section-1: #101010; // Deep black
-  --color-section-2: #4D2D30; // Moody wine
-  --color-section-3: #606D5D; // Moss green
-  --color-section-4: #548687; // Soft cyan green
-  --color-section-5: #808080; // Mid gray
-  --color-section-6: #9395D3; // Dusty lavender
-  --color-section-7: #FFF1F1; // Faded rose white
-  --color-section-8: #1E1E2E; // Twilight navy
-  --color-section-9: #2B3640; // Graphite blue
-  --color-section-10: #C9A66B; // Warm gold (accent)
-  --color-section-11: #E7E7E7; // Soft white
-  --color-section-12: #2A2B3C; // Deep steel
-
-  --color-dark: #101010;
-
-
-  --color-light: #6E6E6E;
-  --color-white: #fff;
-  --accent: 136, 58, 234;
-  --accent-light: 224, 204, 250;
-  --accent-dark: 49, 10, 101;
   --accent-gradient: linear-gradient(45deg,
       rgb(var(--accent)),
       rgb(var(--accent-light)) 30%,

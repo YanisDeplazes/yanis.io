@@ -89,15 +89,15 @@ gallery:
     - videoUrl: '/images/galleries/events/2024/11_galatea/1.mp4'
       alt: 'Galatea II x YSLAM Boys'
       imageUrl: '/images/galleries/events/2024/11_galatea/1.png'
+lists:
+  - title: "Artists"
+    items:
+      - "<a href='https://www.instagram.com/anonymousdreamers.hd/' target='_blank'>Anonymous Dreamers Hiding in Disguise</a>"
+      - "<a href='https://www.instagram.com/caveprimitive/' target='_blank'>Cave Primitive</a>"
+      - "<a href='https://www.instagram.com/san_____dro/' target='_blank'>Alessandro Veneruso</a>"
+      - "<a href='https://www.instagram.com/sss_suburbia/' target='_blank'>Suburbia</a>"
+      - "<a href='https://www.instagram.com/prima___ballerina___/' target='_blank'>Prima Ballerina</a>"
+      - "<a href='https://www.coeval-magazine.com/coeval/yslam-boys' target='_blank'>Yslam Boys</a>"
 ---
 
 Performance Art Collection is an ongoing series capturing the raw energy and experimentation of performance art across Europe. Through both photography and video, it explores unconventional performances, highlighting the visceral and often chaotic nature of live art.
-
-## Selected Performances
-
-- TRAVELLING THEATRE OF CRUELTY AND ABSURD SEEKS EMPLACEMENT FOR A MISTY EVENING by <a href="https://www.instagram.com/anonymousdreamers.hd/" target="_blank">Anonymous Dreamers Hiding in Disguise</a> & <a href="https://www.instagram.com/liminal.veil/" target="_blank">LIMINAL VEIL</a>
-- Sacramento by <a href="https://www.instagram.com/caveprimitive/" target="_blank">Cave Primitive</a>
-- Nightmerdam pt 4 by <a href="https://www.instagram.com/san_____dro/" target="_blank">Alessandro Veneruso</a>
-- Suburbia by <a href="https://www.instagram.com/sss_suburbia/" target="_blank">Suburbia</a>
-- Les Fleurs du mal by <a href="https://www.instagram.com/prima___ballerina___/" target="_blank">Prima Ballerina</a>
-- Galatea II, III & IV by <a href="https://www.coeval-magazine.com/coeval/yslam-boys" target="_blank">Yslam Boys</a>

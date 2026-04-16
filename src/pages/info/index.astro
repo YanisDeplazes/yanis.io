@@ -19,14 +19,10 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
 const resolveImage = async (url: string) => images[`/src/assets${url}`]?.();
 
 let resolvedThumbnail;
-if (thumbnail) {
-  console.log('thumbnail');
-  console.log(thumbnail);
 
+if (thumbnail) {
   const resolved = await resolveImage(thumbnail);
   resolvedThumbnail = resolved?.default; // Use the URL string directly
-  console.log('resolvedThumbnail');
-  console.log(resolvedThumbnail);
 }
 ---
 

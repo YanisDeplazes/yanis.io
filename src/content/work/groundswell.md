@@ -4,7 +4,7 @@ description: 'Visual documentation focused on social and activist movements at p
 start: 2025-10-11
 end: 2025-10-11
 slug: 'groundswell'
-type: ['stills']
+type: ['stills', 'moving']
 location: ['Worldwide']
 context: "Collection"
 thumbnail: '/images/galleries/groundswell/7.jpg'
@@ -12,6 +12,9 @@ selected: true
 ongoing: true
 gallery:
   content:
+    - videoUrl: '/images/galleries/groundswell/8.mp4'
+      alt: 'Our Country, Our Streets.'
+      imageUrl: '/images/galleries/groundswell/8.jpg'
     - imageUrl: '/images/galleries/groundswell/7.jpg'
       alt: 'Groundswell - 7'
     - imageUrl: '/images/galleries/groundswell/6.jpg'

@@ -13,7 +13,7 @@
   "dependencies": {
     "@astrojs/check": "^0.9.5",
     "@astrojs/sitemap": "^3.6.0",
-    "astro": "^5.16.0",
+    "astro": "^6.1.9",
     "cheerio": "^1.1.2",
     "globby": "^16.0.0",
     "gsap": "^3.13.0",

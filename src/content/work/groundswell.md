@@ -2,12 +2,12 @@
 title: 'Groundswell'
 description: 'Visual documentation focused on social and activist movements at protests.'
 start: 2025-10-11
-end: 2025-10-11
+end: 2026-05-01
 slug: 'groundswell'
 type: ['stills', 'moving']
 location: ['Worldwide']
 context: "Collection"
-thumbnail: '/images/galleries/groundswell/7.jpg'
+thumbnail: '/images/galleries/groundswell/20.jpg'
 selected: true
 ongoing: true
 gallery:
@@ -55,4 +55,4 @@ gallery:
       alt: 'Groundswell - 1'
 ---
 
-**Groundswell** is a collection of visual documentation focused on social movements and public protests. The series focuses on the collective energy and presence of people in these spaces, documenting the reality of activism on the ground. It serves as a straightforward record of the methods and individuals involved in local and international social movements.
+**Groundswell** is a collection of visual documentation focused on social movements and public protests. The series focuses on the collective energy and presence of people in these spaces, by documenting the reality of activism on the ground.

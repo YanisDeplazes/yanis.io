@@ -42,8 +42,6 @@ gallery:
       alt: 'NOG7 2026 - Geneva - Groundswell - 21'
     - imageUrl: '/images/galleries/groundswell/20.jpg'
       alt: 'May Day 2026 - Zurich - Groundswell - 20'
-    - imageUrl: '/images/galleries/groundswell/20.jpg'
-      alt: 'May Day 2026 - Zurich - Groundswell - 20'
     - imageUrl: '/images/galleries/groundswell/19.jpg'
       alt: 'May Day 2026 - Zurich - Groundswell - 19'
     - imageUrl: '/images/galleries/groundswell/18.jpg'

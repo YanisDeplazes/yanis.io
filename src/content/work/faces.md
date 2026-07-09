@@ -5,10 +5,10 @@ start: 2020-01-18
 end: 2025-03-30
 slug: 'faces'
 type: ['stills']
-context: "Collection"
+context: 'Collection'
 location: ['Worldwide']
 thumbnail: '/images/galleries/faces/19.jpg'
-selected: true
+selected: false
 ongoing: true
 gallery:
   content:

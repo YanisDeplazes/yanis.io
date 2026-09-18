@@ -5,13 +5,29 @@ start: 2023-09-08
 end: 2025-11-15
 slug: 'high-gain'
 type: ['stills']
-context: "Collection"
+context: 'Collection'
 location: ['Worldwide']
 thumbnail: '/images/galleries/high-gain/23.jpg'
 selected: true
 ongoing: true
 gallery:
   content:
+    - imageUrl: '/images/galleries/high-gain/31.jpg'
+      alt: 'High Gain - 31'
+    - imageUrl: '/images/galleries/high-gain/30.jpg'
+      alt: 'High Gain - 30'
+    - imageUrl: '/images/galleries/high-gain/29.jpg'
+      alt: 'High Gain - 29'
+    - imageUrl: '/images/galleries/high-gain/28.jpg'
+      alt: 'High Gain - 28'
+    - imageUrl: '/images/galleries/high-gain/27.jpg'
+      alt: 'High Gain - 27'
+    - imageUrl: '/images/galleries/high-gain/26.jpg'
+      alt: 'High Gain - 26'
+    - imageUrl: '/images/galleries/high-gain/25.jpg'
+      alt: 'High Gain - 25'
+    - imageUrl: '/images/galleries/high-gain/24.jpg'
+      alt: 'High Gain - 24'
     - imageUrl: '/images/galleries/high-gain/23.jpg'
       alt: 'High Gain - 23'
     - imageUrl: '/images/galleries/high-gain/22.jpg'
@@ -60,8 +76,9 @@ gallery:
       alt: 'High Gain - 1'
 
 lists:
-  - title: "Events"
+  - title: 'Events'
     items:
+      - "<a href=https://www.instagram.com/amenra_official/' target='_blank'>AMENRA</a> - LUCERNE"
       - "<a href=https://www.instagram.com/suicidecatdoors/' target='_blank'>Suicide Catdoors</a> - LUCERNE"
       - "<a href='https://www.instagram.com/caniscreamfest/' target='_blank'>CANISCREAM</a> - VOL3, MILAN"
       - "<a href='https://www.instagram.com/xsittendezernatx/' target='_blank'>Sittendezernat</a> & <a href='https://www.instagram.com/bolzenschuss_band/' target='_blank'>Bolzenschuss</a>, ST. GALLEN"

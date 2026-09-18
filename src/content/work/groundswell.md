@@ -6,12 +6,30 @@ end: 2026-05-01
 slug: 'groundswell'
 type: ['stills', 'moving']
 location: ['Worldwide']
-context: "Collection"
+context: 'Collection'
 thumbnail: '/images/galleries/groundswell/34.jpg'
 selected: true
 ongoing: true
 gallery:
   content:
+    - imageUrl: '/images/galleries/groundswell/43.jpg'
+      alt: 'ZIONISTS NOT WELCOME IN AMSTERDAM 2026 - Groundswell - 43'
+    - imageUrl: '/images/galleries/groundswell/42.jpg'
+      alt: 'ZIONISTS NOT WELCOME IN AMSTERDAM 2026 - Groundswell - 42'
+    - imageUrl: '/images/galleries/groundswell/41.jpg'
+      alt: 'ZIONISTS NOT WELCOME IN AMSTERDAM 2026 - Groundswell - 41'
+    - imageUrl: '/images/galleries/groundswell/40.jpg'
+      alt: 'ZIONISTS NOT WELCOME IN AMSTERDAM 2026 - Groundswell - 40'
+    - imageUrl: '/images/galleries/groundswell/39.jpg'
+      alt: 'ZIONISTS NOT WELCOME IN AMSTERDAM 2026 - Groundswell - 39'
+    - imageUrl: '/images/galleries/groundswell/38.jpg'
+      alt: 'ZIONISTS NOT WELCOME IN AMSTERDAM 2026 - Groundswell - 38'
+    - imageUrl: '/images/galleries/groundswell/37.jpg'
+      alt: 'ZIONISTS NOT WELCOME IN AMSTERDAM 2026 - Groundswell - 37'
+    - imageUrl: '/images/galleries/groundswell/36.jpg'
+      alt: 'ZIONISTS NOT WELCOME IN AMSTERDAM 2026 - Groundswell - 36'
+    - imageUrl: '/images/galleries/groundswell/35.jpg'
+      alt: 'ZIONISTS NOT WELCOME IN AMSTERDAM 2026 - Groundswell - 35'
     - imageUrl: '/images/galleries/groundswell/34.jpg'
       alt: 'NOG7 2026 - Geneva - Groundswell - 34'
     - imageUrl: '/images/galleries/groundswell/33.jpg'

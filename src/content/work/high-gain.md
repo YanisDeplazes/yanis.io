@@ -2,12 +2,12 @@
 title: 'High Gain'
 description: 'Photo and video series documenting Punk subcultures across Europe.'
 start: 2023-09-08
-end: 2025-11-15
+end: 2026-08-15
 slug: 'high-gain'
 type: ['stills']
 context: 'Collection'
 location: ['Worldwide']
-thumbnail: '/images/galleries/high-gain/23.jpg'
+thumbnail: '/images/galleries/high-gain/31.jpg'
 selected: true
 ongoing: true
 gallery:

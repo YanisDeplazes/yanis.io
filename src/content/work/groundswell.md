@@ -2,12 +2,12 @@
 title: 'Groundswell'
 description: 'Visual documentation focused on social and activist movements at protests.'
 start: 2025-10-11
-end: 2026-05-01
+end: 2026-09-17
 slug: 'groundswell'
 type: ['stills', 'moving']
 location: ['Worldwide']
 context: 'Collection'
-thumbnail: '/images/galleries/groundswell/34.jpg'
+thumbnail: '/images/galleries/groundswell/43.jpg'
 selected: true
 ongoing: true
 gallery:

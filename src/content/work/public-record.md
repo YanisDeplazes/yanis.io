@@ -2,16 +2,20 @@
 title: 'Public Record'
 description: ''
 start: 2023-01-01
-end: 2026-01-15
+end: 2026-10-11
 slug: 'public-record'
 type: ['stills']
-context: "Collection"
+context: 'Collection'
 location: ['Worldwide']
-thumbnail: '/images/galleries/public-record/71.jpg'
+thumbnail: '/images/galleries/public-record/73.jpg'
 selected: true
 ongoing: true
 gallery:
   content:
+    - imageUrl: '/images/galleries/public-record/71.jpg'
+      alt: 'Public Record - 73'
+    - imageUrl: '/images/galleries/public-record/71.jpg'
+      alt: 'Public Record - 72'
     - imageUrl: '/images/galleries/public-record/71.jpg'
       alt: 'Public Record - 71'
     - imageUrl: '/images/galleries/public-record/70.jpg'
@@ -154,7 +158,6 @@ gallery:
       alt: 'Public Record - 2'
     - imageUrl: '/images/galleries/public-record/1.jpg'
       alt: 'Public Record - 1'
-
 ---
 
 **Public Record** is an ongoing index of scenes from everyday life. The collection focuses on people and society, documenting unposed moments as they naturally occur. It serves as a running record of the spontaneous gestures and social structures found in public spaces.

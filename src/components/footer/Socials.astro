@@ -1,9 +1,16 @@
 ---
 const links = [
+  // { name: 'Hans Lucas', href: 'https://hanslucas.com/ydeplazes/photo' },
   { name: 'Instagram', href: 'https://instagram.com/yanisdeplazes' },
-  { name: 'Vimeo', href: 'https://vimeo.com/user91873613' },
-  { name: 'GitHub', href: 'https://github.com/yanisdeplazes' },
+  { name: 'X', href: 'https://x.com/yanisdeplazes' },
+  { name: 'Bluesky', href: 'https://bsky.app/profile/yanis.io' },
+  {
+    name: 'Signal',
+    href: 'https://signal.me/#eu/WTYbqUCFw4UvJvImlzKoe5HkyYTBJSPaBvZ8KyKYhqoAs4Ie6UlCZ70oG0Jzs2pL',
+  },
+  //  { name: 'Vimeo', href: 'https://vimeo.com/user91873613' },
   { name: 'LinkedIn', href: 'https://www.linkedin.com/in/yanis-deplazes/' },
+  // { name: 'GitHub', href: 'https://github.com/yanisdeplazes' },
 ];
 ---
 
@@ -15,6 +22,7 @@ const links = [
           <a
             href={href}
             target="_blank"
+            rel="noopener noreferrer"
             class="link title-font font-size-6"
           >
             {name}
@@ -35,6 +43,7 @@ const links = [
       flex-wrap: wrap;
       justify-content: center;
       gap: var(--space-s);
+      row-gap: var(--space-3xs);
     }
   }
 </style>

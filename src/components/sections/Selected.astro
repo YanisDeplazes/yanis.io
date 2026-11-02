@@ -1,0 +1,53 @@
+---
+import Wrapper from '../../layouts/Wrapper.astro';
+import SelectedWrapper from '../wrappers/SelectedWrapper.astro';
+import { getSortedWork } from '../../utils/workUtils.ts';
+
+const resolvedSelected = await getSortedWork((data) => data.selected === true);
+---
+
+<section class="selection">
+  <Wrapper>
+    <div class="content">
+      {
+        resolvedSelected.map(
+          (item) =>
+            item.resolvedThumbnail && (
+              <div class="item reveal-on-scroll" data-title={item.title}>
+                <SelectedWrapper
+                  slug={item.slug}
+                  start={item.start}
+                  end={item.end}
+                  title={item.title}
+                  type={item.type}
+                  src={item.resolvedThumbnail}
+                  ongoing={item.ongoing}
+                />
+              </div>
+            ),
+        )
+      }
+    </div>
+  </Wrapper>
+</section>
+
+<style lang="scss">
+  .selection {
+    .content {
+      display: grid;
+      width: 100%;
+      grid-template-columns: repeat(1, 1fr);
+      grid-template-rows: repeat(1, 1fr);
+      align-items: center;
+      gap: var(--space-3xs);
+
+      @media (min-width: 755px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media (min-width: 1100px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  }
+</style>

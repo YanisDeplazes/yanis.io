@@ -1,0 +1,26 @@
+{
+  "name": "yanis.io",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "postbuild": "node generate-image-sitemap.cjs",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.5",
+    "@astrojs/sitemap": "^3.6.0",
+    "astro": "^5.16.0",
+    "cheerio": "^1.1.2",
+    "globby": "^16.0.0",
+    "gsap": "^3.13.0",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "prettier-plugin-astro": "^0.14.1",
+    "sass-embedded": "^1.93.3"
+  }
+}

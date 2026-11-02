@@ -1,0 +1,40 @@
+$breakpoint-tablet: 768px;
+
+:root {
+  --text-color: #FD3D2A;
+  --color-background: #101010; // Deep black
+  --color-project: #101010;
+  --color-accent: #FD3D2A;
+  --color-background-light: #F7F7FF;
+  --color-dark: #101010; 
+
+  --accent-gradient: linear-gradient(45deg,
+      rgb(var(--accent)),
+      rgb(var(--accent-light)) 30%,
+      white 60%);
+
+  --space-3xs: clamp(0.3125rem, 0.3125rem + 0vw, 0.3125rem);
+  --space-2xs: clamp(0.5625rem, 0.5408rem + 0.1087vw, 0.625rem);
+  --space-xs: clamp(0.875rem, 0.8533rem + 0.1087vw, 0.9375rem);
+  --space-s: clamp(1.125rem, 1.0815rem + 0.2174vw, 1.25rem);
+  --space-m: clamp(1.6875rem, 1.6223rem + 0.3261vw, 1.875rem);
+  --space-l: clamp(2.25rem, 2.163rem + 0.4348vw, 2.5rem);
+  --space-xl: clamp(3.375rem, 3.2446rem + 0.6522vw, 3.75rem);
+  --space-2xl: clamp(4.5rem, 4.3261rem + 0.8696vw, 5rem);
+  --space-3xl: clamp(6.75rem, 6.4891rem + 1.3043vw, 7.5rem);
+  --space-4xl: clamp(9rem, 8.7rem + 1.74vw, 10rem); // 144px to 160px
+  --space-5xl: clamp(12rem, 11.6rem + 2.6vw, 13.75rem); // 192px to 220px
+  --space-6xl: clamp(15rem, 14.5rem + 3.48vw, 17.5rem); // 240px to 280px
+
+  // Spacing & Layout
+  --padding-side: 20px;
+  --radius-side: 40px;
+  --padding-inner: 20px;
+  --radius-inner: 20px;
+
+  @media (min-width: $breakpoint-tablet) {
+    --padding-side: 40px;
+    --padding-inner: 20px;
+  }
+
+}

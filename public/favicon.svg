@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="425.2" height="425.2"><svg id="SvgjsSvg1001" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 425.2 425.2">
+  <!-- Generator: Adobe Illustrator 29.8.3, SVG Export Plug-In . SVG Version: 2.1.1 Build 3)  -->
+  <defs>
+    <style>
+      .st0, .st1 {
+        fill: #ef4231;
+      }
+
+      .st2 {
+        fill: #111;
+      }
+
+      .st2, .st1 {
+        stroke: #231f20;
+        stroke-miterlimit: 10;
+      }
+
+      .st1 {
+        opacity: .59;
+      }
+    </style>
+  </defs>
+  <rect class="st2" width="425.2" height="425.2"></rect>
+  <rect class="st1" width="425.2" height="425.2"></rect>
+  <g>
+    <path class="st0" d="M198.55,164.53l-60.83,71.65v24.48h-37.55v-24.48l-60.83-71.65h44.31l49.42,62.34h-27.78l48.97-62.34h44.31Z"></path>
+    <path class="st0" d="M317.97,164.53c13.52,0,24.69,1.3,33.49,3.91,8.81,2.61,15.73,6.16,20.73,10.67,5.01,4.51,8.54,9.64,10.59,15.4,2.05,5.76,3.07,11.79,3.07,18.1s-1.15,12.34-3.45,18.1c-2.3,5.76-6.08,10.89-11.34,15.4-5.26,4.5-12.22,8.06-20.88,10.67-8.67,2.6-19.41,3.91-32.22,3.91h-108.15v-96.13h108.15ZM247.37,230.63h69.1c5.61,0,10.37-.38,14.27-1.13,3.91-.75,7.03-1.88,9.39-3.37,2.35-1.5,4.06-3.38,5.11-5.64s1.58-4.88,1.58-7.88-.53-5.64-1.58-7.89c-1.05-2.25-2.76-4.13-5.11-5.63s-5.48-2.63-9.39-3.38-8.66-1.12-14.27-1.12h-69.1v36.05Z"></path>
+  </g>
+</svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
+@media (prefers-color-scheme: dark) { :root { filter: none; } }
+</style></svg>

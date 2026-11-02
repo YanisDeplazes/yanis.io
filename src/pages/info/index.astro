@@ -1,0 +1,383 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Image from '../../assets/images/portrait.jpg';
+import Description from '../../components/sections/Description.astro';
+import ImageWrapper from '../../components/wrappers/ImageWrapper.astro';
+
+const title = 'Info';
+const suffix = 'Yanis Deplazes';
+const description =
+  'Yanis Deplazes is a visual journalist and researcher based between Switzerland and the Netherlands. Exploring people and society through multimedia.';
+
+const thumbnail = Image.src;
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/**/*.{jpg,jpeg,png,webp}',
+);
+
+const resolveImage = async (url: string) => images[`/src/assets${url}`]?.();
+
+let resolvedThumbnail;
+
+if (thumbnail) {
+  const resolved = await resolveImage(thumbnail);
+  resolvedThumbnail = resolved?.default;
+}
+
+const outlets = [
+  {
+    name: 'The New York Times',
+    show: true,
+    links: [
+      'https://www.nytimes.com/2026/10/31/world/europe/france-riots-protests-paris-rue-beaurepaire.html',
+    ],
+  },
+  {
+    name: 'SRF',
+    show: true,
+    links: [
+      'https://www.srf.ch/news/schweiz/cybersecurity-statt-darknet-kraeftemessen-der-nachwuchshacker-in-morges',
+    ],
+  },
+  {
+    name: 'Ultra Sawt',
+    show: true,
+    links: [
+      'https://www.ultrasawt.com/%D8%AA%D8%AC%D8%AF%D8%AF-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D8%AC%D8%A7%D8%AC%D8%A7%D8%AA-%D9%81%D9%8A-%D8%AF%D9%88%D9%84-%D8%A3%D9%88%D8%B1%D9%88%D8%A8%D9%8A%D8%A9-%D8%A3%D9%8A%D9%86-%D9%88%D9%82%D8%B9%D8%AA-%D9%88%D9%85%D8%A7-%D8%AA%D9%81%D8%A7%D8%B5%D9%8A%D9%84%D9%87%D8%A7%D8%9F/%D8%A3%D8%BA%D9%8A%D8%AF-%D8%AD%D8%AC%D8%A7%D8%B2%D9%8A/%D8%B3%D9%8A%D8%A7%D9%82-%D9%85%D8%AA%D8%B5%D9%84/%D8%B3%D9%8A%D8%A7%D8%B3%D8%A9',
+    ],
+  },
+  {
+    name: 'Luzerner Zeitung',
+    show: true,
+    links: [
+      'https://www.luzernerzeitung.ch/zentralschweiz/uri/altdorf-ein-tag-voller-kunst-musik-und-guter-vibes-msa-dayz-gehen-in-die-zweite-runde-ld.2655098',
+    ],
+  },
+  {
+    name: 'Zsido.com',
+    show: false,
+    links: [
+      'https://zsido.com/parizsi-zavargasok-chabad-rabbi-felgyujtott-autok/',
+    ],
+  },
+  {
+    name: 'Urner Wochenblatt',
+    show: true,
+    links: [
+      'https://www.urnerwochenblatt.ch/artikel/ein-urner-rappt-ueber-sein-bewegtes-leben',
+    ],
+  },
+  {
+    name: 'Le Journal du Dimanche',
+    show: false,
+    links: [
+      'https://www.lejdd.fr/economie/taxe-emeutes-une-contribution-de-08-sur-les-assurances-dommages-des-2027-187170',
+    ],
+  },
+];
+
+const publishedIn = outlets.filter((o) => o.show).map((o) => o.name);
+
+// Comma between outlet names; the list ends with "and others"
+const separator = (i: number) => (i < publishedIn.length - 1 ? ', ' : '');
+---
+
+<Layout
+  title={`${title} — ${suffix}`}
+  description={description}
+  imageSrc={Image.src}
+>
+  <Description title="Info">
+    <div slot="additional" class="info">
+      <p class="lede">
+        <b>Yanis Deplazes</b> is a visual journalist and researcher based between
+        Switzerland and the Netherlands, exploring people and society through multimedia.
+      </p>
+
+      <div class="bio">
+        <p>
+          Social movements and collective struggles across Europe are at the
+          core of their work, especially in the Netherlands, Belgium and
+          Switzerland. Alongside reportage, they build experimental apparatus
+          that examine social structures and everyday life.
+        </p>
+        <p>
+          They came to photography in 2020 from a background in computer
+          science, and since 2023 have combined analog and digital techniques.
+          They are currently pursuing an MA in Information Design at Design
+          Academy Eindhoven, bringing their practice into a research and design
+          context.
+        </p>
+        <p>
+          Photojournalist and member of
+          <a href="https://hanslucas.com/" target="_blank">Hans Lucas</a>, whose
+          distribution network includes Reuters, AFP and dpa. Available for
+          freelance assignments and commissions worldwide.
+        </p>
+      </div>
+
+      <dl class="facts">
+        <div class="row">
+          <dt>Contact</dt>
+          <dd>
+            <ul>
+              <li><a href="mailto:work@yanis.io">work@yanis.io</a></li>
+              <li>
+                <a
+                  href="https://www.instagram.com/yanisdeplazes/"
+                  target="_blank">Instagram</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://signal.me/#eu/WTYbqUCFw4UvJvImlzKoe5HkyYTBJSPaBvZ8KyKYhqoAs4Ie6UlCZ70oG0Jzs2pL"
+                  target="_blank">Signal</a
+                >
+              </li>
+            </ul>
+          </dd>
+        </div>
+
+        <div class="row">
+          <dt>Exhibitions</dt>
+          <dd>
+            <ul class="dated">
+              <li>
+                <span class="when">2026</span>
+                <span>
+                  <a
+                    href="https://social-footprints.com/?artist=yanis-deplazes"
+                    target="_blank"
+                    ><b>Social Footprints: Innocence and otherwise</b></a
+                  ><span class="where">Wanakam, Amsterdam</span>
+                </span>
+              </li>
+              <li>
+                <span class="when">2025</span>
+                <span>
+                  <b>Parallel Documentary Premiere</b><span class="where"
+                    >FC Hyena, Amsterdam</span
+                  >
+                </span>
+              </li>
+              <li>
+                <span class="when">2025</span>
+                <span>
+                  <b>ECHO Recordings and AOS</b><span class="where"
+                    >OT301, Amsterdam</span
+                  >
+                </span>
+              </li>
+              <li>
+                <span class="when">2025</span>
+                <span>
+                  <b>Disconnect</b><span class="where">MA'DAM, Amsterdam</span>
+                </span>
+              </li>
+            </ul>
+          </dd>
+        </div>
+
+        <div class="row">
+          <dt>Published in</dt>
+          <dd class="outlets">
+            {
+              publishedIn.map((outlet, i) => (
+                <>
+                  <>
+                    <b>{outlet}</b>
+                    <span class="sep">{separator(i)}</span>
+                  </>
+                </>
+              ))
+            }<span class="sep"> and others</span>
+          </dd>
+        </div>
+
+        <div class="row">
+          <dt>Education</dt>
+          <dd>
+            <ul class="dated">
+              <li>
+                <span class="when">2026–2028</span>
+                <span>
+                  <b>MA Information Design</b><span class="where"
+                    >Design Academy Eindhoven</span
+                  >
+                </span>
+              </li>
+              <li>
+                <span class="when">2023–2026</span>
+                <span>
+                  <b>BSc Computer Science, Digital Ideation</b><span
+                    class="where"
+                    >Lucerne University of Applied Sciences and Arts</span
+                  >
+                </span>
+              </li>
+              <li>
+                <span class="when">2025</span>
+                <span>
+                  <b>Internet of Things, exchange semester</b><span
+                    class="where">Amsterdam University of Applied Sciences</span
+                  >
+                </span>
+              </li>
+              <li>
+                <span class="when">2018–2022</span>
+                <span>
+                  <b>Mediamatics Technician EFZ with technical FVB</b><span
+                    class="where">SBW Neue Medien</span
+                  >
+                </span>
+              </li>
+            </ul>
+          </dd>
+        </div>
+
+        <div class="row">
+          <dt>Member</dt>
+          <dd>
+            <ul>
+              <li>
+                <a href="https://poolcollective.ch/" target="_blank"
+                  >pool collective</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://www.instagram.com/thick.collective/"
+                  target="_blank">thick collective</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://www.instagram.com/noise.collective/"
+                  target="_blank">Noise Collective</a
+                >
+              </li>
+            </ul>
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <div slot="details">
+      {
+        Image && (
+          <div class="description-image">
+            <ImageWrapper src={Image} alt="Yanis Deplazes" caption="Yanis" />
+          </div>
+        )
+      }
+    </div>
+  </Description>
+</Layout>
+
+<style>
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .info p {
+    margin: 0;
+  }
+
+  /* The one large moment: who Yanis is, in one sentence */
+  .lede {
+    font-size: clamp(1.35rem, 1rem + 1.1vw, 1.9rem);
+    line-height: 1.25;
+    max-width: 30ch;
+    text-wrap: balance;
+  }
+
+  .bio {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    max-width: 62ch;
+    line-height: 1.5;
+  }
+
+  /* Facts: label on the left, content on the right, one rule per row */
+  .facts {
+    margin: 0;
+    max-width: 62rem;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: 1.5rem;
+    padding: 1rem 0;
+    border-top: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  }
+
+  .row:last-child {
+    border-bottom: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  }
+
+  dt,
+  .when,
+  .where,
+  .sep {
+    opacity: 0.65;
+  }
+
+  dd {
+    margin: 0;
+  }
+
+  .outlets {
+    max-width: 52ch;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.35em;
+  }
+
+  /* Year column so entries line up */
+  .dated li {
+    display: grid;
+    grid-template-columns: 6.5em 1fr;
+    gap: 1rem;
+  }
+
+  .when {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .where::before {
+    content: ', ';
+  }
+
+  a:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 640px) {
+    .row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .dated li {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+  }
+</style>
+
+<style is:global>
+  figure {
+    cursor: default !important;
+  }
+</style>

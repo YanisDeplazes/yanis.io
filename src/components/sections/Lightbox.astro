@@ -1,0 +1,281 @@
+---
+import CloseSVG from '../svgs/CloseSVG.astro';
+import NextSVG from '../svgs/NextSVG.astro';
+import PreviousSVG from '../svgs/PreviousSVG.astro';
+---
+
+<div class="lightbox" aria-hidden="true" role="dialog">
+  <div class="wrapper">
+    <div class="lightbox-content">
+      <figure id="lightbox-main-figure"></figure>
+    </div>
+
+    <div class="lightbox-ui">
+      <button class="close-btn" aria-label="Close lightbox">
+        <CloseSVG />
+      </button>
+      <button class="previous-btn" aria-label="Previous">
+        <PreviousSVG />
+      </button>
+      <button class="next-btn" aria-label="Next">
+        <NextSVG />
+      </button>
+    </div>
+  </div>
+</div>
+
+<style lang="scss" is:global>
+  .lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2000;
+    height: 100dvh;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.98);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s;
+    touch-action: none;
+
+    &.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    &-content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    figure {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      img, video {
+        max-width: 100%;
+        max-height: 65dvh; 
+        object-fit: contain;
+      }
+
+      p {
+        margin-top: 20px;
+        opacity: 0.6;
+        font-size: 0.9rem;
+        text-align: center;
+        max-width: 80%;
+        line-height: 1.4;
+        color: var(--text-color);
+      }
+    }
+
+    .lightbox-ui {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .close-btn,
+    .previous-btn,
+    .next-btn {
+      pointer-events: auto;
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-color: #d42d2d2e;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.2s ease, background-color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+
+      &:hover {
+        background-color: #d42d2d4d;
+      }
+
+      svg {
+        width: 22px;
+        height: 22px;
+        stroke: var(--text-color);
+      }
+    }
+
+    @media (max-width: 767px) {
+      .close-btn {
+        top: env(safe-area-inset-top, 20px);
+        right: 20px;
+      }
+      .previous-btn {
+        bottom: env(safe-area-inset-bottom, 40px);
+        left: 25%;
+        transform: translateX(-50%);
+      }
+      .next-btn {
+        bottom: env(safe-area-inset-bottom, 40px);
+        right: 25%;
+        transform: translateX(50%);
+      }
+      .previous-btn:hover { transform: translateX(-50%) scale(1.1); }
+      .next-btn:hover { transform: translateX(50%) scale(1.1); }
+    }
+
+    @media (min-width: 768px) {
+      figure img, figure video {
+        max-height: 80vh;
+      }
+      .close-btn { top: 40px; right: 40px; }
+      .previous-btn { top: 50%; left: 40px; transform: translateY(-50%); }
+      .next-btn { top: 50%; right: 40px; transform: translateY(-50%); }
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const body = document.querySelector('body') as HTMLElement;
+    const lightbox = document.querySelector('.lightbox') as HTMLElement;
+    const lightboxFigure = document.getElementById('lightbox-main-figure') as HTMLElement;
+    const galleryItems = document.querySelectorAll('.gallery .item figure') as NodeListOf<HTMLElement>;
+
+    let currentIndex = 0;
+    let touchStartX = 0;
+
+    if (!lightbox || !galleryItems.length) return;
+
+    // Fixed createCaption signature to accept string, null, or undefined
+    const createCaption = (text: string | null | undefined): void => {
+      if (!text || text.trim() === "") return;
+      const p = document.createElement('p');
+      p.textContent = `© ${text}`;
+      lightboxFigure.appendChild(p);
+    };
+
+    const updateContent = (index: number): void => {
+      const sourceFigure = galleryItems[index];
+      const sourceMedia = sourceFigure.querySelector('img, video');
+      if (!sourceMedia) return;
+
+      lightboxFigure.innerHTML = '';
+
+      if (sourceMedia instanceof HTMLImageElement) {
+        const img = document.createElement('img');
+        img.src = sourceMedia.src;
+        img.alt = sourceMedia.alt;
+        lightboxFigure.appendChild(img);    
+        createCaption(img.alt);
+      } 
+      else if (sourceMedia instanceof HTMLVideoElement) {
+        const video = document.createElement('video');
+        const source = sourceMedia.querySelector('source');
+        
+        video.playsInline = true;
+        video.autoplay = true;
+        video.loop = sourceMedia.hasAttribute('loop');
+        video.muted = sourceMedia.parentElement?.classList.contains('is-autoplay') || sourceMedia.muted;
+        video.controls = !sourceMedia.parentElement?.classList.contains('is-autoplay');
+        
+        if (source) {
+          const s = document.createElement('source');
+          s.src = source.src;
+          s.type = source.type;
+          video.appendChild(s);
+        }
+
+        lightboxFigure.appendChild(video);
+
+        // Uses ?? null to ensure we don't pass undefined to a string|null param
+        const videoCaption = 
+          sourceMedia.querySelector('track')?.getAttribute('label') ?? 
+          sourceFigure.querySelector('figcaption')?.textContent ?? 
+          null;
+        
+        createCaption(videoCaption);
+      }
+    };
+
+    const openLightbox = (index: number): void => {
+      currentIndex = index;
+      updateContent(currentIndex);
+      lightbox.classList.add('active');
+      lightbox.setAttribute('aria-hidden', 'false');
+      body.style.overflow = 'hidden';
+    };
+
+    const closeLightbox = (): void => {
+      lightbox.classList.remove('active');
+      lightbox.setAttribute('aria-hidden', 'true');
+      body.style.overflow = '';
+      setTimeout(() => { lightboxFigure.innerHTML = ''; }, 300);
+    };
+
+    const next = (): void => {
+      currentIndex = (currentIndex + 1) % galleryItems.length;
+      updateContent(currentIndex);
+    };
+
+    const prev = (): void => {
+      currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+      updateContent(currentIndex);
+    };
+
+    lightbox.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    lightbox.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].screenX;
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) {
+        diff > 0 ? next() : prev();
+      }
+    }, { passive: true });
+
+    galleryItems.forEach((fig, idx) => {
+      fig.style.cursor = 'pointer';
+      fig.addEventListener('click', (e) => {
+        e.preventDefault();
+        openLightbox(idx);
+      });
+    });
+
+    lightbox.querySelector('.close-btn')?.addEventListener('click', closeLightbox);
+    lightbox.querySelector('.next-btn')?.addEventListener('click', (e) => { e.stopPropagation(); next(); });
+    lightbox.querySelector('.previous-btn')?.addEventListener('click', (e) => { e.stopPropagation(); prev(); });
+    
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox || (e.target as HTMLElement).classList.contains('wrapper')) {
+        closeLightbox();
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft') prev();
+    });
+  });
+</script>

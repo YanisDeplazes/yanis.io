@@ -1,0 +1,100 @@
+---
+import Wrapper from '../../layouts/Wrapper.astro';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<section class="project-title">
+  <Wrapper>
+    <div class="container">
+      <div class="title-container">
+        <h1 class="title title-font-bold font-size-3" set:html={title} />
+        <slot name="additional" />
+      </div>
+
+      <div class="content">
+        <slot name="details" />
+      </div>
+    </div>
+  </Wrapper>
+</section>
+
+<style lang="scss" is:global>
+  .project-title {
+    padding-top: 0;
+    padding-bottom: 0;
+
+    .container {
+      position: relative;
+      padding-bottom: var(--space-s);
+
+      @media (min-width: 1000px) {
+        display: flex;
+        align-items: flex-start; /* Changed from justify-items for better alignment */
+        gap: var(--space-3xl);
+      }
+
+      &::after {
+        content: '';
+        background-color: var(--color-accent);
+        height: 1px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        opacity: 0.5;
+      }
+
+      .title-container,
+      .content {
+        width: 100%;
+        color: var(--color-accent);
+
+        .title {
+          margin-block-start: var(--space-3xs);
+          margin-bottom: var(--space-xs);
+          text-transform: uppercase; /* Matching the Yanis aesthetic */
+        }
+      }
+
+      .title-container {
+        @media (min-width: 1000px) {
+          width: 68%;
+        }
+      }
+
+      .content {
+        display: flex;
+        flex-direction: column;
+        gap: 0; /* Let the List component handle internal spacing */
+        .list {
+          border-top: 1px solid rgba(255, 62, 0, 0.2);
+        &:first-child {
+            border-top: none;
+          }
+          li {
+            a {
+              font-weight: 400 !important;
+            }
+          }
+        }
+        @media (min-width: 1000px) {
+          width: 32%;
+        }
+      }
+
+      a {
+        text-decoration: underline;
+        transition: all 0.2s ease-in-out;
+        font-weight: bold;
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+</style>

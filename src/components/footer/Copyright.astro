@@ -1,14 +1,29 @@
-<div class="copyright font-size-small text-transform-reset">
-  Copyright © 2026 Yanis Deplazes.<br />
-  All rights reserved.
-</div>
+---
+import { profile } from '../../data/profile';
 
-<style lang="scss">
+const year = new Date().getFullYear();
+---
+
+<p class="copyright meta">
+  <span>© {year} {profile.name}</span>
+  <a class="email" href={`mailto:${profile.email}`}>{profile.email}</a>
+</p>
+
+<style>
   .copyright {
-    text-align: center;
-    text-transform: uppercase;
-    @media (min-width: 755px) {
-      text-align: left;
-    }
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-m);
+    color: var(--color-muted);
+  }
+
+  .email {
+    color: var(--color-ink);
+    text-transform: none;
+    transition: color 0.2s ease;
+  }
+
+  .email:hover {
+    color: var(--color-accent);
   }
 </style>

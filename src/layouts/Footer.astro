@@ -1,32 +1,29 @@
 ---
-import Wrapper from '../layouts/Wrapper.astro';
-import Socials from '../components/footer/Socials.astro';
+import Wrapper from './Wrapper.astro';
 import Copyright from '../components/footer/Copyright.astro';
+import Socials from '../components/footer/Socials.astro';
 ---
 
-<footer>
+<footer class="site-footer">
   <Wrapper>
-    <div class="container">
+    <div class="inner">
       <Copyright />
       <Socials />
     </div>
-    <style lang="scss">
-      footer {
-        width: 100vw;
-        padding: 20px 0px;
-        border-top: 1px solid var(--color-accent);
-        background-color: var(--color-project);
-        .container {
-          display: flex;
-          flex-direction: column-reverse;
-          align-items: center;
-
-          @media (min-width: 755px) {
-            flex-direction: row;
-            justify-content: space-between;
-          }
-        }
-      }
-    </style>
   </Wrapper>
 </footer>
+
+<style>
+  .site-footer {
+    padding-block: var(--space-m);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-xs) var(--space-m);
+  }
+</style>

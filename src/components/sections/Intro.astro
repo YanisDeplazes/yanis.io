@@ -1,0 +1,68 @@
+---
+import Wrapper from '../../layouts/Wrapper.astro';
+import { profile } from '../../data/profile';
+
+const { text } = profile.location;
+---
+
+<section class="intro band">
+  <Wrapper>
+    <h1 class="statement">
+      <b>{profile.name}</b> is a visual journalist and researcher {
+        profile.statement
+      }
+    </h1>
+
+    <ul class="status meta">
+      <li>working between {text}</li>
+      <li>
+        Member of <a
+          href={profile.agency.href}
+          target="_blank"
+          rel="noopener noreferrer">{profile.agency.name}</a
+        >
+      </li>
+      <li>
+        <a href={`mailto:${profile.email}`}>Available for assignments →</a>
+      </li>
+    </ul>
+  </Wrapper>
+</section>
+
+<style>
+  .intro {
+    padding-block: var(--space-2xl);
+  }
+
+  @media (min-width: 900px) {
+    .intro {
+      padding-block: var(--space-3xl) var(--space-2xl);
+    }
+  }
+
+  .statement {
+    max-width: 26ch;
+    font-size: clamp(1.625rem, 1rem + 2.1vw, 2.75rem);
+    font-weight: 450;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    text-wrap: pretty;
+  }
+
+  .status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs) var(--space-m);
+    margin-top: var(--space-xl);
+  }
+
+  .status a {
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+    transition: color 0.2s ease;
+  }
+
+  .status a:hover {
+    color: var(--color-paper);
+  }
+</style>

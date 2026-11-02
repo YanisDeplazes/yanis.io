@@ -1,53 +1,115 @@
 ---
 import Wrapper from '../../layouts/Wrapper.astro';
 import SelectedWrapper from '../wrappers/SelectedWrapper.astro';
-import { getSortedWork } from '../../utils/workUtils.ts';
+import { getSelected, type WorkItem } from '../../utils/workUtils';
 
-const resolvedSelected = await getSortedWork((data) => data.selected === true);
+const selected = (await getSelected()).filter(
+  (item): item is WorkItem & { thumbnail: ImageMetadata } =>
+    Boolean(item.thumbnail),
+);
+
+// The stream repeats a pattern of four slots: wide, left, right (lower), centred.
+const sizesFor = (index: number) =>
+  index % 4 === 0
+    ? '(min-width: 1920px) 1840px, calc(100vw - 80px)'
+    : '(min-width: 900px) 58vw, 100vw';
 ---
 
-<section class="selection">
+<section class="selected" aria-labelledby="selected-heading">
   <Wrapper>
-    <div class="content">
+    <h2 id="selected-heading" class="section-label meta">
+      Selected work <span class="count">{selected.length}</span>
+    </h2>
+
+    <ol class="stream">
       {
-        resolvedSelected.map(
-          (item) =>
-            item.resolvedThumbnail && (
-              <div class="item reveal-on-scroll" data-title={item.title}>
-                <SelectedWrapper
-                  slug={item.slug}
-                  start={item.start}
-                  end={item.end}
-                  title={item.title}
-                  type={item.type}
-                  src={item.resolvedThumbnail}
-                  ongoing={item.ongoing}
-                />
-              </div>
-            ),
-        )
+        selected.map((item, i) => (
+          <li class="slot" data-reveal>
+            <SelectedWrapper
+              item={item}
+              number={i + 1}
+              total={selected.length}
+              sizes={sizesFor(i)}
+            />
+          </li>
+        ))
       }
-    </div>
+    </ol>
+
+    <p class="nudge">
+      See all work in the <a href="/work" class="text-link">archive</a>.
+    </p>
   </Wrapper>
 </section>
 
-<style lang="scss">
-  .selection {
-    .content {
-      display: grid;
-      width: 100%;
-      grid-template-columns: repeat(1, 1fr);
-      grid-template-rows: repeat(1, 1fr);
-      align-items: center;
-      gap: var(--space-3xs);
+<style>
+  .selected {
+    padding-top: var(--gap-block);
+  }
 
-      @media (min-width: 755px) {
-        grid-template-columns: repeat(2, 1fr);
-      }
+  .section-label {
+    display: flex;
+    gap: var(--space-2xs);
+    padding-bottom: var(--space-xs);
+    margin-bottom: var(--space-m);
+    border-bottom: 1px solid var(--color-line);
+  }
 
-      @media (min-width: 1100px) {
-        grid-template-columns: repeat(3, 1fr);
-      }
+  .count {
+    color: var(--color-muted);
+  }
+
+  .stream {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  /* Wide slots keep the photo's own aspect ratio, never cropped.
+     Full width when it fits; otherwise as wide as the screen height allows
+     (leaving room for the header and the caption). --ratio comes from SelectedWrapper. */
+  .slot:nth-child(4n + 1) :global(.media) {
+    width: min(
+      100%,
+      calc((100svh - var(--header-height) - 7rem) * var(--ratio, 1.5))
+    );
+  }
+
+  @media (min-width: 900px) {
+    .stream {
+      grid-template-columns: repeat(12, 1fr);
+      column-gap: var(--space-m);
+      row-gap: var(--space-4xl);
+      align-items: start;
     }
+
+    .slot:nth-child(4n + 1) {
+      grid-column: 1 / -1;
+    }
+
+    .slot:nth-child(4n + 2) {
+      grid-column: 1 / 8;
+    }
+
+    .slot:nth-child(4n + 3) {
+      grid-column: 9 / -1;
+      margin-top: var(--space-5xl);
+    }
+
+    .slot:nth-child(4n + 4) {
+      grid-column: 3 / 11;
+    }
+
+    /* Keep tall photos from taking over the screen */
+    .slot:not(:nth-child(4n + 1)) :global(.media img) {
+      max-height: 90svh;
+    }
+  }
+
+  .nudge {
+    max-width: 40ch;
+    margin-top: var(--gap-section);
+    font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
   }
 </style>

@@ -1,26 +1,49 @@
 ---
-interface Props {
-  title: string;
-  description: string;
-  imageSrc: any;
-  pageColor?: string;
-}
-
 import Header from './Header.astro';
 import Footer from './Footer.astro';
+import HoverPreview from '../components/sections/HoverPreview.astro';
+import { profile, site } from '../data/profile';
+import { absoluteUrl } from '../utils/seo';
+import DefaultShareImage from '../assets/images/default.png';
 
 import '../styles/main.scss';
 
-const baseUrl = 'https://yanis.io';
-const currentPath = Astro.url.pathname;
-const url = `${baseUrl}${currentPath}`;
-const pageColor = Astro.props.pageColor || 'var(--color-background)';
+interface Props {
+  /** Page name, e.g. "Archive". Leave empty on the home page. */
+  title?: string;
+  /** 140–160 characters work best in search results */
+  description?: string;
+  /** Social share image, as a URL path (e.g. thumbnail.src). Defaults to default.png */
+  image?: string;
+  imageAlt?: string;
+  /** "article" for project pages */
+  type?: 'website' | 'article' | 'profile';
+  published?: Date;
+  modified?: Date;
+  /** Keep the page out of search engines (hidden projects) */
+  noindex?: boolean;
+  /** Structured data objects, see utils/seo.ts */
+  schema?: object[];
+}
 
 const {
-  title = 'Yanis Deplazes',
-  description = 'My Portfolio',
-  imageSrc = 'default.png',
+  title,
+  description = profile.summary,
+  image = DefaultShareImage.src,
+  imageAlt = `${profile.name}, ${profile.role}`,
+  type = 'website',
+  published,
+  modified,
+  noindex = false,
+  schema = [],
 } = Astro.props;
+
+// "Groundswell — Yanis Deplazes" / home: "Yanis Deplazes — Visual journalist & researcher, NL · CH"
+const pageTitle = title
+  ? `${title} — ${profile.name}`
+  : `${profile.name} — ${profile.role}, Netherlands & Switzerland`;
+const url = absoluteUrl(Astro.url.pathname);
+const imageUrl = absoluteUrl(image);
 ---
 
 <!doctype html>
@@ -30,104 +53,74 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
 
-    <title>{title}</title>
+    <title>{pageTitle}</title>
     <meta name="description" content={description} />
-
-    <!-- Canonical Link -->
+    <meta name="author" content={profile.name} />
     <link rel="canonical" href={url} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <link rel="sitemap" href="/sitemap-index.xml" />
 
-    <!-- Open Graph Meta Tags -->
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:type" content={type} />
     <meta property="og:url" content={url} />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={`${imageSrc}`} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:alt" content={imageAlt} />
+    {published && <meta property="article:published_time" content={published.toISOString()} />}
+    {modified && <meta property="article:modified_time" content={modified.toISOString()} />}
 
-    <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta property="twitter:domain" content="yanis.io" />
-    <meta property="twitter:url" content={url} />
-    <meta name="twitter:title" content={title} />
+    <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={`${imageSrc}`} />
-
-    <!-- Favicon -->
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:image:alt" content={imageAlt} />
 
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="yanis.io" />
     <link rel="manifest" href="/site.webmanifest" />
+    <meta name="apple-mobile-web-app-title" content="yanis.io" />
+    <meta name="theme-color" content="#fafafa" />
 
-    <meta name="theme-color" content="#000000" />
+    <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/syne.woff2" as="font" type="font/woff2" crossorigin />
+
+    {
+      schema.map((data) => (
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(data)} />
+      ))
+    }
+
+    <!-- Marks JavaScript as available before paint, so reveal effects never hide content without it -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
-  <body style={`--color-project: ${pageColor}; opacity: 0`}>
-    
+
+  <body>
+    <a class="skip-link meta" href="#main">Skip to content</a>
     <Header />
-    <main>
+    <main id="main">
       <slot />
     </main>
     <Footer />
-    <script type="module">
-      function revealOnScroll(options = {}) {
-        const {
-          selector = '.reveal-on-scroll',
-          threshold = 0.2,
-          rootMargin = '0px',
-          once = true,
-          revealedClass = 'revealed',
-        } = options;
-
-        const observer = new IntersectionObserver(
-          (entries, obs) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add(revealedClass);
-                if (once) obs.unobserve(entry.target);
-              }
-            });
-          },
-          {
-            threshold,
-            rootMargin,
-          },
-        );
-
-        document
-          .querySelectorAll(selector)
-          .forEach((el) => observer.observe(el));
-      }
-
-      document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-          revealOnScroll();
-        }, 1000);
-      });
-    </script>
+    <HoverPreview />
 
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const navigation = document.querySelector('header .list');
-        const hamburger = document.querySelector('header .hamburger');
+      // Fade elements with [data-reveal] in as they enter the viewport
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          });
+        },
+        { rootMargin: '0px 0px -10% 0px' },
+      );
 
-        if (!navigation || !hamburger) return;
-
-        hamburger.addEventListener('click', () => {
-          navigation.classList.toggle('open');
-          hamburger.classList.toggle('open');
-        });
-      });
-    </script>
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        window.onload = () => {
-          const bodyElement = document.querySelector('body') as HTMLElement;
-          if (bodyElement) {
-            bodyElement.style.opacity = '1';
-          }
-        };
-      });
+      document.querySelectorAll('[data-reveal]').forEach((el) => observer.observe(el));
     </script>
   </body>
 </html>

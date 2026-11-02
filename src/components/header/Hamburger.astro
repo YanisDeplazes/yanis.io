@@ -1,49 +1,32 @@
-<div class="hamburger">
-  <span></span>
-  <span></span>
-</div>
+<button
+  type="button"
+  class="menu-toggle meta"
+  aria-expanded="false"
+  aria-controls="site-menu"
+>
+  <span class="open-label">Menu</span>
+  <span class="close-label">Close</span>
+</button>
 
 <style>
-  .hamburger {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 30px;
-    height: 16px;
-    cursor: pointer;
-    z-index: 1;
+  .menu-toggle {
     position: relative;
+    z-index: 2; /* stays above the open menu */
+    padding: var(--space-2xs) 0;
+  }
 
-    @media (min-width: 1100px) {
+  .close-label,
+  .menu-toggle[aria-expanded='true'] .open-label {
+    display: none;
+  }
+
+  .menu-toggle[aria-expanded='true'] .close-label {
+    display: inline;
+  }
+
+  @media (min-width: 900px) {
+    .menu-toggle {
       display: none;
-    }
-
-    span {
-      display: block;
-      height: 2px;
-      background-color: var(--color-accent);
-      transition: all 0.3s ease;
-    }
-
-    &:hover span {
-      opacity: 0.7;
-    }
-    &.open {
-      span {
-        background-color: var(--color-dark);
-
-        &:nth-child(1) {
-          transform: rotate(45deg);
-          position: relative;
-          top: 7px;
-        }
-
-        &:nth-child(2) {
-          transform: rotate(-45deg);
-          position: relative;
-          top: -7px;
-        }
-      }
     }
   }
 </style>

@@ -1,27 +1,22 @@
-.reveal-on-scroll {
-  opacity: 1; // keep the container stable and visible
+// Elements with [data-reveal] fade up once they scroll into view (see Layout.astro).
+// The .js class is set before paint, so without JavaScript everything stays visible.
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
 
-  figure {
-    opacity: 0;
-  }
-
-
-  &.revealed {
-    figure {
-      animation: imgScaleFadeIn 1s ease-in-out forwards;
-    }
-     
+  &.is-visible {
+    opacity: 1;
+    transform: none;
   }
 }
 
-@keyframes imgScaleFadeIn {
-  from {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-
-  to {
-    transform: scale(1);
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] {
     opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

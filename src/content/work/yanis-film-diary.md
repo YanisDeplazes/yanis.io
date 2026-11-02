@@ -1,23 +1,26 @@
 ---
 title: 'Yanis Film Diary'
-description: 'A visual diary that transforms the physical "Film Negative Sleeve" into an interactive website.'
-start: 2024-07-01
+description: 'My film photography diary as a website: Three.js turns physical negative sleeves into an interactive archive. Built at HSLU in 2024.'
 slug: 'yanis-film-diary'
-type: ['system']
-context: "Lucerne University of Applied Sciences and Arts"
-location: ['Switzerland']
+start: 2024-07-01
+category: 'technology'
+type: ['web']
+location: 'Lucerne, Switzerland'
+institution: 'Lucerne University of Applied Sciences and Arts'
 thumbnail: '/images/galleries/yanis-film-diary/1.jpg'
-selected: true
-ongoing: false
-gallery:
-  content:
-    - imageUrl: '/images/galleries/yanis-film-diary/1.jpg'
-      videoUrl: '/images/galleries/yanis-film-diary/1.mp4'
-      alt: 'Yanis Film Diary - 1'
+selected: false
+links:
+  - label: 'film.yanis.io'
+    href: 'https://film.yanis.io'
 lists:
-  - title: "Link"
+  - title: 'Stack'
     items:
-      - "<a href='https://film.yanis.io' target=_blank>film.yanis.io</a>"
+      - 'Three.js'
+gallery:
+  - video: '/images/galleries/yanis-film-diary/1.mp4'
+    poster: '/images/galleries/yanis-film-diary/1.jpg'
 ---
 
-**Yanis Film Diary** is a personal journal of my film photography journey, created during the spring semester of 2024 at HSLU. Built using Three.js, the project explores various aspects of web development to transform physical "Film Negative Sleeve" into an interactive website.
+Every roll of film ends up in a negative sleeve. **Yanis Film Diary** turns those sleeves into a website: a personal journal of my film photography that you can browse like the physical archive.
+
+Built with Three.js during the spring semester of 2024 at the Lucerne University of Applied Sciences and Arts, as a way to explore what the web can do with a very analog object.

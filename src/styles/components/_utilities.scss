@@ -1,56 +1,98 @@
-.letter-spacing {
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-.border {
-  border: 1px solid #fff3;
+.skip-link {
+  position: fixed;
+  top: var(--space-2xs);
+  left: var(--space-2xs);
+  z-index: 100;
+  padding: var(--space-2xs) var(--space-xs);
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+  transform: translateY(-200%);
 
-  &.radius {
-    border-radius: 40px;
+  &:focus {
+    transform: none;
   }
 }
 
-.display-none {
-  display: none;
+.text-muted {
+  color: var(--color-muted);
 }
 
-.color-white {
-  color: var(--color-white);
-}
-
-.color-light {
-  color: var(--color-light);
-}
-
-.color-dark {
-  color: var(--color-project);
-}
-
-.color-primary {
-  color: var(--text-color);
-}
-
-
-.button {
-  background-color: white;
-  color: #101010;
-  padding: 1em 2em;
-  border-radius: 2em;
-  transition: all 0.2s ease-out;
+// Underlined text link with an orange hover, e.g. "Full bio"
+.text-link {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color 0.2s ease;
 
   &:hover {
-    background-color: #101010;
-    color: white;
+    color: var(--color-accent);
   }
 }
 
-// Hide scrollbar
-html {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none;
+// One underline style for every "you are here" state: navigation, filters, toggles.
+// Hover shows the same line, thinner.
+.mark-link {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.45em;
+  transition:
+    color 0.2s ease,
+    text-decoration-color 0.2s ease;
+
+  &:hover {
+    text-decoration-color: var(--color-line);
+  }
+
+  &[aria-current='page'],
+  &[aria-pressed='true'] {
+    color: var(--color-ink);
+    text-decoration-color: var(--color-accent);
+  }
 }
 
-html body::-webkit-scrollbar {
+// Solid orange band (home intro, contact). Text on it is ink.
+.band {
+  background-color: var(--color-accent);
+  color: var(--color-ink);
+
+  ::selection {
+    background-color: var(--color-ink);
+    color: var(--color-accent);
+  }
+
+  // Orange-on-orange would vanish: on a band, links and muted text use ink and paper
+  .text-link:hover {
+    color: var(--color-paper);
+  }
+
+  .text-muted {
+    color: inherit;
+  }
+}
+
+// Hide the scrollbar but keep scrolling
+html {
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
   display: none;
+}
+
+// Stop page scrolling behind the mobile menu and the lightbox
+.is-locked {
+  overflow: hidden;
 }

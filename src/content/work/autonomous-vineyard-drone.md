@@ -1,43 +1,42 @@
 ---
 title: 'Autonomous Vineyard Drone'
-description: 'A custom-built drone system for autonomous precision agriculture and terrain mapping.'
-start: 2025-04-16
+description: 'A drone that flies itself through vineyard rows, monitors the vines and keeps birds away. Built with MSafe and students of the Amsterdam University of Applied Sciences.'
 slug: 'autonomous-vineyard-drone'
-type: ['system']
+start: 2025-04-16
+category: 'technology'
+type: ['hardware', 'system']
+location: 'Amsterdam, Netherlands'
+client: 'MSafe'
+institution: 'Amsterdam University of Applied Sciences'
 thumbnail: '/images/galleries/autonomous-vineyard-drone/1.jpg'
-selected: false
-context: "Amsterdam University of Applied Sciences"
-location: ['Netherlands']
-ongoing: false
-gallery:
-  content:
-    - videoUrl: '/images/galleries/autonomous-vineyard-drone/1.mp4'
-      alt: 'Autonomous Vineyard Drone - Demo'
-      imageUrl: '/images/galleries/autonomous-vineyard-drone/1.jpg'
-      autoplay: true
-    - imageUrl: '/images/galleries/autonomous-vineyard-drone/1.jpg'
-      alt: 'Autonomous Vineyard Drone - Drone'
-    - imageUrl: '/images/galleries/autonomous-vineyard-drone/2.jpg'
-      alt: 'Autonomous Vineyard Drone - Drone'
-    - imageUrl: '/images/galleries/autonomous-vineyard-drone/3.jpg'
-      alt: 'Autonomous Vineyard Drone - Prototyping'
-    - imageUrl: '/images/galleries/autonomous-vineyard-drone/4.jpg'
-      alt: 'Autonomous Vineyard Drone - Backend'
-    - imageUrl: '/images/galleries/autonomous-vineyard-drone/5.jpg'
-      alt: 'Autonomous Vineyard Drone - Database'
+links:
+  - label: 'Code on GitHub'
+    href: 'https://github.com/YanisDeplazes/Autonomous-Vineyard-Drone/'
 lists:
-  - title: "Link"
+  - title: 'Stack'
     items:
-      - "<a href='https://github.com/YanisDeplazes/Autonomous-Vineyard-Drone/' target=_blank>github</a>"
-  - title: "Technologies"
-    items:
-      - "ArduPilot & Orange Cube"
-      - "Astro & Express.js"
-      - "MAVLink Protocol"
-      - "NDVI Camera System"
-      - "Raspberry Pi 3 Base Station"
+      - 'ArduPilot and Orange Cube'
+      - 'MAVLink protocol'
+      - 'NDVI camera system'
+      - 'Raspberry Pi 3 base station'
+      - 'Astro and Express.js'
+gallery:
+  - video: '/images/galleries/autonomous-vineyard-drone/1.mp4'
+    poster: '/images/galleries/autonomous-vineyard-drone/1.jpg'
+    caption: 'Autonomous flight demo'
+    autoplay: true
+  - image: '/images/galleries/autonomous-vineyard-drone/1.jpg'
+    caption: 'The drone'
+  - image: '/images/galleries/autonomous-vineyard-drone/2.jpg'
+    caption: 'The drone'
+  - image: '/images/galleries/autonomous-vineyard-drone/3.jpg'
+    caption: 'Prototyping'
+  - image: '/images/galleries/autonomous-vineyard-drone/4.jpg'
+    caption: 'Backend'
+  - image: '/images/galleries/autonomous-vineyard-drone/5.jpg'
+    caption: 'Database'
 ---
 
-The **MSafe Autonomous Vineyard Drone** is a long-term development project aimed at creating a drone that can navigate independently through vineyard rows, monitor the vines, and deter birds. Our team has made substantial progress toward achieving full autonomy and vineyard-specific functionality.
+A drone that flies itself through vineyard rows, keeps an eye on the vines and keeps the birds away. The **MSafe Autonomous Vineyard Drone** is a long-running project between students of the Amsterdam University of Applied Sciences and MSafe, an ICT company specialised in secure file handling that is exploring agricultural automation.
 
-This project is a collaboration between HvA students and MSafe, an ICT company specializing in secure file handling that's exploring agricultural automation solutions. Our team is the third group of students to work on this ongoing project, building upon previous teams' foundations.
+Our team was the third to work on it, building on what the earlier groups had started, and got a big step closer to full autonomy and vineyard-specific functions: from flight control over MAVLink to the base station and the web interface.

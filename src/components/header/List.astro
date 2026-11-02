@@ -1,92 +1,97 @@
 ---
 const links = [
-  { name: 'Selected', path: '/' },
-  { name: 'Archive', path: '/work' },
-  { name: 'Info', path: '/info' },
+  { name: 'selected', path: '/' },
+  { name: 'reportage', path: '/reportage' },
+  { name: 'archive', path: '/work' },
+  { name: 'info', path: '/info' },
 ];
 
-const currentPath = Astro.url.pathname;
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 
-// Check if we are on the home page
-const isHome = currentPath === '/';
+const isActive = (path: string) =>
+  path === '/' ? currentPath === '/' : currentPath.startsWith(path);
 ---
 
-<ul class="list">
+<ul class="list" id="site-menu">
   {
-    links.map(({ name, path }) => {
-      // If it's the home link, only highlight it if the currentPath is exactly '/'
-      const isActive =
-        (path === '/' && isHome) ||
-        (path !== '/' && currentPath.startsWith(path));
-      return (
-        <li class={isActive ? 'active' : ''}>
-          <a href={path} class="link title-font font-size-5">
-            {name}
-          </a>
-        </li>
-      );
-    })
+    links.map(({ name, path }) => (
+      <li>
+        <a href={path} class="link mark-link" aria-current={isActive(path) ? 'page' : undefined}>
+          {name}
+        </a>
+      </li>
+    ))
   }
 </ul>
 
 <style>
+  /* ----- Mobile: full-screen menu ----- */
   .list {
-    margin: 0;
     position: fixed;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: var(--color-accent);
+    inset: 0;
+    z-index: 1;
     display: flex;
-    gap: var(--space-s);
-    color: var(--color-dark);
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
+    justify-content: center;
+    gap: var(--space-2xs);
+    padding-inline: var(--padding-side);
+    background-color: var(--color-accent);
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 12vw, 4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    text-transform: uppercase;
     opacity: 0;
-    transition: all 0.2s ease-in-out;
-    pointer-events: none;
+    visibility: hidden;
+    transition:
+      opacity 0.25s ease,
+      visibility 0.25s;
+  }
 
-    @media (min-width: 1100px) {
-      color: var(--color-accent);
+  /* On the orange menu the current page is underlined in ink */
+  .list .link[aria-current='page'] {
+    text-decoration-color: var(--color-ink);
+  }
+
+  :global(.navigation[data-open='true']) .list {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* ----- Desktop: one quiet line ----- */
+  @media (min-width: 900px) {
+    .list {
+      position: static;
       flex-direction: row;
-      gap: var(--space-xl);
+      gap: var(--space-m);
+      padding: 0;
+      background: none;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      text-transform: none;
       opacity: 1;
-      width: unset;
-      height: unset;
-      background-color: unset;
-      position: unset;
-      pointer-events: all;
+      visibility: visible;
     }
 
-    li {
-      position: relative;
-      transition: all 0.3s ease;
-
-      &:hover {
-        opacity: 0.8;
-      }
-      &.active {
-        a::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          width: 100%;
-          height: 1px;
-          left: 0;
-          bottom: 0px;
-          background-color: var(--color-dark);
-
-          @media (min-width: 1100px) {
-            background-color: var(--color-accent);
-          }
-        }
-      }
+    .list .link {
+      color: var(--color-muted);
     }
-    &.open {
-      opacity: 1;
-      pointer-events: all;
+
+    .list .link:hover {
+      color: var(--color-ink);
+    }
+
+    .list .link[aria-current='page'] {
+      color: var(--color-ink);
+      text-decoration-color: var(--color-accent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .list {
+      transition: none;
     }
   }
 </style>

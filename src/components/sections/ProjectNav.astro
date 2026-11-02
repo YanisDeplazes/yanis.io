@@ -1,0 +1,110 @@
+---
+// End of a project page: the next project, and a way back.
+import { Image } from 'astro:assets';
+import Wrapper from '../../layouts/Wrapper.astro';
+import type { WorkItem } from '../../utils/workUtils';
+
+interface Props {
+  next?: WorkItem;
+  back: { href: string; label: string };
+}
+
+const { next, back } = Astro.props;
+---
+
+<nav class="project-nav" aria-label="More work">
+  <Wrapper>
+    <div class="inner">
+      <a href={back.href} class="back meta">← Back to {back.label.toLowerCase()}</a>
+
+      {
+        next && (
+          <a href={`/work/${next.slug}`} class="next">
+            <span class="label meta">Next</span>
+            <span class="title title-font-bold">{next.title}</span>
+            <span class="details meta">
+              {next.categoryLabel} · {next.years}
+            </span>
+            {next.thumbnail && (
+              <Image
+                src={next.thumbnail}
+                alt=""
+                widths={[320, 640]}
+                sizes="320px"
+                format="webp"
+                class="thumb"
+              />
+            )}
+          </a>
+        )
+      }
+    </div>
+  </Wrapper>
+</nav>
+
+<style>
+  .project-nav {
+    margin-top: var(--space-4xl);
+  }
+
+  .inner {
+    display: grid;
+    gap: var(--space-m);
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .back {
+    align-self: start;
+    transition: color 0.2s ease;
+  }
+
+  .back:hover {
+    color: var(--color-accent);
+  }
+
+  .next {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2xs);
+  }
+
+  .label,
+  .details {
+    color: var(--color-muted);
+  }
+
+  .title {
+    font-size: clamp(1.75rem, 1rem + 3vw, 3.5rem);
+    text-wrap: balance;
+    transition: color 0.2s ease;
+  }
+
+  .next :global(.thumb) {
+    width: min(100%, 320px);
+    height: auto;
+    margin-top: var(--space-xs);
+  }
+
+  .next:hover .title {
+    color: var(--color-accent);
+  }
+
+  @media (min-width: 900px) {
+    .inner {
+      grid-template-columns: 1fr 2fr;
+    }
+
+    .next {
+      grid-template-columns: 1fr auto;
+      column-gap: var(--space-m);
+    }
+
+    .next :global(.thumb) {
+      grid-column: 2;
+      grid-row: 1 / span 3;
+      width: 280px;
+      margin-top: 0;
+    }
+  }
+</style>

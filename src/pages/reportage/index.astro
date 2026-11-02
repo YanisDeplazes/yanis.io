@@ -1,0 +1,23 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/sections/PageHeader.astro';
+import Reportage from '../../components/sections/Reportage.astro';
+import { profile } from '../../data/profile';
+import { breadcrumbSchema } from '../../utils/seo';
+
+const { text } = profile.location;
+---
+
+<Layout
+  title="Reportage"
+  description={`Stories of people and society by Yanis Deplazes, visual journalist working between ${text}.`}
+  schema={[
+    breadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Reportage', path: '/reportage' },
+    ]),
+  ]}
+>
+  <PageHeader title="Reportage" intro={`Stories of people and society.`} />
+  <Reportage />
+</Layout>

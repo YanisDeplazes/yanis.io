@@ -1,14 +1,11 @@
-// Import base styles
-@import 'base/variables';
-@import 'base/typography';
-@import 'base/reset';
+// Base
+@use 'base/variables';
+@use 'base/typography';
+@use 'base/reset';
 
-// Import layout styles
-@import 'layout/layout';
+// Layout
+@use 'layout/layout';
 
-
-// Import component styles
-// @import 'components/buttons';
-@import 'components/reveal';
-@import 'components/utilities';
-@import 'components/sections';
+// Components
+@use 'components/utilities';
+@use 'components/reveal';

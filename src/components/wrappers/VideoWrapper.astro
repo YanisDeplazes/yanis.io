@@ -1,88 +1,162 @@
 ---
-// src/components/GalleryVideo.astro
-
 interface Props {
-  videoSrc: string;
-  posterSrc?: string;
-  alt?: string;
+  src: string;
+  poster?: string;
+  caption?: string;
+  /** Chapter title and dateline, added to the caption in the lightbox */
+  context?: string;
+  number?: string;
+  /** Silent loop that plays like a moving photograph, without controls */
   autoplay?: boolean;
 }
-const { videoSrc, posterSrc, alt, autoplay = false } = Astro.props;
+
+const { src, poster, caption, context, number, autoplay = false } = Astro.props;
+
+const label = caption?.replace(/<[^>]+>/g, '');
+// Plain text for the lightbox, same as photographs
+const lightboxCaption = [context, label].filter(Boolean).join(' — ');
+
+// Everything the lightbox needs to play it large (see Lightbox.astro)
+const lightbox = {
+  'data-lightbox': true,
+  'data-type': 'video',
+  'data-full': src,
+  'data-poster': poster,
+  'data-loop': String(autoplay),
+  'data-alt': label,
+  'data-caption': lightboxCaption,
+};
 ---
 
-<figure class:list={['video-container', { 'is-autoplay': autoplay }]}>
-  <video
-    preload={autoplay ? 'auto' : 'none'}
-    class="video-player"
-    poster={posterSrc}
-    disablepictureinpicture
-    autoplay={autoplay}
-    muted={autoplay}
-    loop={autoplay}
-    playsinline={autoplay}
-  >
-    <source src={videoSrc} type="video/mp4" />
-    {alt && <track kind="captions" label={`${alt}`} src="/empty.vtt" />}
-    Your browser does not support the video tag.
-  </video>
+<figure class="video">
+  <div class="player">
+    {
+      autoplay ? (
+        // A loop is a moving photograph: the whole frame opens it large, like an image
+        <button
+          type="button"
+          class="open"
+          aria-label={`View video${number ? ` ${number}` : ''} full screen`}
+          {...lightbox}
+        >
+          <video
+            src={src}
+            poster={poster}
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            aria-label={label}
+          />
+        </button>
+      ) : (
+        <>
+          <video
+            src={src}
+            poster={poster}
+            controls
+            playsinline
+            preload="none"
+            aria-label={label}
+          />
+          {/* The player keeps its own controls; this corner button opens it large */}
+          <button
+            type="button"
+            class="expand meta"
+            aria-label={`View video${number ? ` ${number}` : ''} full screen`}
+            {...lightbox}
+          >
+            ⤢
+          </button>
+        </>
+      )
+    }
+  </div>
 
-  {/* Only show play button if NOT in autoplay mode */}
-  {!autoplay && <button class="play-button">▶</button>}
+  {
+    (number || caption) && (
+      <figcaption class="caption">
+        {number && <span class="number">{number}</span>}
+        {caption && <span class="text" set:html={caption} />}
+      </figcaption>
+    )
+  }
 </figure>
 
-<style lang="scss">
-  .video-container {
+<style>
+  .video {
+    width: min(100%, 1320px);
+  }
+
+  .player {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+  }
+
+  .open {
+    display: block;
+    width: 100%;
+    cursor: zoom-in;
+  }
+
+  video {
+    display: block;
+    width: 100%;
+    max-height: 85svh;
     object-fit: contain;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    margin: 0;
-    cursor: pointer;
+    background-color: var(--color-placeholder);
+  }
 
-    &.is-autoplay {
-      cursor: zoom-in;
-    }
+  .expand {
+    position: absolute;
+    top: var(--space-2xs);
+    right: var(--space-2xs);
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 1rem;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    opacity: 0;
+    transition:
+      opacity 0.2s ease,
+      color 0.2s ease;
+  }
 
-    .video-player {
-      width: auto;
-      height: auto;
-      max-height: 70vh;
-      max-width: 100%;
-      transition: ease-in-out;
-      object-fit: cover;
+  /* Visible when the player is hovered or the button has keyboard focus; always on touch screens */
+  .player:hover .expand,
+  .expand:focus-visible {
+    opacity: 1;
+  }
 
-      &.playing {
-        max-height: 90vh;
-        width: auto;
-        margin-left: auto;
-        margin-right: auto;
-      }
-    }
+  .expand:hover {
+    color: var(--color-accent);
+  }
 
-    .play-button {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0, 0, 0, 0.6);
-      border: none;
-      color: var(--color-accent);
-      font-size: 40px;
-      padding: 15px 20px;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: opacity 0.3s ease;
+  @media (hover: none) {
+    .expand {
       opacity: 1;
-      border: 1px solid #d42d2da8;
-
-      &.hidden {
-        opacity: 0;
-        pointer-events: none;
-      }
     }
+  }
+
+  /* Contact sheet: the whole tile opens the lightbox */
+  :global(.gallery[data-layout='sheet']) .expand {
+    inset: 0;
+    width: auto;
+    height: auto;
+    opacity: 0;
+  }
+
+  .caption {
+    display: flex;
+    gap: var(--space-xs);
+    padding-top: var(--space-2xs);
+    color: var(--color-muted);
+  }
+
+  .number {
+    flex-shrink: 0;
+    color: var(--color-ink);
   }
 </style>

@@ -1,60 +1,60 @@
 ---
+// One row of facts on a project page: a label and its value(s).
+// Pass `items` for HTML strings from content files, or use the slot.
 interface Props {
-  title: string;
+  label: string;
+  items?: string[];
 }
 
-const { title } = Astro.props;
+const { label, items } = Astro.props;
 ---
 
-<div class="list">
-  <h2 class="font-size-small paragraph-font">{title}</h2>
-  <ul class="font-size-small">
-    <slot />
-  </ul>
+<div class="fact">
+  <dt class="meta">{label}</dt>
+  <dd>
+    {
+      items ? (
+        <ul>
+          {items.map((html) => (
+            <li set:html={html} />
+          ))}
+        </ul>
+      ) : (
+        <slot />
+      )
+    }
+  </dd>
 </div>
 
-<style lang="scss">
-  .list {
-    display: flex;
-    ul {
-      list-style: none !important;
-      flex: 1;
-      margin: 1em 0;
-      padding-left: 0px;
-      list-style-position: initial !important;
-      display: flex;
-      gap: 0.5em;
-      flex-direction: column;
-      margin-block-start: 3px;
-      margin-block-end: 15px;
-
-      @media (min-width: 600px) {
-        margin: 10px 0px;
-      }
-    }
-
-    h2 {
-      margin-block-start: 15px;
-      margin-block-end: 3px;
-
-      @media (min-width: 600px) {
-        margin: 10px 0px;
-      }
-      width: 170px;
-      flex-shrink: 0;
-      letter-spacing: 10%;
-      text-transform: uppercase;
-      font-weight: bold;
-      opacity: 0.4;
-    }
+<style>
+  .fact {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: var(--space-xs);
+    padding-block: var(--space-2xs);
+    border-top: 1px solid var(--color-line);
+    font-size: 0.9375rem;
+    line-height: 1.45;
   }
 
-  @media (max-width: 600px) {
-    .list {
-      flex-direction: column;
-      h2 {
-        width: auto;
-      }
-    }
+  dt {
+    padding-top: 0.2em;
+    color: var(--color-muted);
+  }
+
+  ul {
+    display: grid;
+    gap: 0.2em;
+  }
+
+  dd :global(a) {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+    transition: color 0.2s ease;
+  }
+
+  dd :global(a:hover) {
+    color: var(--color-accent);
   }
 </style>

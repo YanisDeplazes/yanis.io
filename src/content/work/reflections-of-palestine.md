@@ -1,21 +1,20 @@
 ---
-title: 'REFLECTIONS OF PALESTINE'
-description: "An installation displaying archival material from Palestine in a room with hanging mirrors"
-start: 2025-10-14
+title: 'Reflections of Palestine'
+description: 'An installation that places 150 years of Palestinian archival material in a room of suspended mirrors, shaped after Palestinian-controlled territories.'
 slug: 'reflections-of-palestine'
+start: 2025-10-14
+category: 'design-research'
 type: ['installation']
-context: "Lucerne University of Applied Sciences and Arts"
-location: ['Switzerland']
+location: 'Lucerne, Switzerland'
+institution: 'Lucerne University of Applied Sciences and Arts'
 thumbnail: '/images/galleries/reflections-of-palestine/1.jpg'
 selected: true
-ongoing: false
 gallery:
-  content:
-    - videoUrl: '/images/galleries/reflections-of-palestine/1.mp4'
-      alt: 'REFLECTIONS OF PALESTINE - 150 years of Archives'
-      imageUrl: '/images/galleries/reflections-of-palestine/1.jpg'
+  - video: '/images/galleries/reflections-of-palestine/1.mp4'
+    poster: '/images/galleries/reflections-of-palestine/1.jpg'
+    caption: '150 years of archives'
 ---
 
-This installation investigates nature of historical memory. It explores 150 years of Palestinian archival material within a room with suspended mirrors based on Palestinian-controlled territories. The focus was shifted from macro-political conflict to the moments of everyday life, hope, and resilience.
+**Reflections of Palestine** is an installation about historical memory. It works with 150 years of Palestinian archival material, set in a room of suspended mirrors shaped after the Palestinian-controlled territories.
 
-The viewer becomes an active participant by giving them the possibility to move the shards and change the reflections within the room. 
+Instead of the macro-political conflict, the archive turns toward everyday life: routine, hope, resilience. Visitors can move the mirror shards, and with them the reflections in the room. What you see depends on where you stand and what you touch.

@@ -1,0 +1,83 @@
+---
+// One photo that follows the cursor over any link with data-hover-preview="<image url>".
+// Used by the archive index and the index under a collection. Lives once in Layout.astro.
+// A container with data-hover-preview-off (e.g. the archive in grid view) switches it off inside.
+---
+
+<img class="hover-preview" alt="" aria-hidden="true" />
+
+<style>
+  .hover-preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 40;
+    width: clamp(180px, 16vw, 280px);
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(var(--x, 0), var(--y, 0));
+    transition: opacity 0.15s ease;
+  }
+
+  .hover-preview.is-visible {
+    opacity: 1;
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .hover-preview {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hover-preview {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const preview = document.querySelector<HTMLImageElement>('.hover-preview');
+
+  if (preview && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    let active: HTMLElement | null = null;
+
+    // Beside the cursor, flipped to the left near the right edge, kept inside the window
+    const move = (event: PointerEvent) => {
+      const { offsetWidth: width, offsetHeight: height } = preview;
+      const right = event.clientX + 24 + width > window.innerWidth;
+      const x = right ? event.clientX - 24 - width : event.clientX + 24;
+      const y = Math.min(Math.max(event.clientY - height / 2, 8), window.innerHeight - height - 8);
+      preview.style.setProperty('--x', `${x}px`);
+      preview.style.setProperty('--y', `${y}px`);
+    };
+
+    const hide = () => {
+      active = null;
+      preview.classList.remove('is-visible');
+    };
+
+    document.addEventListener('pointerover', (event) => {
+      const trigger = (event.target as HTMLElement).closest<HTMLElement>('[data-hover-preview]');
+      if (!trigger || trigger === active) return;
+      if (trigger.closest('[data-hover-preview-off]') || !trigger.dataset.hoverPreview) return hide();
+
+      active = trigger;
+      preview.src = trigger.dataset.hoverPreview;
+      move(event);
+      preview.classList.add('is-visible');
+    });
+
+    document.addEventListener('pointerout', (event) => {
+      if (!active) return;
+      const next = event.relatedTarget as Node | null;
+      if (!next || !active.contains(next)) hide();
+    });
+
+    document.addEventListener('pointermove', (event) => {
+      if (active) move(event);
+    });
+
+    window.addEventListener('scroll', hide, { passive: true });
+  }
+</script>

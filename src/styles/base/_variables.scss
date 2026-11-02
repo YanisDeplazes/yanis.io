@@ -1,40 +1,54 @@
+// Breakpoints (Sass, for media queries)
 $breakpoint-tablet: 768px;
+$breakpoint-desktop: 1100px;
 
 :root {
-  --text-color: #FD3D2A;
-  --color-background: #101010; // Deep black
-  --color-project: #101010;
-  --color-accent: #FD3D2A;
-  --color-background-light: #F7F7FF;
-  --color-dark: #101010; 
+  // ----- Color -----
+  // Neutral paper so the photographs keep their own color.
+  // Orange is the signature: solid bands on the home page, marks for active and hover states.
+  --color-paper: #fafafa;
+  --color-ink: #111111;
+  --color-muted: #6b6b6b; // 5:1 on paper, fine for small text
+  --color-line: #e2e2e2;
+  --color-placeholder: #ececec; // behind images while they load
+  --color-accent: #fd3d2a; // ink on accent reads at 5.3:1
 
-  --accent-gradient: linear-gradient(45deg,
-      rgb(var(--accent)),
-      rgb(var(--accent-light)) 30%,
-      white 60%);
+  // ----- Type -----
+  --font-display: 'Syne', 'Inter', sans-serif; // names and titles
+  --font-sans: 'Inter', system-ui, sans-serif; // reading
+  --font-mono: 'Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace; // captions, dates, numbers
 
+  // ----- Space (fluid) -----
   --space-3xs: clamp(0.3125rem, 0.3125rem + 0vw, 0.3125rem);
   --space-2xs: clamp(0.5625rem, 0.5408rem + 0.1087vw, 0.625rem);
   --space-xs: clamp(0.875rem, 0.8533rem + 0.1087vw, 0.9375rem);
   --space-s: clamp(1.125rem, 1.0815rem + 0.2174vw, 1.25rem);
   --space-m: clamp(1.6875rem, 1.6223rem + 0.3261vw, 1.875rem);
   --space-l: clamp(2.25rem, 2.163rem + 0.4348vw, 2.5rem);
-  --space-xl: clamp(3.375rem, 3.2446rem + 0.6522vw, 3.75rem);
-  --space-2xl: clamp(4.5rem, 4.3261rem + 0.8696vw, 5rem);
-  --space-3xl: clamp(6.75rem, 6.4891rem + 1.3043vw, 7.5rem);
-  --space-4xl: clamp(9rem, 8.7rem + 1.74vw, 10rem); // 144px to 160px
-  --space-5xl: clamp(12rem, 11.6rem + 2.6vw, 13.75rem); // 192px to 220px
-  --space-6xl: clamp(15rem, 14.5rem + 3.48vw, 17.5rem); // 240px to 280px
+  --space-xl: clamp(2.75rem, 2.6rem + 0.5vw, 3rem);
+  --space-2xl: clamp(3.5rem, 3.3rem + 0.7vw, 4rem);
+  --space-3xl: clamp(5rem, 4.7rem + 1vw, 6rem);
+  --space-4xl: clamp(7rem, 6.7rem + 1.2vw, 8rem);
+  --space-5xl: clamp(9.5rem, 9rem + 2vw, 11rem);
 
-  // Spacing & Layout
+  // ----- Rhythm -----
+  // Three steps, used everywhere so pages breathe the same way
+  --gap-inside: var(--space-s); // between a label and its content
+  --gap-block: var(--space-xl); // between blocks in a section
+  --gap-section: var(--space-3xl); // between sections
+
+  // ----- Layout -----
   --padding-side: 20px;
-  --radius-side: 40px;
-  --padding-inner: 20px;
-  --radius-inner: 20px;
+  --content-max: 1920px;
+  --text-max: 62ch;
+  --header-height: 72px; // measured and updated by Header.astro
 
   @media (min-width: $breakpoint-tablet) {
     --padding-side: 40px;
-    --padding-inner: 20px;
   }
 
+  // Wide screens: generous margins left and right, growing with the window
+  @media (min-width: $breakpoint-desktop) {
+    --padding-side: clamp(56px, 6vw, 128px);
+  }
 }

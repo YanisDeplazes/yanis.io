@@ -1,0 +1,135 @@
+---
+// Everything filed under a collection (each day of Groundswell, each night of High And Heads),
+// as a light index: one line per entry, its photo follows the cursor (HoverPreview).
+// The collection's own gallery is the edit above it.
+import { getImage } from 'astro:assets';
+import Wrapper from '../../layouts/Wrapper.astro';
+
+export interface SeriesStory {
+  slug: string;
+  title: string;
+  description: string;
+  start: Date;
+  /** "31 October 2026" for news, just the year for the rest */
+  date: string;
+  location?: string;
+  thumbnail?: ImageMetadata;
+  count: number;
+}
+
+interface Props {
+  stories: SeriesStory[];
+  /** From the collection's `storiesHeading`; "Index" by default */
+  heading?: string;
+}
+
+const { stories, heading = 'Index' } = Astro.props;
+
+// Small copies for the hover preview
+const previews = await Promise.all(
+  stories.map(async ({ thumbnail }) =>
+    thumbnail ? (await getImage({ src: thumbnail, width: 480, format: 'webp' })).src : undefined,
+  ),
+);
+---
+
+<section class="series" aria-labelledby="series-heading">
+  <Wrapper>
+    <header class="head">
+      <h2 id="series-heading" class="heading meta">{heading}</h2>
+      <p class="meta muted">
+        {stories.length} {stories.length === 1 ? 'entry' : 'entries'}, newest first
+      </p>
+    </header>
+
+    <ol class="stories">
+      {
+        stories.map((story, index) => (
+          <li>
+            <a href={`/work/${story.slug}`} class="story" data-hover-preview={previews[index]}>
+              <time class="date meta" datetime={story.start.toISOString().slice(0, 10)}>
+                {story.date}
+              </time>
+              <span class="name">{story.title}</span>
+              {story.location && <span class="place muted">{story.location}</span>}
+              <span class="count meta muted">
+                {story.count} {story.count === 1 ? 'photo' : 'photos'} →
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </Wrapper>
+
+</section>
+
+<style>
+  .series {
+    margin-top: var(--gap-section);
+  }
+
+  .head {
+    display: flex;
+    gap: var(--space-s);
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: var(--space-2xs);
+    border-bottom: 1px solid var(--color-ink);
+  }
+
+  .muted {
+    color: var(--color-muted);
+  }
+
+  /* One line per entry; stacks on phones */
+  .story {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.1em var(--space-s);
+    align-items: baseline;
+    padding-block: var(--space-2xs);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .date {
+    grid-column: 1 / -1;
+    color: var(--color-muted);
+  }
+
+  .name {
+    transition: color 0.2s ease;
+  }
+
+  .place {
+    display: none;
+  }
+
+  .count {
+    color: var(--color-muted);
+    white-space: nowrap;
+  }
+
+  .story:hover .name,
+  .story:focus-visible .name {
+    color: var(--color-accent);
+  }
+
+  @media (min-width: 900px) {
+    .story {
+      grid-template-columns: 11rem minmax(0, 1fr) 16rem 7rem;
+    }
+
+    .date {
+      grid-column: auto;
+    }
+
+    .place {
+      display: block;
+    }
+
+    .count {
+      text-align: right;
+    }
+  }
+</style>

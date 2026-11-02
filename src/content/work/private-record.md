@@ -1,37 +1,32 @@
 ---
 title: 'Private Record'
-description: ''
+description: 'Abstract, textured photographs of unscripted private moments: an ongoing study of isolation and the forms it takes.'
+slug: 'private-record'
 start: 2025-04-20
 end: 2025-10-11
-slug: 'private-record'
+ongoing: true
+category: 'collection'
 type: ['stills']
-context: "Collection"
-location: ['Worldwide']
+location: 'Worldwide'
+topics: ['everyday-life']
 thumbnail: '/images/galleries/private-record/14.jpg'
 selected: true
-ongoing: true
+
+# Captions: add `caption: '...'` under any image (who, what, where).
+# Text between photos: add a block `- text: |` anywhere in the list.
 gallery:
-  content:
-    - imageUrl: '/images/galleries/private-record/16.jpg'
-      alt: 'Private Record - 16'
-    - imageUrl: '/images/galleries/private-record/14.jpg'
-      alt: 'Private Record - 14'
-    - imageUrl: '/images/galleries/private-record/13.jpg'
-      alt: 'Private Record - 13'
-    - imageUrl: '/images/galleries/private-record/12.jpg'
-      alt: 'Private Record - 12'
-    - imageUrl: '/images/galleries/private-record/11.jpg'
-      alt: 'Private Record - 11'
-    - imageUrl: '/images/galleries/private-record/10.jpg'
-      alt: 'Private Record - 10'
-    - imageUrl: '/images/galleries/private-record/8.jpg'
-      alt: 'Private Record - 8'
-    - imageUrl: '/images/galleries/private-record/7.jpg'
-      alt: 'Private Record - 7'
-    - imageUrl: '/images/galleries/private-record/3.jpg'
-      alt: 'Private Record - 3'
-    - imageUrl: '/images/galleries/private-record/1.jpg'
-      alt: 'Private Record - 1'
+  - image: '/images/galleries/private-record/16.jpg'
+  - image: '/images/galleries/private-record/14.jpg'
+  - image: '/images/galleries/private-record/13.jpg'
+  - image: '/images/galleries/private-record/12.jpg'
+  - image: '/images/galleries/private-record/11.jpg'
+  - image: '/images/galleries/private-record/10.jpg'
+  - image: '/images/galleries/private-record/8.jpg'
+  - image: '/images/galleries/private-record/7.jpg'
+  - image: '/images/galleries/private-record/3.jpg'
+  - image: '/images/galleries/private-record/1.jpg'
 ---
 
-**Private Record** is an ongoing series of abstract photography. The project focuses various subjects and private-record processes, creating a raw, textured record of unscripted internal moments. It is an ongoing study of isolation and the different forms it takes.
+**Private Record** is the inward counterpart to Public Record: abstract, textured photographs of moments that were never meant to be seen.
+
+It is an ongoing study of isolation and the different forms it takes.

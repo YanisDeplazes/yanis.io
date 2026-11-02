@@ -1,258 +1,543 @@
 ---
+// The body of a project: chapters, text and photographs, in the order of the content file.
+// Two layouts: "grid" (rows of two, chapters and text full width) and "sheet" (contact sheet).
+// In each row, both photos are sized from their proportions to the same height, so a row
+// is filled edge to edge without gaps and the numbers always read 01 02 / 03 04, left to right.
+// Captions show under each photo in the grid and in the lightbox, not in the contact sheet.
+import { getImage } from 'astro:assets';
 import Wrapper from '../../layouts/Wrapper.astro';
 import ImageWrapper from '../wrappers/ImageWrapper.astro';
 import VideoWrapper from '../wrappers/VideoWrapper.astro';
+import { resolveImage, resolveVideo } from '../../utils/media';
+import { readCaption } from '../../utils/iptc';
+import { joinParts, padNumber, toParagraphs } from '../../utils/format';
+import {
+  isChapter,
+  isImage,
+  isText,
+  isVideo,
+  type GalleryBlock,
+} from '../../utils/workUtils';
 
-const { galleryData } = Astro.props;
+interface Props {
+  blocks: GalleryBlock[];
+  title: string;
+  /** Which layout opens first. Default: grid */
+  layout?: 'grid' | 'sheet';
+}
 
-// Dynamic imports
-const images = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/images/galleries/**/*.{jpg,jpeg,png,webp}',
-);
-const videos = import.meta.glob<{ default: string }>(
-  '/src/assets/images/galleries/**/*.mp4',
-);
+const { blocks, title, layout } = Astro.props;
 
-// Resolvers
-const resolveImage = async (url: string) => images[`/src/assets${url}`]?.();
-const resolveVideo = async (url: string) => videos[`/src/assets${url}`]?.();
+type Chapter = {
+  kind: 'chapter';
+  order: number;
+  title: string;
+  dateline: string;
+  paragraphs: string[];
+};
+type Text = { kind: 'text'; order: number; paragraphs: string[] };
+type Media = {
+  kind: 'media';
+  order: number;
+  number: number;
+  image?: ImageMetadata;
+  video?: string;
+  full?: string;
+  autoplay: boolean;
+  caption?: string;
+  alt: string;
+  context: string; // chapter dateline, for the lightbox
+  aspect: number; // width / height, to share a row by proportion
+};
+type Rows = { kind: 'rows'; rows: Media[][] };
 
-// Resolve all gallery media
-const resolvedGallery = await Promise.all(
-  galleryData.map(async (item: any) => ({
-    ...item,
-    resolvedImage: item.imageUrl ? await resolveImage(item.imageUrl) : null,
-    resolvedVideo: item.videoUrl ? await resolveVideo(item.videoUrl) : null,
-  })),
-);
+let current = { title: '', dateline: '' };
+let count = 0;
+let order = 0;
+const items: (Chapter | Text | Media)[] = [];
+
+for (const block of blocks) {
+  if (isChapter(block)) {
+    current = {
+      title: block.chapter,
+      dateline: joinParts([block.place, block.date]),
+    };
+    items.push({
+      kind: 'chapter',
+      order: order++,
+      ...current,
+      paragraphs: toParagraphs(block.text),
+    });
+  } else if (isText(block)) {
+    items.push({
+      kind: 'text',
+      order: order++,
+      paragraphs: toParagraphs(block.text),
+    });
+  } else if (isImage(block) || isVideo(block)) {
+    const image = await resolveImage(
+      isImage(block) ? block.image : block.poster,
+    );
+    const video = isVideo(block) ? await resolveVideo(block.video) : undefined;
+    if (!image && !video) continue; // missing file: skip instead of breaking the page
+
+    count += 1;
+    const full =
+      image && !video
+        ? (
+            await getImage({
+              src: image,
+              width: Math.min(image.width, 2400),
+              format: 'webp',
+            })
+          ).src
+        : undefined;
+
+    // Caption: the one in the content file wins, else the IPTC caption from the photo itself
+    const caption =
+      block.caption ||
+      (isImage(block) ? await readCaption(block.image) : undefined);
+
+    items.push({
+      kind: 'media',
+      order: order++,
+      number: count,
+      image,
+      video,
+      full,
+      autoplay: isVideo(block) ? block.autoplay : false,
+      caption,
+      // Alt text: an explicit alt, else the caption, else where it sits in the project
+      alt:
+        (isImage(block) && block.alt) ||
+        caption?.replace(/<[^>]+>/g, '') ||
+        joinParts(
+          [title, current.title, current.dateline, `photograph ${count}`],
+          ', ',
+        ),
+      context: joinParts([current.title, current.dateline]),
+      aspect: image ? image.width / image.height : 16 / 9,
+    });
+  }
+}
+
+// Group photos between chapters into rows of two, in their numbered order
+const segments: (Chapter | Text | Rows)[] = [];
+for (const item of items) {
+  if (item.kind !== 'media') {
+    segments.push(item);
+    continue;
+  }
+  let group = segments.at(-1);
+  if (group?.kind !== 'rows') {
+    group = { kind: 'rows', rows: [] };
+    segments.push(group);
+  }
+  const row = group.rows.at(-1);
+  if (row && row.length < 2) row.push(item);
+  else group.rows.push([item]);
+}
+
+const media = items.filter((item): item is Media => item.kind === 'media');
+const films = media.filter((item) => item.video).length;
+const stills = media.length - films;
+const single = media.length === 1;
+
+const initialLayout = single ? 'grid' : (layout ?? 'grid');
+
+const layouts = [
+  { value: 'grid', label: 'Grid' },
+  { value: 'sheet', label: 'Contact sheet' },
+];
+
+// Each gallery gets its own radio group, in case a page holds more than one
+const groupName = `layout-${Math.random().toString(36).slice(2, 8)}`;
+
+const summary = joinParts([
+  stills
+    ? `${stills} ${stills === 1 ? 'photograph' : 'photographs'}`
+    : undefined,
+  films ? `${films} ${films === 1 ? 'film' : 'films'}` : undefined,
+]);
 ---
 
-<section class="gallery">
-  <Wrapper>
-    <div class="content masonry gallery">
-      {
-        resolvedGallery.map((item) => {
-          const isVideo = item.resolvedVideo && item.resolvedImage;
-          // If it's a video BUT autoplay is true, we treat it as an image-item
-          const isDisplayingAsImage = !isVideo || item.autoplay === true;
+{
+  media.length > 0 && (
+    <section
+      class="gallery"
+      data-layout={initialLayout}
+      data-single={single || undefined}
+      aria-label={`${title}: ${summary}`}
+    >
+      <Wrapper>
+        <div class="toolbar">
+          <p class="meta count">{summary}</p>
 
-          return (
-            <div
-              class:list={[
-                'item',
-                'reveal-on-scroll',
-                isDisplayingAsImage ? 'image-item' : 'video-item',
-              ]}
-            >
-              {isVideo ? (
-                <VideoWrapper
-                  videoSrc={item.resolvedVideo.default}
-                  alt={`Yanis Deplazes - ${item.alt}`}
-                  posterSrc={item.resolvedImage.default.src}
-                  autoplay={item.autoplay}
-                />
-              ) : item.resolvedImage ? (
-                <ImageWrapper
-                  src={item.resolvedImage.default}
-                  alt={`Yanis Deplazes - ${item.alt}`}
-                  caption={item.alt}
-                />
-              ) : (
-                <p>Media not found</p>
-              )}
-            </div>
-          );
-        })
-      }
-    </div>
-  </Wrapper>
-</section>
+          {media.length > 4 && (
+            <fieldset class="layout-toggle meta">
+              <legend class="sr-only">Layout</legend>
+              {layouts.map(({ value, label }) => (
+                <label>
+                  <input
+                    type="radio"
+                    name={groupName}
+                    value={value}
+                    checked={value === initialLayout}
+                    data-set-layout
+                  />
+                  {label}
+                </label>
+              ))}
+            </fieldset>
+          )}
+        </div>
 
-<style lang="scss">
-  .gallery {
-    .masonry {
-      position: relative;
-      @media (min-width: 1000px) {
-        opacity: 0;
-        visibility: hidden;
-      }
+        <div class="flow">
+          {segments.map((segment) => {
+            if (segment.kind === 'chapter') {
+              return (
+                <header
+                  class="chapter"
+                  style={`order: ${segment.order}`}
+                  data-reveal
+                >
+                  {segment.dateline && (
+                    <p class="dateline meta">{segment.dateline}</p>
+                  )}
+                  <h2 class="chapter-title title-font-bold">{segment.title}</h2>
+                  {segment.paragraphs.length > 0 && (
+                    <div class="prose chapter-text">
+                      {segment.paragraphs.map((p) => (
+                        <p set:html={p} />
+                      ))}
+                    </div>
+                  )}
+                </header>
+              );
+            }
 
-      @media (max-width: 999px) {
-        height: unset !important;
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-l);
-      }
+            if (segment.kind === 'text') {
+              return (
+                <div
+                  class="note prose"
+                  style={`order: ${segment.order}`}
+                  data-reveal
+                >
+                  {segment.paragraphs.map((p) => (
+                    <p set:html={p} />
+                  ))}
+                </div>
+              );
+            }
 
-      .item {
-        height: auto;
-        width: 100%;
-      }
+            return (
+              <div class="rows">
+                {segment.rows.map((row) => (
+                  <div class="row" data-count={row.length}>
+                    {row.map((item) => (
+                      <div
+                        class="frame"
+                        id={`frame-${item.number}`}
+                        style={`order: ${item.order}; --aspect: ${item.aspect.toFixed(4)}`}
+                        data-reveal
+                      >
+                        {item.video ? (
+                          <VideoWrapper
+                            src={item.video}
+                            poster={item.image?.src}
+                            caption={item.caption}
+                            context={item.context}
+                            number={padNumber(item.number, media.length)}
+                            autoplay={item.autoplay}
+                          />
+                        ) : (
+                          <ImageWrapper
+                            src={item.image!}
+                            alt={item.alt}
+                            caption={item.caption}
+                            context={item.context}
+                            number={padNumber(item.number, media.length)}
+                            full={item.full}
+                            loading={item.number <= 2 ? 'eager' : 'lazy'}
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      </Wrapper>
+    </section>
+  )
+}
+
+<style>
+  .toolbar {
+    position: sticky;
+    top: calc(var(--header-height) - 1px);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    min-height: 3.5rem;
+    margin-bottom: var(--gap-block);
+    background-color: var(--color-paper);
+    border-block: 1px solid var(--color-line);
+  }
+
+  .count {
+    color: var(--color-muted);
+  }
+
+  /* ----- Layout switch: native radio inputs, the label shows the state ----- */
+  .layout-toggle {
+    display: flex;
+    gap: var(--space-s);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-inline-size: 0;
+  }
+
+  .layout-toggle input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .layout-toggle label {
+    color: var(--color-muted);
+    cursor: pointer;
+  }
+
+  .layout-toggle label:hover,
+  .layout-toggle label:has(input:checked) {
+    color: var(--color-ink);
+  }
+
+  .layout-toggle label:has(input:focus-visible) {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ----- One column (phones, single photos): everything in reading order.
+     The column wrappers step aside, so each item's `order` puts it back in sequence. ----- */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2xl);
+  }
+
+  .rows,
+  .row {
+    display: contents;
+  }
+
+  /* Chapters and notes line up with the photo column; their text keeps a reading width */
+  .chapter,
+  .note {
+    width: min(100%, 1320px);
+  }
+
+  .chapter > *,
+  .note > :global(*) {
+    max-width: var(--text-max);
+  }
+
+  .chapter {
+    margin-top: var(--space-xl); /* extra air before a new chapter */
+    padding-top: var(--gap-inside);
+    border-top: 2px solid var(--color-accent);
+  }
+
+  .chapter:first-child {
+    margin-top: 0;
+  }
+
+  .dateline {
+    color: var(--color-muted);
+  }
+
+  .chapter-title {
+    margin-top: var(--space-2xs);
+    font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.375rem);
+    text-wrap: balance;
+  }
+
+  .chapter-text {
+    margin-top: var(--gap-inside);
+  }
+
+  .note {
+    font-size: 1.1875rem;
+  }
+
+  .frame {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    scroll-margin-top: calc(var(--header-height) + var(--space-3xl));
+  }
+
+  .frame :global(img) {
+    width: auto;
+    max-width: 100%;
+    max-height: 80svh;
+  }
+
+  /* Videos: hide the big play button iOS lays over autoplay films (e.g. in Low Power Mode) */
+  .frame :global(video)::-webkit-media-controls-start-playback-button {
+    display: none !important;
+    -webkit-appearance: none;
+  }
+
+  /* ----- Rows of two from 800px: each photo takes width in proportion to its shape,
+     so both photos in a row end up the same height ----- */
+  @media (min-width: 800px) {
+    .gallery[data-layout='grid']:not([data-single]) .flow {
+      align-items: stretch;
     }
+
+    .gallery[data-layout='grid']:not([data-single]) .chapter,
+    .gallery[data-layout='grid']:not([data-single]) .note {
+      width: auto;
+    }
+
+    .gallery[data-layout='grid']:not([data-single]) .rows {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+    }
+
+    .gallery[data-layout='grid']:not([data-single]) .row {
+      display: flex;
+      gap: var(--space-m);
+      align-items: flex-start;
+    }
+
+    .gallery[data-layout='grid']:not([data-single]) .frame {
+      display: block;
+      flex: var(--aspect) 1 0;
+      min-width: 0;
+    }
+
+    /* A photo left on its own at the end of a group keeps the size it would have in a pair */
+    .gallery[data-layout='grid']:not([data-single])
+      .row[data-count='1']
+      .frame {
+      flex: 0 0 calc(50% - var(--space-m) / 2);
+    }
+
+    .gallery[data-layout='grid']:not([data-single]) .frame :global(img) {
+      width: 100%;
+      height: auto;
+      max-height: none;
+    }
+
+    /* Every caption takes exactly two lines, so a longer one never pushes the photos
+       below it down. Anything longer is cut with an ellipsis; the lightbox shows it whole. */
+    .gallery[data-layout='grid']:not([data-single]) .frame :global(.text) {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      overflow: hidden;
+      height: 2lh;
+    }
+
+    /* A chapter heading sits closer to the photographs that follow it */
+    .gallery[data-layout='grid']:not([data-single]) .chapter + .rows,
+    .gallery[data-layout='grid']:not([data-single]) .note + .rows {
+      margin-top: calc(var(--space-l) - var(--space-2xl));
+    }
+  }
+
+  /* ----- Contact sheet: everything at a glance, chapters as dividers ----- */
+  .gallery[data-layout='sheet'] .flow {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(140px, 40vw), 1fr));
+    gap: var(--space-m) var(--space-2xs);
+    align-items: start;
+  }
+
+  .gallery[data-layout='sheet'] .chapter {
+    grid-column: 1 / -1;
+    width: auto;
+    margin-top: var(--space-s);
+    padding-top: var(--space-2xs);
+    border-top-width: 1px;
+  }
+
+  .gallery[data-layout='sheet'] .chapter:first-child {
+    margin-top: 0;
+  }
+
+  .gallery[data-layout='sheet'] .chapter-title {
+    margin-top: 0;
+    font-size: 1rem;
+  }
+
+  .gallery[data-layout='sheet'] .chapter-text,
+  .gallery[data-layout='sheet'] .note {
+    display: none;
+  }
+
+  .gallery[data-layout='sheet'] .frame {
+    display: block;
+    cursor: pointer;
+  }
+
+  .gallery[data-layout='sheet'] .frame :global(figure) {
+    width: 100%;
+  }
+
+  .gallery[data-layout='sheet'] .frame :global(img),
+  .gallery[data-layout='sheet'] .frame :global(video) {
+    width: 100%;
+    max-height: none;
+    aspect-ratio: 1;
+    object-fit: cover;
+    pointer-events: none; /* the whole tile is the click target */
+  }
+
+  /* The contact sheet shows numbers only; captions stay in the grid and the lightbox */
+  .gallery[data-layout='sheet'] .frame :global(.text) {
+    display: none;
+  }
+
+  .gallery[data-layout='sheet'] .frame:hover :global(.number) {
+    color: var(--color-accent);
   }
 </style>
 
 <script>
-  function getColumnCount(): number {
-    const width = window.innerWidth;
-    if (width < 1000) return 1;
-    return 2;
-  }
-
-  function resolveClamp(varName: string): number {
-    const temp = document.createElement('div');
-    temp.style.position = 'absolute';
-    temp.style.visibility = 'hidden';
-    temp.style.height = `var(${varName})`;
-    document.body.appendChild(temp);
-
-    const px = parseFloat(getComputedStyle(temp).height);
-    document.body.removeChild(temp);
-
-    return px;
-  }
-
-  function getItemHeight(item: HTMLElement, width: string): number {
-    item.style.width = `${width}`;
-    let height = item.clientHeight;
-    return height;
-  }
-
-  function getTop(
-    isVideo: boolean,
-    index: number,
-    imageIndex: number,
-    rowGap: number,
-    columns: Array<2>,
-  ): number {
-    let top;
-
-    if (isVideo) {
-      top = Math.max(columns[0], columns[1]) + (index === 0 ? 0 : rowGap);
-    } else {
-      top =
-        Math.min(columns[0], columns[1]) +
-        (index === 0 || (index === 1 && imageIndex !== 0) ? 0 : rowGap);
-    }
-    return top;
-  }
-
-  function getWidth(
-    isVideo: boolean,
-    columnWidthPx: number,
-    columnCount: number,
-  ) {
-    return isVideo ? '100%' : columnCount === 1 ? '100%' : `${columnWidthPx}px`;
-  }
-
-  function setItemStyles(
-    item: HTMLElement,
-    width: string,
-    height: string,
-    top: number,
-    isRight: boolean,
-  ): void {
-    item.style.width = width;
-    item.style.height = height;
-    item.style.top = `${top}px`;
-    if (isRight) {
-      item.style.right = '0';
-    }
-  }
-  function setContainerStyles(
-    container: HTMLElement,
-    position: string,
-    height: string,
-    opacity: number,
-    visibility: string,
-  ): void {
-    container.style.position = position;
-    container.style.height = height; // Set the height based on the tallest column
-    container.style.opacity = `${opacity}`; // Ensure the container is visible
-    container.style.visibility = visibility; // Make the container visible after positioning
-  }
-
-  function initMasonryGrid(
-    containerSelector = '.masonry',
-    itemSelector = '.item',
-    gap = 50,
-  ): void {
-    const container = document.querySelector(
-      containerSelector,
-    ) as HTMLElement | null;
-    if (!container) return;
-
-    const items = Array.from(
-      container.querySelectorAll(itemSelector),
-    ) as HTMLElement[];
-    if (items.length === 0) return;
-
-    // A function to ensure images are loaded and then proceed with layout calculation
-    const processItems = () => {
-      let columnCount = getColumnCount();
-      if (columnCount === 1) {
-        items.forEach((item, index) => {
-          item.style.position = 'unset';
-          item.style.width = '100%';
-          item.style.height = 'auto';
-        });
-        container.style.height = '100%';
-        return;
-      }
-
-      let columns = new Array(columnCount).fill(0);
-      let containerWidth = container.clientWidth;
-      let columnGap = gap;
-      let rowGap = gap;
-
-      const columnWidthPx = (containerWidth - columnGap) / columnCount;
-      let imageIndex = 0;
-
-      items.forEach((item, index) => {
-        item.style.position = 'absolute';
-        item.style.width = '';
-        item.style.height = '';
-        item.style.top = '';
-        item.style.left = '';
-
-        const isVideo: boolean = item.classList.contains('video-item');
-        const width = getWidth(isVideo, columnWidthPx, getColumnCount());
-        const height = getItemHeight(item, width);
-        const top = getTop(isVideo, index, imageIndex, rowGap, columns);
-        const colIndex = columns[0] <= columns[1] ? 0 : 1;
-        const updatedColumnHeight = top + height;
-
-        if (isVideo) {
-          columns[0] = columns[1] = updatedColumnHeight;
-        } else {
-          columns[colIndex] = updatedColumnHeight;
-        }
-
-        const isRight = isVideo ? false : !!colIndex;
-        imageIndex = isVideo ? 0 : +1;
-        setItemStyles(item, width, height + 'px', top, isRight);
-      });
-
-      setContainerStyles(
-        container,
-        'relative',
-        `${Math.max(columns[0], columns[1])}px`,
-        1,
-        'visible',
+  document.querySelectorAll<HTMLElement>('.gallery').forEach((gallery) => {
+    gallery
+      .querySelectorAll<HTMLInputElement>('[data-set-layout]')
+      .forEach((input) =>
+        input.addEventListener('change', () => {
+          gallery.dataset.layout = input.value;
+          // Only jump back if the top of the gallery is out of view
+          if (gallery.getBoundingClientRect().top < 0) {
+            gallery.scrollIntoView({ block: 'start' });
+          }
+        }),
       );
-    };
-
-    // Call the layout function on window load and resize
-    window.addEventListener('load', processItems); // Ensure all images are loaded before processing
-    window.addEventListener('resize', processItems); // Recalculate on window resize
-
-    // Initial layout call to set the grid before images load
-    processItems();
-  }
-
-  // Initialize the masonry grid once the DOM is ready
-  document.addEventListener('DOMContentLoaded', () => {
-    const gap = resolveClamp('--space-5xl');
-    initMasonryGrid('.masonry.gallery', '.item', gap); // Initialize Masonry Grid
+    // In both layouts a click on a photo opens it large in the lightbox
   });
 </script>

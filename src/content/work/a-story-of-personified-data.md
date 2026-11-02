@@ -1,44 +1,37 @@
 ---
 title: 'A Story of Personified Data'
-description: 'Official aftermovie and event coverage for the Zuger Messe 2025.'
+description: 'Bachelor graduation installation on social media algorithms and the online communities that glorify eating disorders, told through one girl''s everyday life.'
+slug: 'a-story-of-personified-data'
 start: 2026-03-01
 end: 2026-07-01
-slug: 'a-story-of-personified-data'
+category: 'design-research'
 type: ['installation']
-context: 'Lucerne University of Applied Sciences and Arts'
-location: ['Switzerland']
-website: 'none for now'
+location: 'Lucerne, Switzerland'
+institution: 'Lucerne University of Applied Sciences and Arts'
 thumbnail: '/images/galleries/a-story-of-personified-data/8.jpg'
 selected: true
-ongoing: false
-gallery:
-  content:
-    - videoUrl: '/images/galleries/a-story-of-personified-data/2.mp4'
-      imageUrl: '/images/galleries/a-story-of-personified-data/2.jpg'
-      alt: 'A Story of Personified Data'
-      autoplay: true
-    - imageUrl: '/images/galleries/a-story-of-personified-data/3.jpg'
-      alt: 'A Story of Personified Data'
-    - imageUrl: '/images/galleries/a-story-of-personified-data/4.jpg'
-      alt: 'A Story of Personified Data'
-    - imageUrl: '/images/galleries/a-story-of-personified-data/5.jpg'
-      alt: 'A Story of Personified Data'
-    - imageUrl: '/images/galleries/a-story-of-personified-data/6.jpg'
-      alt: 'A Story of Personified Data'
-    - imageUrl: '/images/galleries/a-story-of-personified-data/7.jpg'
-      alt: 'A Story of Personified Data'
-    - videoUrl: '/images/galleries/a-story-of-personified-data/1.mp4'
-      imageUrl: '/images/galleries/a-story-of-personified-data/2.jpg'
-      alt: 'A Story of Personified Data'
 lists:
   - title: 'Collaboration with'
     items:
-      - "<a href='https://www.instagram.com/stef.graphics/' target='_blank'>Stefan Vögeli</a>"
-      - "<a href='https://www.instagram.com/artischgsi/' target='_blank'>Felisha Leutwiler</a>"
+      - '<a href=''https://www.instagram.com/stef.graphics/'' target=''_blank''>Stefan Vögeli</a>'
+      - '<a href=''https://www.instagram.com/artischgsi/'' target=''_blank''>Felisha Leutwiler</a>'
+
+# The last video uses 2.jpg as its poster: replace with 1.jpg if that exists.
+gallery:
+  - video: '/images/galleries/a-story-of-personified-data/2.mp4'
+    poster: '/images/galleries/a-story-of-personified-data/2.jpg'
+    autoplay: true
+  - image: '/images/galleries/a-story-of-personified-data/3.jpg'
+  - image: '/images/galleries/a-story-of-personified-data/4.jpg'
+  - image: '/images/galleries/a-story-of-personified-data/5.jpg'
+  - image: '/images/galleries/a-story-of-personified-data/6.jpg'
+  - image: '/images/galleries/a-story-of-personified-data/7.jpg'
+  - video: '/images/galleries/a-story-of-personified-data/1.mp4'
+    poster: '/images/galleries/a-story-of-personified-data/2.jpg'
 ---
 
-This is our Bachelor's graduation project in Digital Ideation exhibited at the <a href='https://www.hslu.ch/' target='_blank'>Lucerne University of Applied Sciences and Arts.</a>.
+Our bachelor's graduation project in Digital Ideation at the <a href='https://www.hslu.ch/' target='_blank'>Lucerne University of Applied Sciences and Arts</a>, made with Stefan Vögeli and Felisha Leutwiler.
 
-Our project focuses on social media algorithms and the resulting online community that glorifies eating disorders. Visitors to our installation gain a direct insight into the daily life of a young girl and how she finds her way into this problematic community.
+The installation is about social media algorithms and the online communities they feed, in this case one that glorifies eating disorders. Visitors get a direct look into the daily life of a young girl and see, step by step, how her feed pulls her into that community.
 
-The profit-driven nature of large technology corporations makes us question the safety of the most vulnerable users. Therefore, we believe it is incredibly important to raise awareness about toxic subcultures on social media and to reach out to the parents, guardians, and mentors of young people.
+The platforms are built to keep people scrolling, not to keep the most vulnerable users safe. We made this for the parents, guardians and mentors of young people, who rarely see what a feed like that actually looks like.

@@ -3,17 +3,34 @@ import Hamburger from './Hamburger.astro';
 import List from './List.astro';
 ---
 
-<nav class="navigation">
+<nav class="navigation" aria-label="Main">
   <Hamburger />
   <List />
-
-  <style lang="scss">
-    .navigation {
-      @media (min-width: 1100px) {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-    }
-  </style>
 </nav>
+
+<script>
+  const navigation = document.querySelector<HTMLElement>('.navigation');
+  const toggle = navigation?.querySelector<HTMLButtonElement>('.menu-toggle');
+
+  if (navigation && toggle) {
+    const setOpen = (open: boolean) => {
+      navigation.dataset.open = String(open);
+      toggle.setAttribute('aria-expanded', String(open));
+      document.documentElement.classList.toggle('is-locked', open);
+    };
+
+    toggle.addEventListener('click', () =>
+      setOpen(navigation.dataset.open !== 'true'),
+    );
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && navigation.dataset.open === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    // Close again when switching to the desktop layout
+    matchMedia('(min-width: 900px)').addEventListener('change', () => setOpen(false));
+  }
+</script>

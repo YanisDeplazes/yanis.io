@@ -1,11 +1,12 @@
 <div class="wrapper">
   <slot />
 </div>
-<style lang="scss">
+
+<style>
   .wrapper {
-    padding-left: var(--padding-side);
-    padding-right: var(--padding-side);
-    max-width: 1920px;
-    margin: auto;
+    width: 100%;
+    max-width: var(--content-max);
+    margin-inline: auto;
+    padding-inline: var(--padding-side);
   }
 </style>

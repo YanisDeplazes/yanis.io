@@ -1,0 +1,82 @@
+---
+import Wrapper from '../../layouts/Wrapper.astro';
+import ReportageWrapper from '../wrappers/ReportageWrapper.astro';
+import { getFeaturedReportage } from '../../utils/workUtils';
+import { profile } from '../../data/profile';
+
+// A selection; every story is in the archive under Reportage
+const { stories, total } = await getFeaturedReportage();
+---
+
+<section class="reportage">
+  <Wrapper>
+    {
+      stories.length > 0 ? (
+        <ol class="stories">
+          {stories.map((item) => (
+            <li data-reveal>
+              <ReportageWrapper item={item} series={item.seriesTitle} />
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p class="empty">No stories filed yet.</p>
+      )
+    }
+
+    {
+      total > stories.length && (
+        <p class="all">
+          <a href="/work?filter=reportage" class="text-link">
+            All {total} stories in the archive →
+          </a>
+        </p>
+      )
+    }
+
+    <p class="agency">
+      Selected stories are distributed through
+      <a
+        href={profile.agency.href}
+        class="text-link"
+        target="_blank"
+        rel="noopener noreferrer">{profile.agency.name}</a
+      >. For licensing, assignments or collaborations, get in touch at
+      <a href={`mailto:${profile.email}`} class="text-link">{profile.email}</a>.
+    </p>
+  </Wrapper>
+</section>
+
+<style>
+  .stories {
+    display: grid;
+    gap: var(--space-3xl);
+  }
+
+  .stories > li {
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .all {
+    margin-top: var(--space-3xl);
+    font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    letter-spacing: -0.015em;
+  }
+
+  .empty {
+    color: var(--color-muted);
+  }
+
+  .agency {
+    max-width: 52ch;
+    margin-top: var(--space-4xl);
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--color-line);
+    color: var(--color-muted);
+  }
+
+  .agency a {
+    color: var(--color-ink);
+  }
+</style>

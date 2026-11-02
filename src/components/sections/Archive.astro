@@ -2,173 +2,262 @@
 import Wrapper from '../../layouts/Wrapper.astro';
 import WorkWrapper from '../wrappers/WorkWrapper.astro';
 import FilterNav from './FilterNav.astro';
-import WorkPreview from './Inspector.astro';
-import { getSortedWork } from '../../utils/workUtils.ts';
+import { categories as categoryList, getArchive, topics, type WorkItem } from '../../utils/workUtils';
 
-const allWork = await getSortedWork((data) => data.ongoing !== undefined);
-const ongoingWork = allWork.filter((item) => item.ongoing === true);
-const finishedWork = allWork.filter((item) => item.ongoing === false);
-const resolvedWork = [...ongoingWork, ...finishedWork];
+// Everything, reportage included, newest first.
+const work = (await getArchive()).filter(
+  (item): item is WorkItem & { thumbnail: ImageMetadata } => Boolean(item.thumbnail),
+);
 
-const categories = [
-  ...new Set(
-    resolvedWork.flatMap((item) => {
-      if (Array.isArray(item.type)) {
-        return item.type.flatMap((t: string) =>
-          t.split(',').map((s: string) => s.trim().toLowerCase()),
-        );
-      }
-      return typeof item.type === 'string'
-        ? item.type.split(',').map((s: string) => s.trim().toLowerCase())
-        : [];
-    }),
+// Filters: only categories that have entries, in the order defined in workUtils
+const used = new Set(work.map((item) => item.category));
+const shown = categoryList.filter((c) => used.has(c.value));
+
+const labels = {
+  all: 'All',
+  ...Object.fromEntries(shown.map((c) => [c.value, c.label])),
+};
+
+// Topics (from the home page links, e.g. /work?topic=subcultures)
+const topicLabels = Object.fromEntries(topics.map((t) => [t.value, t.label]));
+
+const counts = {
+  all: work.length,
+  ...Object.fromEntries(
+    shown.map((c) => [c.value, work.filter((item) => item.category === c.value).length]),
   ),
-].sort();
-
-const pluralMapping = {
-  all: 'all',
-  installation: 'installations',
-  moving: 'moving',
-  stills: 'stills',
-  system: 'systems',
 };
 ---
 
-<section class={`work ${Astro.props.className || ''}`}>
+<section class="archive" data-view="grid" data-hover-preview-off data-topic-labels={JSON.stringify(topicLabels)}>
   <Wrapper>
-    <FilterNav categories={categories} pluralMapping={pluralMapping} />
+    <FilterNav categories={shown.map((c) => c.value)} labels={labels} counts={counts} />
 
-    <div class="archive-container">
-      <div class="list-side">
-        <div class="table-head" aria-hidden="true">
-          <div class="work-grid-header">
-            <span class="font-spacing-small">Project</span>
-            <span class="font-spacing-small">Context</span>
-            <span class="font-spacing-small">Location</span>
-            <span class="font-spacing-small">Type</span>
-            <span class="font-spacing-small">Year</span>
-          </div>
+    <p class="topic-note meta" hidden>
+      Showing <span class="topic-label"></span>
+      <button type="button" class="topic-clear">Show everything</button>
+    </p>
+
+    <div class="layout">
+      <div class="results">
+        <div class="table-head meta" aria-hidden="true">
+          <span>Project</span>
+          <span>Category</span>
+          <span>Type</span>
+          <span>Location</span>
+          <span>Year</span>
         </div>
 
-        <div class="content work-list">
+        <ul class="work-list">
           {
-            resolvedWork.map(
-              (item) =>
-                item.resolvedThumbnail && (
-                  <div
-                    class="item work-item"
-                    data-type={JSON.stringify(item.type)}
-                  >
-                    <WorkWrapper
-                      slug={item.slug}
-                      start={item.start}
-                      title={item.title}
-                      type={item.type}
-                      src={item.resolvedThumbnail}
-                      end={item.end}
-                      ongoing={item.ongoing}
-                      location={item.location}
-                      context={item.context}
-                    />
-                  </div>
-                ),
-            )
+            work.map((item) => (
+              <li class="work-item" data-category={item.category} data-topics={item.topics.join(' ')}>
+                <WorkWrapper item={item} />
+              </li>
+            ))
           }
-        </div>
+        </ul>
+
+        <p class="empty" hidden>Nothing here yet.</p>
       </div>
 
-      <WorkPreview />
     </div>
   </Wrapper>
 </section>
 
-<style lang="scss">
-  .archive-container {
+<style>
+  .archive {
+    /* Column widths shared by the index header and every index row */
+    --archive-columns: 2.4fr 1.1fr 1fr 1fr 0.7fr;
+  }
+
+  /* Shown when the archive was opened on a topic */
+  .topic-note {
     display: flex;
-    gap: var(--space-xl);
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2xs) var(--space-s);
+    margin-top: calc(var(--space-s) - var(--gap-block));
+    margin-bottom: var(--gap-block);
+    color: var(--color-muted);
+  }
+
+  .topic-note[hidden] {
+    display: none;
+  }
+
+  .topic-label {
+    padding: 0.2em 0.5em;
+    background-color: var(--color-accent);
+    color: var(--color-ink);
+  }
+
+  .topic-clear {
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+    transition: color 0.2s ease;
+  }
+
+  .topic-clear:hover {
+    color: var(--color-accent);
+  }
+
+  .layout {
+    display: flex;
     align-items: flex-start;
-    position: relative;
+    gap: var(--space-xl);
+    /* Where filtering scrolls back to: just below the header and the filter bar */
+    scroll-margin-top: calc(var(--header-height) + var(--space-3xl));
   }
-  .list-side {
+
+  .results {
     flex: 1;
+    min-width: 0;
   }
+
+  .empty {
+    color: var(--color-muted);
+  }
+
+  /* ---------- Grid ---------- */
+  .archive[data-view='grid'] .work-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: var(--space-xl) var(--space-s);
+  }
+
+  .archive[data-view='grid'] .table-head {
+    display: none;
+  }
+
+  /* ---------- Index ---------- */
   .table-head {
     display: none;
-    @media (min-width: 1000px) {
-      display: block;
-    }
   }
-  .work-grid-header {
-    display: grid;
-    padding: 0 var(--space-xs);
-    grid-template-columns: 2.5fr 1fr 1fr 0.8fr 0.7fr;
-    gap: var(--space-l);
-    padding-bottom: 12px;
 
-    span:nth-child(4),
-    span:nth-child(5) {
+  @media (min-width: 1000px) {
+    .archive[data-view='index'] .table-head {
+      display: grid;
+      grid-template-columns: var(--archive-columns);
+      gap: var(--space-m);
+      padding: 0 var(--space-2xs) var(--space-2xs);
+      color: var(--color-muted);
+    }
+
+    .archive[data-view='index'] .table-head span:nth-child(n + 4) {
       text-align: right;
     }
   }
-  .work-item {
-    transition: opacity 0.4s ease;
-    &.hidden {
-      display: none;
-    }
+
+  .archive[data-view='index'] .work-list {
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .archive[data-view='index'] .work-item {
+    border-top: 1px solid var(--color-line);
   }
 </style>
+
 <script>
-  function initArchive() {
-    const filters = document.querySelectorAll('.filter-btn');
-    const items = document.querySelectorAll('.work-item') as NodeListOf<HTMLElement>;
-    const inspectorImg = document.getElementById('inspector-img') as HTMLImageElement;
-    const viewfinder = document.getElementById('viewfinder');
-    const rows = document.querySelectorAll('.work-item-row');
+  type View = 'grid' | 'index';
+  const VIEW_KEY = 'archive-view';
 
-    filters.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const filter = btn.getAttribute('data-filter');
-        
-        filters.forEach((f) => f.classList.remove('active'));
-        btn.classList.add('active');
+  const archive = document.querySelector<HTMLElement>('.archive');
 
-        items.forEach((item) => {
-          // 1. Get the raw data from the attribute
-          const rawType = item.getAttribute('data-type') || '[]';
-          const parsed = JSON.parse(rawType);
+  if (archive) {
+    const layout = archive.querySelector<HTMLElement>('.layout');
+    const bar = archive.querySelector<HTMLElement>('.filter-bar');
+    const sentinel = archive.querySelector<HTMLElement>('.filter-sentinel');
+    const empty = archive.querySelector<HTMLElement>('.empty');
+    const items = archive.querySelectorAll<HTMLElement>('.work-item');
+    const filterButtons = archive.querySelectorAll<HTMLButtonElement>('[data-filter]');
+    const viewButtons = archive.querySelectorAll<HTMLButtonElement>('[data-view]');
 
-          // 2. Normalize to an array and split any comma-separated strings
-          const typeArray = (Array.isArray(parsed) ? parsed : [parsed])
-            .flatMap(t => typeof t === 'string' ? t.split(',') : t)
-            .map(t => t.trim().toLowerCase());
+    // ----- Grid / Index -----
+    const setView = (view: View) => {
+      archive.dataset.view = view;
+      // The photo follows the cursor in the index only; the grid already shows them
+      archive.toggleAttribute('data-hover-preview-off', view === 'grid');
+      viewButtons.forEach((button) =>
+        button.setAttribute('aria-pressed', String(button.dataset.view === view)),
+      );
+      try {
+        localStorage.setItem(VIEW_KEY, view);
+      } catch {}
+    };
 
-          // 3. Check if the active filter exists in our normalized array
-          if (filter === 'all' || typeArray.includes(filter?.toLowerCase())) {
-            item.classList.remove('hidden');
-          } else {
-            item.classList.add('hidden');
-          }
-        });
+    viewButtons.forEach((button) =>
+      button.addEventListener('click', () => setView(button.dataset.view as View)),
+    );
+
+    try {
+      if (localStorage.getItem(VIEW_KEY) === 'index') setView('index');
+    } catch {}
+
+    // ----- Filters -----
+    // The bar is stuck once its resting position has scrolled above it
+    const isStuck = () => {
+      if (!bar || !sentinel) return false;
+      return sentinel.getBoundingClientRect().top < bar.getBoundingClientRect().top;
+    };
+
+    // Two filters combine: a category (buttons) and a topic (from home page links)
+    const topicNote = archive.querySelector<HTMLElement>('.topic-note');
+    const topicLabel = archive.querySelector<HTMLElement>('.topic-label');
+    const topicLabels: Record<string, string> = JSON.parse(archive.dataset.topicLabels ?? '{}');
+    const params = new URLSearchParams(location.search);
+
+    const isCategory = (value: string | null) =>
+      [...filterButtons].some((button) => button.dataset.filter === value);
+
+    let filter = isCategory(params.get('filter')) ? params.get('filter')! : 'all';
+    let topic = params.get('topic') && topicLabels[params.get('topic')!] ? params.get('topic')! : '';
+
+    const render = () => {
+      filterButtons.forEach((button) =>
+        button.setAttribute('aria-pressed', String(button.dataset.filter === filter)),
+      );
+
+      let visible = 0;
+      items.forEach((item) => {
+        const inCategory = filter === 'all' || item.dataset.category === filter;
+        const inTopic = !topic || (item.dataset.topics ?? '').split(' ').includes(topic);
+        item.hidden = !(inCategory && inTopic);
+        if (!item.hidden) visible++;
       });
+      if (empty) empty.hidden = visible > 0;
+
+      if (topicNote && topicLabel) {
+        topicNote.hidden = !topic;
+        topicLabel.textContent = topicLabels[topic] ?? '';
+      }
+
+      // Shareable URL, e.g. /work?filter=event or /work?topic=subcultures
+      const url = new URL(location.href);
+      url.searchParams.delete('filter');
+      url.searchParams.delete('topic');
+      if (filter !== 'all') url.searchParams.set('filter', filter);
+      if (topic) url.searchParams.set('topic', topic);
+      history.replaceState(history.state, '', url);
+    };
+
+    filterButtons.forEach((button) =>
+      button.addEventListener('click', () => {
+        filter = button.dataset.filter ?? 'all';
+        topic = ''; // picking a category starts fresh
+        render();
+        button.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+
+        // Scrolled down? Jump back to the first result.
+        if (isStuck()) layout?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }),
+    );
+
+    archive.querySelector('.topic-clear')?.addEventListener('click', () => {
+      topic = '';
+      render();
     });
 
-    // ... keeping your existing rows.forEach inspector logic below ...
-    rows.forEach((row) => {
-      row.addEventListener('mouseenter', () => {
-        const src = row.getAttribute('data-preview');
-        if (inspectorImg && src) {
-          inspectorImg.src = src;
-          inspectorImg.classList.add('active');
-          viewfinder?.classList.add('visible');
-        }
-      });
-      row.addEventListener('mouseleave', () => {
-        viewfinder?.classList.remove('visible');
-        inspectorImg.classList.remove('active');
-      });
-    });
+    render();
   }
-
-  initArchive();
-  document.addEventListener('astro:after-swap', initArchive);
 </script>

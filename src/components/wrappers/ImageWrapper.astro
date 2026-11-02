@@ -1,43 +1,96 @@
 ---
-// src/components/GalleryImage.astro
 import { Image } from 'astro:assets';
 
 interface Props {
   src: ImageMetadata;
   alt: string;
+  /** What we see. Shown under the photo and in the lightbox. */
   caption?: string;
+  /** Chapter title and dateline, added to the caption in the lightbox */
+  context?: string;
+  /** Running number shown before the caption, e.g. "07" */
+  number?: string;
+  /** Large version for the lightbox. Without it the image is not clickable. */
+  full?: string;
+  sizes?: string;
+  loading?: 'eager' | 'lazy';
 }
-const { src, alt, caption } = Astro.props;
+
+const {
+  src,
+  alt,
+  caption,
+  context,
+  number,
+  full,
+  sizes = '(min-width: 1400px) 1320px, 100vw',
+  loading = 'lazy',
+} = Astro.props;
+
+const widths = [480, 800, 1320, 2000];
+// Plain text for the lightbox (captions may contain simple HTML like <em>)
+const lightboxCaption = [context, caption?.replace(/<[^>]+>/g, '')].filter(Boolean).join(' — ');
 ---
 
-<figure>
-  <Image src={src} alt={alt} format="webp" loading="lazy" />
-  {caption && <figcaption>{caption}</figcaption>}
+<figure class="image">
+  {
+    full ? (
+      <button
+        type="button"
+        class="open"
+        data-lightbox
+        data-full={full}
+        data-alt={alt}
+        data-caption={lightboxCaption}
+        aria-label={`View photograph${number ? ` ${number}` : ''} full screen`}
+      >
+        <Image src={src} alt={alt} widths={widths} sizes={sizes} loading={loading} format="webp" />
+      </button>
+    ) : (
+      <Image src={src} alt={alt} widths={widths} sizes={sizes} loading={loading} format="webp" />
+    )
+  }
+
+  {
+    (number || caption) && (
+      <figcaption class="caption">
+        {number && <span class="number">{number}</span>}
+        {caption && <span class="text" set:html={caption} />}
+      </figcaption>
+    )
+  }
 </figure>
 
-<style lang="scss">
-  figure {
-    margin-block-start: 0px;
-    margin-block-end: 0px;
-    margin: 0;
+<style>
+  .image {
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .open {
+    display: block;
     cursor: zoom-in;
+  }
 
-    img {
-      width: 100%;
-      height: 100%;
-      transition: all 1.5s ease-in-out;
-    }
+  .image :global(img) {
+    background-color: var(--color-placeholder);
+  }
 
-    figcaption {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-      white-space: nowrap;
-      border: 0;
-    }
+  /* The caption wraps at the photo's width instead of widening the figure */
+  .caption {
+    display: flex;
+    gap: var(--space-xs);
+    padding-top: var(--space-2xs);
+    color: var(--color-muted);
+    contain: inline-size;
+  }
+
+  .number {
+    flex-shrink: 0;
+    color: var(--color-ink);
+  }
+
+  .text {
+    text-wrap: pretty;
   }
 </style>

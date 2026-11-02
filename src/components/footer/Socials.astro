@@ -1,49 +1,31 @@
 ---
-const links = [
-  // { name: 'Hans Lucas', href: 'https://hanslucas.com/ydeplazes/photo' },
-  { name: 'Instagram', href: 'https://instagram.com/yanisdeplazes' },
-  { name: 'X', href: 'https://x.com/Yanis_Deplazes' },
-  { name: 'Bluesky', href: 'https://bsky.app/profile/yanis.io' },
-  {
-    name: 'Signal',
-    href: 'https://signal.me/#eu/WTYbqUCFw4UvJvImlzKoe5HkyYTBJSPaBvZ8KyKYhqoAs4Ie6UlCZ70oG0Jzs2pL',
-  },
-  //  { name: 'Vimeo', href: 'https://vimeo.com/user91873613' },
-  { name: 'LinkedIn', href: 'https://www.linkedin.com/in/yanis-deplazes/' },
-  // { name: 'GitHub', href: 'https://github.com/yanisdeplazes' },
-];
+import { socials } from '../../data/profile';
 ---
 
-<nav class="socials">
-  <ul class="list" id="desktopNav">
-    {
-      links.map(({ name, href }) => (
-        <li>
-          <a
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="link title-font font-size-6"
-          >
-            {name}
-          </a>
-        </li>
-      ))
-    }
-  </ul>
-</nav>
+<ul class="socials meta" aria-label="Elsewhere">
+  {
+    socials.map(({ name, href }) => (
+      <li>
+        <a href={href} target="_blank" rel="noopener noreferrer">
+          {name}
+        </a>
+      </li>
+    ))
+  }
+</ul>
 
-<style lang="scss">
+<style>
   .socials {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: var(--space-s);
-      row-gap: var(--space-3xs);
-    }
+    flex-wrap: wrap;
+    gap: var(--space-3xs) var(--space-s);
+  }
+
+  a {
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: var(--color-accent);
   }
 </style>

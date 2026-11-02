@@ -1,21 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Image from '../assets/images/default.png';
+import Intro from '../components/sections/Intro.astro';
 import Selected from '../components/sections/Selected.astro';
-import Title from '../components/sections/Title.astro';
-import Video from '../assets/videos/hero.mp4';
-
-const title = 'Portfolio';
-const suffix = 'Yanis Deplazes';
-const description =
-  'Visual Journalist and Researcher - Exploring people through multimedia.';
+import About from '../components/sections/About.astro';
+import Portrait from '../assets/images/portrait.jpg';
+import { personSchema } from '../utils/seo';
 ---
 
-<Layout
-  title={`${title} — ${suffix}`}
-  description={description}
-  imageSrc={Image.src}
->
-  <Title video={Video} title={`${title}`} />
+<Layout type="profile" schema={[personSchema(Portrait.src)]}>
+  <Intro />
   <Selected />
+  <About />
 </Layout>

@@ -1,19 +1,23 @@
 ---
-// src/pages/work/index.astro
 import Layout from '../../layouts/Layout.astro';
-import Image from '../../assets/images/default.png';
+import PageHeader from '../../components/sections/PageHeader.astro';
 import Archive from '../../components/sections/Archive.astro';
-
-const title = 'Work';
-const suffix = 'Yanis Deplazes';
-const description =
-  'Browse the full archive of work by Yanis Deplazes.';
+import { breadcrumbSchema } from '../../utils/seo';
 ---
 
 <Layout
-  title={`${title} — ${suffix}`}
-  description={description}
-  imageSrc={Image.src}
+  title="Archive"
+  description="Every project by Yanis Deplazes: reportage, long-term photo series, event coverage, design and research, and code."
+  schema={[
+    breadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Archive', path: '/work' },
+    ]),
+  ]}
 >
+  <PageHeader
+    title="Archive"
+    intro="Everything in one place: reportage, long-term series, event coverage, design and research, and the things I build with code."
+  />
   <Archive />
 </Layout>

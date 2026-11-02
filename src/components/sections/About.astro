@@ -1,0 +1,140 @@
+---
+import Wrapper from '../../layouts/Wrapper.astro';
+import { profile, socials } from '../../data/profile';
+
+const contact = [
+  { name: profile.email, href: `mailto:${profile.email}` },
+  ...socials.filter(({ name }) => ['Signal'].includes(name)),
+];
+
+const { text } = profile.location;
+const coverage = new Intl.ListFormat('en-GB', { type: 'conjunction' }).format(
+  profile.coverage,
+);
+---
+
+<section class="about band" aria-labelledby="about-heading">
+  <Wrapper>
+    <div class="grid">
+      <h2 id="about-heading" class="label meta">About</h2>
+
+      <div class="body">
+        <p class="lead">
+          <b>{profile.name}</b> is a visual journalist and researcher working between
+          {text}, exploring people and society through multimedia.
+        </p>
+        <p class="more">
+          <a href="/info" class="text-link"
+            >Full bio, exhibitions and publications</a
+          >
+        </p>
+      </div>
+
+      <dl class="contact">
+        <div>
+          <dt class="meta">Location</dt>
+          <dd>{profile.location.label}</dd>
+        </div>
+
+        <div>
+          <dt class="meta">Coverage</dt>
+          <dd>{coverage}, and further on request.</dd>
+        </div>
+
+        <div>
+          <dt class="meta">Contact</dt>
+          <dd>
+            <ul>
+              {
+                contact.map(({ name, href }) => (
+                  <li>
+                    <a
+                      href={href}
+                      class="text-link"
+                      target={href.startsWith('mailto') ? undefined : '_blank'}
+                      rel="noopener noreferrer"
+                    >
+                      {name}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </dd>
+        </div>
+        <div>
+          <dt class="meta">Agency</dt>
+          <dd>
+            <a
+              href={profile.agency.href}
+              class="text-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {profile.agency.name}
+            </a>, distributed by Reuters, AFP and dpa
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </Wrapper>
+</section>
+
+<style>
+  .about {
+    margin-top: var(--gap-section);
+    padding-block: var(--space-xl) var(--space-2xl);
+  }
+
+  /* On the home page this band sits directly on the footer */
+  :global(main:has(> .about:last-child)) {
+    padding-bottom: 0;
+  }
+
+  .grid {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .lead {
+    max-width: 34ch;
+    font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
+
+  .more {
+    margin-top: var(--gap-inside);
+  }
+
+  .contact {
+    display: grid;
+    gap: var(--gap-inside);
+    align-content: start;
+  }
+
+  .contact dt {
+    margin-bottom: var(--space-3xs);
+  }
+
+  @media (min-width: 900px) {
+    .grid {
+      grid-template-columns: repeat(12, 1fr);
+      column-gap: var(--space-m);
+    }
+
+    .label {
+      grid-column: 1 / 3;
+      padding-top: 0.6em;
+    }
+
+    .body {
+      grid-column: 3 / 9;
+    }
+
+    .contact {
+      grid-column: 10 / -1;
+      padding-top: 0.4em;
+    }
+  }
+</style>

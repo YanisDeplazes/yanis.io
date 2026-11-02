@@ -1,47 +1,54 @@
 ---
-import Wrapper from '../layouts/Wrapper.astro';
-
+import Wrapper from './Wrapper.astro';
 import Logo from '../components/header/Logo.astro';
 import Navigation from '../components/header/Navigation.astro';
 ---
 
-<header>
+<header class="site-header">
   <Wrapper>
-    <div class="container">
+    <div class="bar">
       <Logo />
       <Navigation />
     </div>
   </Wrapper>
-  <div class="fade"></div>
 </header>
 
-<style lang="scss">
-  header {
-    width: 100vw;
-    position: fixed;
-    z-index: 10;
-    height: auto;
-    background-color: var(--color-project);
-    border-bottom: 5px solid var(--color-project);
-    transition:
-      background-color 0.4s ease-in-out,
-      border-bottom 0.4s ease-in-out;
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: var(--color-paper);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
 
-    .container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: var(--space-2xs) 0px;
-      gap: var(--space-m);
-    }
-    &::after {
-      content: '';
-      width: 100%;
-      height: 1px;
-      bottom: 0;
-      left: 0;
-      position: absolute;
-      background-color: var(--color-accent);
-    }
+  /* A hairline appears once the page scrolls under the header */
+  .site-header.is-scrolled {
+    border-bottom-color: var(--color-line);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+    min-height: 72px;
   }
 </style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('.site-header');
+
+  if (header) {
+    // Expose the header height so sticky elements (filters, gallery toolbar) sit right below it
+    const setHeight = () =>
+      document.documentElement.style.setProperty('--header-height', `${header.offsetHeight}px`);
+    setHeight();
+    new ResizeObserver(setHeight).observe(header);
+
+    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 4);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>

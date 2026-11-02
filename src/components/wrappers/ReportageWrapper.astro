@@ -1,0 +1,117 @@
+---
+import { Image } from 'astro:assets';
+import type { WorkItem } from '../../utils/workUtils';
+import { formatDateline } from '../../utils/format';
+
+interface Props {
+  item: WorkItem;
+  /** Title of the collection the story belongs to, e.g. "Groundswell" */
+  series?: string;
+}
+
+const { item, series } = Astro.props;
+
+const dateline = formatDateline(item);
+---
+
+<a href={`/work/${item.slug}`} class="story">
+  <div class="media">
+    {
+      item.thumbnail && (
+        <Image
+          src={item.thumbnail}
+          alt=""
+          widths={[640, 960, 1400]}
+          sizes="(min-width: 900px) 58vw, 100vw"
+          format="webp"
+          loading="lazy"
+        />
+      )
+    }
+  </div>
+
+  <div class="text">
+    <p class="dateline meta">
+      <time datetime={item.start.toISOString().slice(0, 10)}>{dateline}</time>
+      {item.location && <span>{item.location}</span>}
+      {series && <span class="series">{series}</span>}
+    </p>
+    <h2 class="title title-font-bold">{item.title}</h2>
+    {item.description && <p class="description">{item.description}</p>}
+    <span class="more meta">View story →</span>
+  </div>
+</a>
+
+<style>
+  .story {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .media {
+    overflow: hidden;
+    background-color: var(--color-placeholder);
+    aspect-ratio: 3 / 2;
+  }
+
+  .media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .dateline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-xs);
+    color: var(--color-muted);
+  }
+
+  .series {
+    color: var(--color-accent);
+  }
+
+  .title {
+    margin-top: var(--space-2xs);
+    font-size: clamp(1.375rem, 1rem + 1.2vw, 2rem);
+    text-wrap: balance;
+    transition: color 0.2s ease;
+  }
+
+  .description {
+    max-width: 44ch;
+    margin-top: var(--space-xs);
+    line-height: 1.5;
+  }
+
+  .more {
+    display: inline-block;
+    margin-top: var(--space-s);
+  }
+
+  .story:hover .title,
+  .story:focus-visible .title {
+    color: var(--color-accent);
+  }
+
+  .story:hover .media :global(img) {
+    transform: scale(1.02);
+  }
+
+  @media (min-width: 900px) {
+    .story {
+      grid-template-columns: repeat(12, 1fr);
+      column-gap: var(--space-m);
+      align-items: end;
+    }
+
+    .media {
+      grid-column: 1 / 8;
+    }
+
+    .text {
+      grid-column: 8 / -1;
+    }
+  }
+</style>

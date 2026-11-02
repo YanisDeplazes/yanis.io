@@ -55,7 +55,9 @@ const external = (href: string) => !href.startsWith('mailto:');
 
       <div class="content">
         <h1 class="lede">
-          <b>{profile.name}</b> is a visual journalist and researcher working between
+          <b>{profile.name}</b> is a visual journalist and researcher working between{
+            ' '
+          }
           {text}, exploring people and society through multimedia.
         </h1>
 
@@ -74,8 +76,7 @@ const external = (href: string) => !href.startsWith('mailto:');
             film to installations, an autonomous drone and interactive websites.
           </p>
           <p>
-            Photojournalist and member of
-            <a
+            Photojournalist and member of <a
               href={profile.agency.href}
               target="_blank"
               rel="noopener noreferrer">{profile.agency.name}</a

@@ -16,7 +16,11 @@ const isActive = (path: string) =>
   {
     links.map(({ name, path }) => (
       <li>
-        <a href={path} class="link mark-link" aria-current={isActive(path) ? 'page' : undefined}>
+        <a
+          href={path}
+          class="link mark-link"
+          aria-current={isActive(path) ? 'page' : undefined}
+        >
           {name}
         </a>
       </li>
@@ -48,7 +52,23 @@ const isActive = (path: string) =>
       visibility 0.25s;
   }
 
-  /* On the orange menu the current page is underlined in ink */
+  /* The shared underline is sized for small text; at this size it needs to sit closer
+     and grow with the letters */
+  .list .link {
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.12em;
+  }
+
+  /* On the orange menu: no near-white hover line (it also sticks after a tap on phones),
+     a faint ink line instead, and the current page underlined in full ink */
+  .list .link:hover {
+    text-decoration-color: color-mix(
+      in srgb,
+      var(--color-ink) 30%,
+      transparent
+    );
+  }
+
   .list .link[aria-current='page'] {
     text-decoration-color: var(--color-ink);
   }
@@ -75,12 +95,16 @@ const isActive = (path: string) =>
       visibility: visible;
     }
 
+    /* Back to the shared underline for normal-sized text */
     .list .link {
       color: var(--color-muted);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.45em;
     }
 
     .list .link:hover {
       color: var(--color-ink);
+      text-decoration-color: var(--color-line);
     }
 
     .list .link[aria-current='page'] {

@@ -25,7 +25,7 @@ const filters = ['all', ...categories];
             data-filter={filter}
             aria-pressed={filter === 'all' ? 'true' : 'false'}
           >
-            {labels[filter] ?? filter}
+            <span class="label">{labels[filter] ?? filter}</span>
             <sup class="count meta">{counts[filter] ?? 0}</sup>
           </button>
         </li>
@@ -65,19 +65,56 @@ const filters = ['all', ...categories];
     margin-bottom: var(--gap-block);
     background-color: var(--color-paper);
     border-block: 1px solid var(--color-line);
+
+    /* Width of the fade at either end of the filters, when there is more to scroll to */
+    --fade: 2rem;
   }
 
   .filters {
+    position: relative; /* buttons measure their position from here, see the script */
     display: flex;
     gap: var(--space-m);
+    min-width: 0;
 
     /* Scrolls sideways on small screens instead of wrapping */
     overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--fade);
     scrollbar-width: none;
   }
 
   .filters::-webkit-scrollbar {
     display: none;
+  }
+
+  .filters li {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+  }
+
+  /* Fades show that the row goes on: on the right while there is more, on the left once scrolled */
+  .filter-bar[data-fade-start] .filters,
+  .filter-bar[data-fade-end] .filters {
+    --fade-start: 0px;
+    --fade-end: 0px;
+    --fade-mask: linear-gradient(
+      to right,
+      transparent,
+      #000 var(--fade-start),
+      #000 calc(100% - var(--fade-end)),
+      transparent
+    );
+    -webkit-mask-image: var(--fade-mask); /* older iOS Safari */
+    mask-image: var(--fade-mask);
+  }
+
+  .filter-bar[data-fade-start] .filters {
+    --fade-start: var(--fade);
+  }
+
+  .filter-bar[data-fade-end] .filters {
+    --fade-end: var(--fade);
   }
 
   .filter-btn {
@@ -88,6 +125,28 @@ const filters = ['all', ...categories];
 
   .filter-btn:hover {
     color: var(--color-ink);
+  }
+
+  /* Only the word is underlined, never the count. Safari draws the button's underline
+     under the count as well, so the line sits on the label instead of the button. */
+  .filter-btn {
+    text-decoration: none;
+  }
+
+  .filter-btn .label {
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.45em;
+    transition: text-decoration-color 0.2s ease;
+  }
+
+  .filter-btn:hover .label {
+    text-decoration-color: var(--color-line);
+  }
+
+  .filter-btn[aria-pressed='true'] .label {
+    text-decoration-color: var(--color-accent);
   }
 
   /* inline-block keeps the count out of the underline */
@@ -112,4 +171,75 @@ const filters = ['all', ...categories];
   .view-toggle button:hover {
     color: var(--color-ink);
   }
+
+  /* ----- Phones: bigger tap targets, the view switch kept small and set apart ----- */
+  @media (max-width: 767px) {
+    .filter-bar {
+      gap: var(--space-s);
+      min-height: 3rem;
+    }
+
+    .filters {
+      gap: var(--space-s);
+    }
+
+    /* At least 44px tall, so a thumb hits the right one */
+    .filter-btn,
+    .view-toggle button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+
+    .view-toggle {
+      gap: var(--space-2xs);
+      padding-left: var(--space-s);
+      border-left: 1px solid var(--color-line);
+    }
+  }
 </style>
+
+<script>
+  const smooth = () =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ? 'auto'
+      : 'smooth';
+
+  document.querySelectorAll<HTMLElement>('.filter-bar').forEach((bar) => {
+    const list = bar.querySelector<HTMLElement>('.filters');
+    if (!list) return;
+
+    // Fade an end only when there is more to scroll to on that side
+    const updateFades = () => {
+      const max = list.scrollWidth - list.clientWidth;
+      bar.toggleAttribute('data-fade-start', list.scrollLeft > 2);
+      bar.toggleAttribute('data-fade-end', list.scrollLeft < max - 2);
+    };
+
+    // Scroll the row (not the page) so a filter sits in the middle of it
+    const centre = (button: HTMLElement, behavior: ScrollBehavior) => {
+      const left =
+        button.offsetLeft - (list.clientWidth - button.offsetWidth) / 2;
+      list.scrollTo({ left: Math.max(0, left), behavior });
+    };
+
+    list.addEventListener('scroll', updateFades, { passive: true });
+    new ResizeObserver(updateFades).observe(list);
+
+    list
+      .querySelectorAll<HTMLElement>('[data-filter]')
+      .forEach((button) =>
+        button.addEventListener('click', () => centre(button, smooth())),
+      );
+
+    // Opened with a filter in the URL (e.g. /work?filter=event): bring it into view.
+    // Waits a frame so the archive has marked the active filter first.
+    requestAnimationFrame(() => {
+      const active = list.querySelector<HTMLElement>(
+        '[data-filter][aria-pressed="true"]',
+      );
+      if (active) centre(active, 'auto');
+      updateFades();
+    });
+  });
+</script>

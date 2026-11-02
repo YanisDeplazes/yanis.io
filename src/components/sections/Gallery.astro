@@ -400,6 +400,26 @@ const summary = joinParts([
     max-height: 80svh;
   }
 
+  /* Phones: every photo and film fills the full width, portraits included
+     (they scroll past instead of shrinking to fit the screen height) */
+  @media (max-width: 799px) {
+    .gallery[data-layout='grid'] .frame {
+      display: block;
+    }
+
+    .gallery[data-layout='grid'] .frame :global(figure),
+    .gallery[data-layout='grid'] .frame :global(img),
+    .gallery[data-layout='grid'] .frame :global(video) {
+      width: 100%;
+    }
+
+    .gallery[data-layout='grid'] .frame :global(img),
+    .gallery[data-layout='grid'] .frame :global(video) {
+      height: auto;
+      max-height: none;
+    }
+  }
+
   /* Videos: hide the big play button iOS lays over autoplay films (e.g. in Low Power Mode) */
   .frame :global(video)::-webkit-media-controls-start-playback-button {
     display: none !important;

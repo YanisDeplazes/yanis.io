@@ -2,11 +2,17 @@
 import Wrapper from '../../layouts/Wrapper.astro';
 import WorkWrapper from '../wrappers/WorkWrapper.astro';
 import FilterNav from './FilterNav.astro';
-import { categories as categoryList, getArchive, topics, type WorkItem } from '../../utils/workUtils';
+import {
+  categories as categoryList,
+  getArchive,
+  topics,
+  type WorkItem,
+} from '../../utils/workUtils';
 
 // Everything, reportage included, newest first.
 const work = (await getArchive()).filter(
-  (item): item is WorkItem & { thumbnail: ImageMetadata } => Boolean(item.thumbnail),
+  (item): item is WorkItem & { thumbnail: ImageMetadata } =>
+    Boolean(item.thumbnail),
 );
 
 // Filters: only categories that have entries, in the order defined in workUtils
@@ -24,14 +30,26 @@ const topicLabels = Object.fromEntries(topics.map((t) => [t.value, t.label]));
 const counts = {
   all: work.length,
   ...Object.fromEntries(
-    shown.map((c) => [c.value, work.filter((item) => item.category === c.value).length]),
+    shown.map((c) => [
+      c.value,
+      work.filter((item) => item.category === c.value).length,
+    ]),
   ),
 };
 ---
 
-<section class="archive" data-view="grid" data-hover-preview-off data-topic-labels={JSON.stringify(topicLabels)}>
+<section
+  class="archive"
+  data-view="grid"
+  data-hover-preview-off
+  data-topic-labels={JSON.stringify(topicLabels)}
+>
   <Wrapper>
-    <FilterNav categories={shown.map((c) => c.value)} labels={labels} counts={counts} />
+    <FilterNav
+      categories={shown.map((c) => c.value)}
+      labels={labels}
+      counts={counts}
+    />
 
     <p class="topic-note meta" hidden>
       Showing <span class="topic-label"></span>
@@ -51,7 +69,11 @@ const counts = {
         <ul class="work-list">
           {
             work.map((item) => (
-              <li class="work-item" data-category={item.category} data-topics={item.topics.join(' ')}>
+              <li
+                class="work-item"
+                data-category={item.category}
+                data-topics={item.topics.join(' ')}
+              >
                 <WorkWrapper item={item} />
               </li>
             ))
@@ -60,7 +82,6 @@ const counts = {
 
         <p class="empty" hidden>Nothing here yet.</p>
       </div>
-
     </div>
   </Wrapper>
 </section>
@@ -170,8 +191,10 @@ const counts = {
     const sentinel = archive.querySelector<HTMLElement>('.filter-sentinel');
     const empty = archive.querySelector<HTMLElement>('.empty');
     const items = archive.querySelectorAll<HTMLElement>('.work-item');
-    const filterButtons = archive.querySelectorAll<HTMLButtonElement>('[data-filter]');
-    const viewButtons = archive.querySelectorAll<HTMLButtonElement>('[data-view]');
+    const filterButtons =
+      archive.querySelectorAll<HTMLButtonElement>('[data-filter]');
+    const viewButtons =
+      archive.querySelectorAll<HTMLButtonElement>('[data-view]');
 
     // ----- Grid / Index -----
     const setView = (view: View) => {
@@ -179,7 +202,10 @@ const counts = {
       // The photo follows the cursor in the index only; the grid already shows them
       archive.toggleAttribute('data-hover-preview-off', view === 'grid');
       viewButtons.forEach((button) =>
-        button.setAttribute('aria-pressed', String(button.dataset.view === view)),
+        button.setAttribute(
+          'aria-pressed',
+          String(button.dataset.view === view),
+        ),
       );
       try {
         localStorage.setItem(VIEW_KEY, view);
@@ -187,7 +213,9 @@ const counts = {
     };
 
     viewButtons.forEach((button) =>
-      button.addEventListener('click', () => setView(button.dataset.view as View)),
+      button.addEventListener('click', () =>
+        setView(button.dataset.view as View),
+      ),
     );
 
     try {
@@ -198,30 +226,43 @@ const counts = {
     // The bar is stuck once its resting position has scrolled above it
     const isStuck = () => {
       if (!bar || !sentinel) return false;
-      return sentinel.getBoundingClientRect().top < bar.getBoundingClientRect().top;
+      return (
+        sentinel.getBoundingClientRect().top < bar.getBoundingClientRect().top
+      );
     };
 
     // Two filters combine: a category (buttons) and a topic (from home page links)
     const topicNote = archive.querySelector<HTMLElement>('.topic-note');
     const topicLabel = archive.querySelector<HTMLElement>('.topic-label');
-    const topicLabels: Record<string, string> = JSON.parse(archive.dataset.topicLabels ?? '{}');
+    const topicLabels: Record<string, string> = JSON.parse(
+      archive.dataset.topicLabels ?? '{}',
+    );
     const params = new URLSearchParams(location.search);
 
     const isCategory = (value: string | null) =>
       [...filterButtons].some((button) => button.dataset.filter === value);
 
-    let filter = isCategory(params.get('filter')) ? params.get('filter')! : 'all';
-    let topic = params.get('topic') && topicLabels[params.get('topic')!] ? params.get('topic')! : '';
+    let filter = isCategory(params.get('filter'))
+      ? params.get('filter')!
+      : 'all';
+    let topic =
+      params.get('topic') && topicLabels[params.get('topic')!]
+        ? params.get('topic')!
+        : '';
 
     const render = () => {
       filterButtons.forEach((button) =>
-        button.setAttribute('aria-pressed', String(button.dataset.filter === filter)),
+        button.setAttribute(
+          'aria-pressed',
+          String(button.dataset.filter === filter),
+        ),
       );
 
       let visible = 0;
       items.forEach((item) => {
         const inCategory = filter === 'all' || item.dataset.category === filter;
-        const inTopic = !topic || (item.dataset.topics ?? '').split(' ').includes(topic);
+        const inTopic =
+          !topic || (item.dataset.topics ?? '').split(' ').includes(topic);
         item.hidden = !(inCategory && inTopic);
         if (!item.hidden) visible++;
       });
@@ -245,11 +286,11 @@ const counts = {
       button.addEventListener('click', () => {
         filter = button.dataset.filter ?? 'all';
         topic = ''; // picking a category starts fresh
-        render();
-        button.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        render(); // the filter bar itself scrolls the chosen filter into view
 
         // Scrolled down? Jump back to the first result.
-        if (isStuck()) layout?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (isStuck())
+          layout?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }),
     );
 

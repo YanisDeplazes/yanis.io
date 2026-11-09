@@ -4,7 +4,6 @@ description: 'On October 31, 2026 high school and university students led Act II
 slug: 'paris-act-3'
 start: 2026-10-31
 category: 'reportage'
-featured: true
 series: 'groundswell'
 type: ['stills']
 location: 'Paris, France'

@@ -15,8 +15,8 @@ location: 'Europe'
 topics: ['social-movements']
 thumbnail: '/images/galleries/groundswell/2026-10-17-paris/3.jpg'
 preview:
-  - '/images/galleries/groundswell/2026-11-6-amsterdam/5.jpg'
-  - '/images/galleries/groundswell/2026-10-31-paris/3.jpg'
+  - '/images/galleries/groundswell/2026-11-17-brussels/11.jpg'
+  - '/images/galleries/groundswell/2025-10-11-bern/3.jpg'
 selected: true
 
 gallery:
@@ -28,13 +28,15 @@ gallery:
   - image: '/images/galleries/groundswell/2026-11-17-brussels/7.jpg'
   - image: '/images/galleries/groundswell/2026-11-17-brussels/6.jpg'
 
-  - image: '/images/galleries/groundswell/2026-11-6-amsterdam/6.jpg'
-  - image: '/images/galleries/groundswell/2026-11-6-amsterdam/5.jpg'
-
   - image: '/images/galleries/groundswell/2026-11-8-amsterdam/4.jpg'
   - image: '/images/galleries/groundswell/2026-11-8-amsterdam/3.jpg'
   - image: '/images/galleries/groundswell/2026-11-8-amsterdam/2.jpg'
   - image: '/images/galleries/groundswell/2026-11-8-amsterdam/1.jpg'
+
+  - image: '/images/galleries/groundswell/2026-11-6-amsterdam/11.jpg'
+  - image: '/images/galleries/groundswell/2026-11-6-amsterdam/6.jpg'
+  - image: '/images/galleries/groundswell/2026-11-6-amsterdam/5.jpg'
+  - image: '/images/galleries/groundswell/2026-11-6-amsterdam/3.jpg'
 
   - image: '/images/galleries/groundswell/2026-10-31-paris/7.jpg'
   - image: '/images/galleries/groundswell/2026-10-31-paris/6.jpg'

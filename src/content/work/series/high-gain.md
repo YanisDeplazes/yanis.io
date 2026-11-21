@@ -12,7 +12,7 @@ topics: ['subcultures']
 thumbnail: '/images/galleries/high-gain/9.jpg'
 preview:
   - '/images/galleries/high-gain/10.jpg'
-  - '/images/galleries/high-gain/3.jpg'
+  - '/images/galleries/high-gain/12.jpg'
 selected: true
 lists:
   - title: 'Shows'

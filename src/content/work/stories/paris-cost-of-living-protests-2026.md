@@ -12,7 +12,7 @@ series: 'groundswell'
 type: ['stills']
 location: 'Paris, France'
 topics: ['social-movements']
-thumbnail: '/images/galleries/groundswell/2026-10-17-paris/6.jpg'
+thumbnail: '/images/galleries/groundswell/2026-10-17-paris/5.jpg'
 
 # In shooting order. Left out: act-1-7 (wide crowd), act-3-4 (Yellow Vest), act-3-13 (third burning-car frame).
 gallery:

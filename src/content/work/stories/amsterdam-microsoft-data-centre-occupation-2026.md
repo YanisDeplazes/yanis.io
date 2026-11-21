@@ -10,7 +10,7 @@ series: 'groundswell'
 type: ['stills']
 location: 'Amsterdam, Netherlands'
 topics: ['social-movements']
-thumbnail: '/images/galleries/groundswell/2026-11-6-amsterdam/11.jpg'
+thumbnail: '/images/galleries/groundswell/2026-11-6-amsterdam/5.jpg'
 # In shooting order. Left out: 2 (close to 6) and 13 (generic flag at the rally).
 gallery:
   - image: '/images/galleries/groundswell/2026-11-6-amsterdam/1.jpg'

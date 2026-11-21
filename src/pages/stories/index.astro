@@ -20,14 +20,17 @@ const { stories } = await getFeaturedReportage();
     ]),
   ]}
 >
-  <PageHeader title="Stories" intro="Stories of people and society, followed beyond the day itself." />
+  <PageHeader title="Stories" intro="Stories of people and society." />
   <Listing heading="Stories" items={stories} showSeries />
 
   <Wrapper>
     <p class="agency">
       Day-to-day news coverage is distributed through{' '}
-      <a href={profile.agency.href} class="text-link" target="_blank" rel="noopener noreferrer"
-        >{profile.agency.name}</a
+      <a
+        href={profile.agency.href}
+        class="text-link"
+        target="_blank"
+        rel="noopener noreferrer">{profile.agency.name}</a
       >. For licensing, assignments or collaborations, get in touch at <a
         href={`mailto:${profile.email}`}
         class="text-link">{profile.email}</a

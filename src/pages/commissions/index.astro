@@ -12,7 +12,7 @@ const items = await getClientWork();
 
 <Layout
   title="Commissions"
-  description="Commissioned photographs, films and live visuals by Yanis Deplazes for editors, festivals, venues and cultural organisations."
+  description="Selected commissioned work by Yanis Deplazes: photography, video and live visuals."
   schema={[
     breadcrumbSchema([
       { name: 'Home', path: '/' },
@@ -20,10 +20,7 @@ const items = await getClientWork();
     ]),
   ]}
 >
-  <PageHeader
-    title="Commissions"
-    intro="Selected assignments and commissioned work for editors, festivals, venues and cultural organisations."
-  />
+  <PageHeader title="Commissions" intro="Selected commissioned work." />
   <ClientGrid items={items} />
 
   <Wrapper>

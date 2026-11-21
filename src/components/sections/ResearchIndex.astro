@@ -1,0 +1,130 @@
+---
+// Research page: a text-led index, one row per project, with a small image
+import { Image } from 'astro:assets';
+import Wrapper from '../../layouts/Wrapper.astro';
+import type { WorkItem } from '../../utils/workUtils';
+
+interface Props {
+  items: WorkItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<section class="research">
+  <Wrapper>
+    <ol class="rows">
+      {
+        items.map((item, i) => (
+          <li data-reveal>
+            <a href={item.url} class="row">
+              <div class="text">
+                <h2 class="title title-font-bold">{item.title}</h2>
+                <p class="description">{item.description}</p>
+              </div>
+              <p class="details meta">
+                <span>{item.type}</span>
+                <span>{item.years}</span>
+                <span>{item.location}</span>
+                {item.institution && <span class="institution">{item.institution}</span>}
+              </p>
+              <div class="media">
+                {item.thumbnail && (
+                  <Image
+                    src={item.thumbnail}
+                    alt=""
+                    widths={[480, 800]}
+                    sizes="(min-width: 900px) 22vw, 100vw"
+                    format="webp"
+                    loading="lazy"
+                  />
+                )}
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </Wrapper>
+</section>
+
+<style>
+  .rows {
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .row {
+    display: grid;
+    gap: var(--space-s);
+    padding-block: var(--space-m) var(--space-l);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25em var(--space-s);
+    color: var(--color-muted);
+  }
+
+  .institution {
+    flex-basis: 100%;
+  }
+
+  .title {
+    font-size: clamp(1.375rem, 1rem + 1.1vw, 2rem);
+    text-wrap: balance;
+    transition: color 0.2s ease;
+  }
+
+  .description {
+    max-width: 46ch;
+    margin-top: var(--space-xs);
+    line-height: 1.5;
+  }
+
+  .media {
+    overflow: hidden;
+    background-color: var(--color-placeholder);
+    aspect-ratio: 3 / 2;
+  }
+
+  .media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1);
+    transition:
+      filter 0.4s ease,
+      transform 1s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .row:hover .title,
+  .row:focus-visible .title {
+    color: var(--color-accent);
+  }
+
+  .row:hover .media :global(img) {
+    filter: none;
+    transform: scale(1.02);
+  }
+
+  /* Meta first on small screens, then title, then image */
+  .details {
+    order: -1;
+  }
+
+  @media (min-width: 900px) {
+    .row {
+      grid-template-columns: 3fr 2fr 2fr;
+      column-gap: var(--space-m);
+      align-items: start;
+    }
+
+    .details {
+      order: 0;
+      flex-direction: column;
+      flex-wrap: nowrap;
+    }
+  }
+</style>

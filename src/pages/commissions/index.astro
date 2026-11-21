@@ -1,0 +1,49 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/sections/PageHeader.astro';
+import ClientGrid from '../../components/sections/ClientGrid.astro';
+import Wrapper from '../../layouts/Wrapper.astro';
+import { getClientWork } from '../../utils/workUtils';
+import { profile } from '../../data/profile';
+import { breadcrumbSchema } from '../../utils/seo';
+
+const items = await getClientWork();
+---
+
+<Layout
+  title="Commissions"
+  description="Commissioned photographs, films and live visuals by Yanis Deplazes for editors, festivals, venues and cultural organisations."
+  schema={[
+    breadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Commissions', path: '/commissions' },
+    ]),
+  ]}
+>
+  <PageHeader
+    title="Commissions"
+    intro="Selected assignments and commissioned work for editors, festivals, venues and cultural organisations."
+  />
+  <ClientGrid items={items} />
+
+  <Wrapper>
+    <p class="contact">
+      For commissions, get in touch at{' '}
+      <a href={`mailto:${profile.email}`} class="text-link">{profile.email}</a>.
+    </p>
+  </Wrapper>
+</Layout>
+
+<style>
+  .contact {
+    max-width: 52ch;
+    margin-top: var(--space-4xl);
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--color-line);
+    color: var(--color-muted);
+  }
+
+  .contact a {
+    color: var(--color-ink);
+  }
+</style>

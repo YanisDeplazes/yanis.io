@@ -2,7 +2,7 @@
 // The page sitemap itself comes from @astrojs/sitemap (sitemap-index.xml).
 // Hidden projects are left out (their pages carry noindex).
 import type { APIRoute } from 'astro';
-import { getWork, isImage } from '../utils/workUtils';
+import { getWork, isImage, urlFor } from '../utils/workUtils';
 import { resolveImage } from '../utils/media';
 import { absoluteUrl } from '../utils/seo';
 
@@ -10,11 +10,12 @@ export const GET: APIRoute = async () => {
   const work = await getWork();
 
   const pages = await Promise.all(
-    work.map(async ({ id, data }) => {
+    work.map(async (entry) => {
+      const { data } = entry;
       const paths = [data.thumbnail, ...data.gallery.filter(isImage).map((block) => block.image)];
       const images = await Promise.all(paths.map((path) => resolveImage(path)));
       const urls = [...new Set(images.filter((image) => image).map((image) => absoluteUrl(image!.src)))];
-      return { loc: absoluteUrl(`/work/${id}`), urls };
+      return { loc: absoluteUrl(urlFor(entry)), urls };
     }),
   );
 

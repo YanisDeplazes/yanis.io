@@ -1,0 +1,51 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/sections/PageHeader.astro';
+import SeriesShowcase from '../../components/sections/SeriesShowcase.astro';
+import Wrapper from '../../layouts/Wrapper.astro';
+import { getWork } from '../../utils/workUtils';
+import { profile } from '../../data/profile';
+import { breadcrumbSchema } from '../../utils/seo';
+
+const entries = await getWork((data) => data.category === 'collection');
+---
+
+<Layout
+  title="Series"
+  description="Long-term series on protest, subculture and public space by Yanis Deplazes, in photographs and film."
+  schema={[
+    breadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Series', path: '/series' },
+    ]),
+  ]}
+>
+  <PageHeader title="Series" intro="Long-term work on protest, subculture and public space, followed over months and years." />
+  <SeriesShowcase entries={entries} />
+
+  <Wrapper>
+    <p class="agency">
+      Day-to-day news coverage is distributed through{' '}
+      <a href={profile.agency.href} class="text-link" target="_blank" rel="noopener noreferrer"
+        >{profile.agency.name}</a
+      >. For licensing, assignments or collaborations, get in touch at <a
+        href={`mailto:${profile.email}`}
+        class="text-link">{profile.email}</a
+      >.
+    </p>
+  </Wrapper>
+</Layout>
+
+<style>
+  .agency {
+    max-width: 52ch;
+    margin-top: var(--space-4xl);
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--color-line);
+    color: var(--color-muted);
+  }
+
+  .agency a {
+    color: var(--color-ink);
+  }
+</style>

@@ -52,84 +52,18 @@ export const socials = [
 ];
 
 /**
- * Every published piece, one entry per article. The same outlet can appear many times.
- * `project` links the article to a work entry (its slug); it then shows on that project page.
- * `show: false` keeps an entry on file without listing it.
+ * Outlets that have published my work, in the order they should be listed.
+ * Just add a name; the articles themselves are tracked on Hans Lucas (profile.agency.tearsheets).
  */
-export const publications: {
-  outlet: string;
-  title: string;
-  date?: string; // YYYY-MM-DD
-  href: string;
-  project?: string;
-  show?: boolean;
-}[] = [
-  {
-    outlet: 'The New York Times',
-    title: 'Riots in Paris', // TODO: use the article's headline
-    date: '2026-10-31',
-    href: 'https://www.nytimes.com/2026/10/31/world/europe/france-riots-protests-paris-rue-beaurepaire.html',
-    project: 'paris-riots-2026',
-  },
-  {
-    outlet: 'Ultra Sawt',
-    title: 'تجدد الاحتجاجات في دول أوروبية: أين وقعت وما تفاصيلها؟',
-    href: 'https://www.ultrasawt.com/%D8%AA%D8%AC%D8%AF%D8%AF-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D8%AC%D8%A7%D8%AC%D8%A7%D8%AA-%D9%81%D9%8A-%D8%AF%D9%88%D9%84-%D8%A3%D9%88%D8%B1%D9%88%D8%A8%D9%8A%D8%A9-%D8%A3%D9%8A%D9%86-%D9%88%D9%82%D8%B9%D8%AA-%D9%88%D9%85%D8%A7-%D8%AA%D9%81%D8%A7%D8%B5%D9%8A%D9%84%D9%87%D8%A7%D8%9F/%D8%A3%D8%BA%D9%8A%D8%AF-%D8%AD%D8%AC%D8%A7%D8%B2%D9%8A/%D8%B3%D9%8A%D8%A7%D9%82-%D9%85%D8%AA%D8%B5%D9%84/%D8%B3%D9%8A%D8%A7%D8%B3%D8%A9',
-    project: 'groundswell', // TODO: move to the story it belongs to (collections don't list publications)
-  },
-  {
-    outlet: 'SRF',
-    title: 'Kräftemessen der Nachwuchshacker in Morges',
-    date: '2024-07-16',
-    href: 'https://www.srf.ch/news/schweiz/cybersecurity-statt-darknet-kraeftemessen-der-nachwuchshacker-in-morges',
-  },
-  {
-    outlet: 'Luzerner Zeitung',
-    title:
-      'Ein Tag voller Kunst, Musik und guter Vibes: MSA Dayz gehen in die zweite Runde',
-    href: 'https://www.luzernerzeitung.ch/zentralschweiz/uri/altdorf-ein-tag-voller-kunst-musik-und-guter-vibes-msa-dayz-gehen-in-die-zweite-runde-ld.2655098',
-    project: 'msa-dayz',
-  },
-  {
-    outlet: 'Urner Wochenblatt',
-    title: 'Ein Urner rappt über sein bewegtes Leben',
-    href: 'https://www.urnerwochenblatt.ch/artikel/ein-urner-rappt-ueber-sein-bewegtes-leben',
-  },
-  {
-    outlet: 'Zsido.com',
-    title: 'Párizsi zavargások',
-    href: 'https://zsido.com/parizsi-zavargasok-chabad-rabbi-felgyujtott-autok/',
-    show: false,
-  },
-  {
-    outlet: 'Le Journal du Dimanche',
-    title: 'Taxe émeutes',
-    href: 'https://www.lejdd.fr/economie/taxe-emeutes-une-contribution-de-08-sur-les-assurances-dommages-des-2027-187170',
-    show: false,
-  },
+export const outlets = [
+  'Bloomberg',
+  'The New York Times',
+  'SRF',
+  'Suspilne',
+  'Luzerner Zeitung',
+  'Urner Wochenblatt',
+  'Ultra Sawt',
 ];
-
-/** Published pieces, newest first. Undated ones go last. */
-export const getPublications = (project?: string) =>
-  publications
-    .filter(
-      (item) => item.show !== false && (!project || item.project === project),
-    )
-    .sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''));
-
-/**
- * Outlet names for the info page, in order of the latest piece.
- * The articles themselves sit on their project pages; the full list lives on Hans Lucas.
- */
-export const getOutlets = () => {
-  const outlets = new Map<string, { outlet: string; count: number }>();
-  for (const { outlet } of getPublications()) {
-    const known = outlets.get(outlet);
-    if (known) known.count += 1;
-    else outlets.set(outlet, { outlet, count: 1 });
-  }
-  return [...outlets.values()];
-};
 
 export const exhibitions = [
   {

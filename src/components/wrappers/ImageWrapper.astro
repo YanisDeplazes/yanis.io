@@ -52,9 +52,8 @@ const lightboxCaption = [context, caption?.replace(/<[^>]+>/g, '')].filter(Boole
   }
 
   {
-    (number || caption) && (
+    caption && (
       <figcaption class="caption">
-        {number && <span class="number">{number}</span>}
         {caption && <span class="text" set:html={caption} />}
       </figcaption>
     )

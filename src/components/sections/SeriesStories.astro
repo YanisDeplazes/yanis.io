@@ -7,6 +7,7 @@ import Wrapper from '../../layouts/Wrapper.astro';
 
 export interface SeriesStory {
   slug: string;
+  url: string;
   title: string;
   description: string;
   start: Date;
@@ -46,7 +47,7 @@ const previews = await Promise.all(
       {
         stories.map((story, index) => (
           <li>
-            <a href={`/work/${story.slug}`} class="story" data-hover-preview={previews[index]}>
+            <a href={story.url} class="story" data-hover-preview={previews[index]}>
               <time class="date meta" datetime={story.start.toISOString().slice(0, 10)}>
                 {story.date}
               </time>

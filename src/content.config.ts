@@ -28,8 +28,8 @@ const videoBlock = z.object({
 });
 
 // ----- Projects -----
-// Each file in src/content/work is one project; its `slug` in the frontmatter becomes the entry id
-// and the URL (/work/<slug>).
+// Each file in src/content/work/<section>/ is one project; its `slug` in the frontmatter becomes the entry id.
+// The URL is /<section>/<slug>, where the section comes from `category` (see `sections` in utils/workUtils.ts).
 const work = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/work' }),
   schema: z.object({
@@ -50,9 +50,14 @@ const work = defineCollection({
     // A story filed under a collection: the collection's slug, e.g. 'groundswell'
     series: z.string().optional(),
     thumbnail: z.string().optional(),
+    /** Series page: the two smaller photos next to the cover. Leave out to use the first two of the gallery */
+    preview: z.array(z.string()).max(2).optional(),
     selected: z.boolean().default(false), // shown on the home page
     featured: z.boolean().default(false), // reportage: shown on the reportage page (all of it stays in the archive)
     storiesHeading: z.string().optional(),
+
+    /** Old slugs of this project; their /work/<old-slug> addresses forward here */
+    redirectFrom: z.array(z.string()).default([]),
 
     // Two ways to take a project off the site:
     hidden: z.boolean().default(false), // not listed anywhere, not in search engines, page still works via its link

@@ -1,0 +1,26 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/sections/PageHeader.astro';
+import ResearchIndex from '../../components/sections/ResearchIndex.astro';
+import { getResearch } from '../../utils/workUtils';
+import { breadcrumbSchema } from '../../utils/seo';
+
+const projects = await getResearch();
+---
+
+<Layout
+  title="Research"
+  description="Installations and interfaces by Yanis Deplazes: information design that examines social structures and everyday life."
+  schema={[
+    breadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Research', path: '/research' },
+    ]),
+  ]}
+>
+  <PageHeader
+    title="Research"
+    intro="Installations and interfaces that examine social structures and everyday life."
+  />
+  <ResearchIndex items={projects} />
+</Layout>

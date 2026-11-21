@@ -1,7 +1,6 @@
 ---
 import { Image } from 'astro:assets';
 import type { WorkItem } from '../../utils/workUtils';
-import { padNumber } from '../../utils/format';
 
 interface Props {
   item: WorkItem & { thumbnail: ImageMetadata };
@@ -14,7 +13,7 @@ interface Props {
 const { item, number, total, sizes } = Astro.props;
 ---
 
-<a href={`/work/${item.slug}`} class="feature">
+<a href={item.url} class="feature">
   <div class="media" style={`--ratio: ${item.thumbnail.width / item.thumbnail.height}`}>
     <Image
       src={item.thumbnail}
@@ -27,7 +26,6 @@ const { item, number, total, sizes } = Astro.props;
   </div>
 
   <div class="caption-row">
-    <span class="number meta">{padNumber(number, total)}</span>
     <div class="text">
       <h3 class="title title-font-bold">{item.title}</h3>
       <p class="details meta">{item.categoryLabel} · {item.years}</p>
@@ -55,8 +53,6 @@ const { item, number, total, sizes } = Astro.props;
 
   .caption-row {
     display: grid;
-    grid-template-columns: 2.5rem 1fr;
-    gap: var(--space-3xs) var(--space-xs);
     padding-top: var(--space-xs);
   }
 

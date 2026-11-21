@@ -7,14 +7,16 @@ interface Props {
   item: WorkItem;
   /** Title of the collection the story belongs to, e.g. "Groundswell" */
   series?: string;
+  /** Link label, e.g. "View series →" */
+  more?: string;
 }
 
-const { item, series } = Astro.props;
+const { item, series, more = 'View story →' } = Astro.props;
 
 const dateline = formatDateline(item);
 ---
 
-<a href={`/work/${item.slug}`} class="story">
+<a href={item.url} class="story">
   <div class="media">
     {
       item.thumbnail && (
@@ -38,7 +40,7 @@ const dateline = formatDateline(item);
     </p>
     <h2 class="title title-font-bold">{item.title}</h2>
     {item.description && <p class="description">{item.description}</p>}
-    <span class="more meta">View story →</span>
+    <span class="more meta">{more}</span>
   </div>
 </a>
 

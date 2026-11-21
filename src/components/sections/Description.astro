@@ -23,6 +23,14 @@ const { title, category, back, facts } = Astro.props;
   <Wrapper>
     <nav class="crumbs meta" aria-label="Breadcrumb">
       <a href={back.href}>{back.label}</a>
+      {
+        category.toLowerCase() !== back.label.toLowerCase() && (
+          <>
+            <span aria-hidden="true">/</span>
+            <span>{category}</span>
+          </>
+        )
+      }
       <span aria-hidden="true">/</span>
       <span>{category}</span>
     </nav>

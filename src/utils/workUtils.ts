@@ -9,12 +9,32 @@ export type GalleryBlock = WorkData['gallery'][number];
 
 /** Labels and display order, used by menus and filters */
 export const categories: { value: Category; label: string }[] = [
-  { value: 'reportage', label: 'Reportage' },
-  { value: 'collection', label: 'Collections' },
-  { value: 'event', label: 'Events' },
-  { value: 'design-research', label: 'Design & Research' },
+  { value: 'reportage', label: 'Story' },
+  { value: 'collection', label: 'Series' },
+  { value: 'event', label: 'Commission' },
+  { value: 'design-research', label: 'Research' },
   { value: 'technology', label: 'Technology' },
 ];
+
+/**
+ * Where a project lives on the site: its category decides the section,
+ * e.g. a collection → /series/groundswell, a reportage → /stories/paris-…
+ */
+export const sections = {
+  collection: 'series',
+  reportage: 'stories',
+  'design-research': 'research',
+  technology: 'research',
+  event: 'commissions',
+} as const satisfies Record<Category, string>;
+
+export type Section = (typeof sections)[Category];
+
+export const sectionFor = (category: Category): Section => sections[category];
+
+/** "/series/groundswell" */
+export const urlFor = ({ id, data }: { id: string; data: { category: Category } }) =>
+  `/${sectionFor(data.category)}/${id}`;
 
 export const getCategoryLabel = (category: Category) =>
   categories.find((c) => c.value === category)?.label ?? category;
@@ -53,6 +73,7 @@ export const getWork = async (
 /** Everything a listing needs, with the thumbnail resolved */
 export const toListItem = async ({ id, data }: WorkEntry) => ({
   slug: id,
+  url: urlFor({ id, data }),
   title: data.title,
   description: data.description,
   category: data.category,
@@ -91,6 +112,16 @@ export const getFeaturedReportage = async () => {
   );
   return { stories: featured.length ? all.filter(({ slug }) => featured.includes(slug)) : all, total: all.length };
 };
+
+/** The photography page: long-term series, then the stories worth reading on their own */
+export const getSeriesCollections = () => getSortedWork((data) => data.category === 'collection');
+
+/** The research page: design research, installations and the tools behind them */
+export const getResearch = () =>
+  getSortedWork((data) => data.category === 'design-research' || data.category === 'technology');
+
+/** The commissions page: commissioned films, photographs and visuals */
+export const getClientWork = () => getSortedWork((data) => data.category === 'event');
 
 /** The stories filed under a collection, e.g. every day of Groundswell */
 export const getSeriesParts = (series: string) => getSortedWork((data) => data.series === series);

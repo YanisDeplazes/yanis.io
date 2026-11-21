@@ -1,0 +1,51 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/sections/PageHeader.astro';
+import Listing from '../../components/sections/Listing.astro';
+import Wrapper from '../../layouts/Wrapper.astro';
+import { getFeaturedReportage } from '../../utils/workUtils';
+import { profile } from '../../data/profile';
+import { breadcrumbSchema } from '../../utils/seo';
+
+const { stories } = await getFeaturedReportage();
+---
+
+<Layout
+  title="Stories"
+  description="Stories of people and society by Yanis Deplazes: events followed beyond the day itself."
+  schema={[
+    breadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Stories', path: '/stories' },
+    ]),
+  ]}
+>
+  <PageHeader title="Stories" intro="Stories of people and society, followed beyond the day itself." />
+  <Listing heading="Stories" items={stories} showSeries />
+
+  <Wrapper>
+    <p class="agency">
+      Day-to-day news coverage is distributed through{' '}
+      <a href={profile.agency.href} class="text-link" target="_blank" rel="noopener noreferrer"
+        >{profile.agency.name}</a
+      >. For licensing, assignments or collaborations, get in touch at <a
+        href={`mailto:${profile.email}`}
+        class="text-link">{profile.email}</a
+      >.
+    </p>
+  </Wrapper>
+</Layout>
+
+<style>
+  .agency {
+    max-width: 52ch;
+    margin-top: var(--space-4xl);
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--color-line);
+    color: var(--color-muted);
+  }
+
+  .agency a {
+    color: var(--color-ink);
+  }
+</style>

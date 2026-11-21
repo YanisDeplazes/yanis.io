@@ -1,15 +1,17 @@
 ---
 const links = [
-  { name: 'selected', path: '/' },
-  { name: 'reportage', path: '/reportage' },
-  { name: 'archive', path: '/work' },
+  { name: 'series', path: '/series' },
+  { name: 'stories', path: '/stories' },
+  { name: 'research', path: '/research' },
+  { name: 'commissions', path: '/commissions' },
   { name: 'info', path: '/info' },
 ];
 
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 
+// /series and every /series/<slug> page light up "series"
 const isActive = (path: string) =>
-  path === '/' ? currentPath === '/' : currentPath.startsWith(path);
+  path === '/' ? currentPath === '/' : currentPath === path || currentPath.startsWith(`${path}/`);
 ---
 
 <ul class="list" id="site-menu">

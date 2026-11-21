@@ -231,7 +231,7 @@ const summary = joinParts([
             }
 
             return (
-              <div class="rows">
+              <div class="rows" style={`order: ${segment.rows[0][0].order}`}>
                 {segment.rows.map((row) => (
                   <div class="row" data-count={row.length}>
                     {row.map((item) => (

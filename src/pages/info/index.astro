@@ -6,7 +6,7 @@ import Portrait from '../../assets/images/portrait.jpg';
 import {
   education,
   exhibitions,
-  getOutlets,
+  outlets,
   memberships,
   profile,
   socials,
@@ -17,7 +17,6 @@ const { text } = profile.location;
 const coverage = new Intl.ListFormat('en-GB', { type: 'conjunction' }).format(
   profile.coverage,
 );
-const outlets = getOutlets();
 
 const contact = [
   { name: profile.email, href: `mailto:${profile.email}` },
@@ -119,17 +118,15 @@ const external = (href: string) => !href.startsWith('mailto:');
           <div class="row">
             <dt class="meta">Published in</dt>
             <dd>
-              <!-- Outlet names only. The articles sit on their project pages and on Hans Lucas. -->
               <ul class="outlets">
-                {
-                  outlets.map(({ outlet, count }) => (
-                    <li>
-                      {outlet}
-                      {count > 1 && <span class="muted meta">{count}×</span>}
-                    </li>
-                  ))
-                }
+                {outlets.map((outlet) => <li>{outlet}</li>)}
               </ul>
+              <a
+                href={profile.agency.tearsheets}
+                class="tearsheets meta"
+                target="_blank"
+                rel="noopener noreferrer">All tearsheets on Hans Lucas →</a
+              >
             </dd>
           </div>
 
@@ -261,14 +258,16 @@ const external = (href: string) => !href.startsWith('mailto:');
     gap: 0.3em 1.25em;
   }
 
+  .tearsheets {
+    display: inline-block;
+    margin-top: var(--space-xs);
+    color: var(--color-muted);
+  }
+
   .outlets li {
     display: flex;
     gap: 0.35em;
     align-items: baseline;
-  }
-
-  .tearsheets {
-    margin-top: var(--space-2xs);
   }
 
   /* Year | what, with where on a quieter line below */

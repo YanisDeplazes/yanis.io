@@ -75,9 +75,8 @@ const lightbox = {
   </div>
 
   {
-    (number || caption) && (
+    caption && (
       <figcaption class="caption">
-        {number && <span class="number">{number}</span>}
         {caption && <span class="text" set:html={caption} />}
       </figcaption>
     )
